@@ -1,0 +1,398 @@
+% !TeX spellcheck = eu_ES
+\documentclass[eu]{ifirak}
+
+\usepackage{amsmath,latexsym,amssymb,natbib}
+\usepackage{listings}
+\usepackage{ifcommands,subfigure}
+\usepackage[T1]{fontenc}
+\usepackage{tcolorbox}
+
+\newcommand{\zkk}{\guillemotleft}
+\newcommand{\skk}{\guillemotright}
+
+\begin{document}
+\ikasturtea{2013/2014}
+\irakasgaia{Bilaketa Heuristikoak}
+\title{BHLN: Populazioan oinarritutako algoritmoak}
+\date{}
+\irakaslea{Borja Calvo, Josu Ceberio}
+\author{Borja Calvo, Josu Ceberio}
+
+
+\tel{943 01 50 13}
+\mail{borja.calvo@ehu.es}
+
+
+\maketitle
+
+\begin{abstract}
+Kapitulu honetan soluzio-populazioetan oinarritzen diren algoritmoak izango ditugu aztergai. Aurreko kapituluan ikusi dugun bezala, soluzio bakarrean oinarritzen diren algoritmoak, optimizazioa areagotze prozedurak jarraituz egiten dute. Algoritmo poblazionalek ordea, uneoro soluzio multzo bat izango du lehengai gisa eta, bilaketa, dibertsifikazio tekniken bitartez burutzen da. 1962an lehen aldiz proposatu zirenetik, populazioetan oinarritutako algoritmo desberdin ugari aurkitu ditzakegu optimizazioaren arloan.
+Ezagunenak naturan inspiratutako algoritmo ebolutiboak dira, eta hauen artean algoritmo genetikoak landuenak. Hala ere, hauez gain badira bestelako printzipioetan oinarritutako algoritmo eraginkorrak ere. Kapitulu honetan \textit{swarm intelligence} arloan proposatu diren bi algoritmo aztertuko ditugu. 
+\end{abstract}
+
+\section{Sarrera}
+
+Populazioetan oinarritutako heuristikoek soluzio bakar bat optimizatu ordez, soluzio desberdinez osatutako populazio bat optimizatzen dute. Lehen pausuan, motako honetako algoritmoek soluzioen populazio bat hasieratzen dute. Ondoren, modu iteratiboan bi pausuz osaturiko prozedura bat jarraitzen da: lehenik eta behin, uneko populazioan oinarrituta, soluzio multzo berri bat sortzen da, eta bigarren pausu bezala, soluzio multzo biak konbinatuz, hurrengo iterazioko populazioa aukeratzen da. Prozedura hau behin eta berriz errepikatzen da, algoritmoa gelditzeko irizpideren bat betetzen den arte.
+
+7. eta 8. pausuak algoritmoaren menpekoak dira eta beraz, kapitulu honetan azalduko diren algoritmoei dagozkien atalean azalduko ditugu prozedura horiek. Alabaina, Algoritmo desberdinak aurkeztu aurretik, algoritmo poblazional guztiei dagozkien zenbait prozedura azalduko ditugu jarraian. Populazioaren hasieraketa eta gelditzeko irizpidea ordea, 4. eta 10. pausuak hurrenez hurren, ez dira algoritmoaren menpekoak izaten eta beraz, ondorengo paragrafoetan hauen inguruko zenbait ideia emango ditugu.
+ 
+ 
+\subsection{Gelditze Irizpideak}
+Soluzio bakarreko algoritmoetan bezala, irizpide estatikoak erabili ditzakegu algoritmoaren exekuzioa mugatzeko, esate baterako: algoritmoaren iterazio kopurua, CPUaren exekuzio denbora edo sortutako soluzio berrien kopurua. Bestaldetik, irizpideak aldakorrak izan daitezke: hobekuntzarik gabeko iterazio kopuru zehatz bat finkatu dezakegu, edota algoritmoa nahi dugun soluzioetara heltzen bada, gelditu egin dezakegu.
+
+Aipatutako irizpideez gain, zenbait algoritmotan populazioan oinarritutako estatistikoak kalkulatzea ohikoa izaten da. Hauek algoritmoaren konbergentzia egoera neurtzeko eta, behar izan ezkero, gelditzeko erabiltzen dira. Populazioko soluzioen dibertsitatea baxua denean, denak berdinak izanik kasurik txarrenean, algoritmoaren hobekuntzarako aukerak oso baxuak dira, eta beraz, algoritmoa martxan izateak ez du ezertarako balio.
+
+\section{Algoritmo Ebolutiboak}\label{sec:ebolutiboak}
+1859. urtean Charles R. Darwin \textit{On the Origin of the Species by Means of Natural Selection, or the Preservation of Favoured Races in the Struggle for Life} liburua argitaratu zuen. Tituluak berak adierazten duen bezala, liburu honetan Darwinek hautespen naturalaren teoria aurkeztu zuen. 
+
+Eboluzioaren teoriak dioenez, generazioz generazio zenbait mekanismoen bidez -- mutazioak, esate baterako -- aldaketak sortzen dira. Aldaketa batzuei esker indibiduoak hobeto egokitzen dira beraien inguruneari eta, ondorioz, bizirik mantentzeko eta, batez ere, ugaltzeko probabilitateak handitzen dira. Era berean, noski, aldaketa batzuk kaltegarriak izan daitezke, bizitzeko aukerak murriztuz. Kontutan hartuz aipatutako aldaketak heredatu egiten direla, ezaugarri onak generazioz generazio pasatzen dira; kaltegarriak direnak, ostera, galtzeko joera izaten dute. Mekanismo honen bidez, espezieak beraien ingurunera egokitzeko gai dira.
+
+Hirurogeigarren hamarkadan ikertzaileek Darwinaren lana inspiraziotzat hartu zuten optimizazio metahuristikoak diseinatzeko; gaur egun konputazio zientzien arlo oso bat da konputazio ebolutiboa. Atal honetan bi algoritmo mota aztertuko ditugu, algoritmo genetiko klasikoak eta EDAk (\textit{Estimation of Distribution Algorithms}).
+
+\subsection{Algoritmo Genetikoak}
+
+Algoritmo genetikoetan naturan espeziekin gertatzen dena imitatzen saiatzen gara. Era honetan, zenbait paralelismo ezar daitezke:
+
+\begin{itemize}
+\item Espezieen indibiduoak = problemaren soluzioak
+\item Indibiduoen egokitasuna = soluzioaren ebaluazioa
+\item Espeziearen populazioa = soluzio multzoa
+\end{itemize}
+
+Naturan bezala, indibiduoak -- soluzioak, alegia -- ugaltzen dira, indibiduo berriak sortuz. Are gehiago, hautespen prozesu bat egon behar da, non soluzio onenak aukeratzen diren txarrenak deuseztatuz; \ref{fig:GA} irudiak eskema orokorra jasotzen du. Hurrengo ataletan algoritmoaren zenbait aspektu aztertu behar ditugu, hala nola, populazioaren hasieraketa, ugalketa eta indibiduoen aukeraketa.
+
+\subsubsection{Populazioaren hasieraketa}
+
+Esan bezala, populazioetan oinarritutako algoritmoak dibertsifikazio izaera dute eta beraz, lehen populazioa, soluzio oso desberdinez osatu behar da. Sarritan, algoritmoaren lehen pausu honi garrantzi gutxiegi ematen zaio duen eraginerako. Kontuan hartu behar da, algoritmoak egin duen optimizazio-bidearen abiapuntua dela, eta ondorioz, hasierako soluzioen dibertsifikazioa desegokia bada, konbergentzia goiztiarra gerta daitekeela. Orokorrean populazioa ausaz hasieratzen da; hala ere, badira bestelako hasieraketak ere, esaterako dibertsifikazio sekuentziala, dibertsifikazio paraleloa eta hasieraketa heuristikoa.
+
+\subsubsection{Ugalketa}
+
+Ugalketa prozesuaren xedea zenbait indibiduo emanda -- bi, normalean --, indibiduo gehiago sortzea da. Ohikoena prozesu hau bi pausutan banatzea da: soluzioen gurutzaketa eta soluzio berrien mutazioa.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=0.7\linewidth]{./Irudiak/point_crossover}
+\caption{Gurutzatze-operadoreak bektoreen bidezko kodeketarekin erabiltzeko}
+\label{fig:point_crossover}
+\end{figure}
+
+\textbf{Gurutzazea.} Bi soluzio -- edo gehiago -- gurutzatzen ditugunean euren propietateak sortutako soluzioei transmititzea da gure helburua. Hori lortzeko, soluzioei operadore mota berezi bat aplikatuko diegu, \zkk gurutze-operadorea\skk\ -- \textit{crossover}, ingelesez --. Algoritmoak ondo funtziona dezan, gurutze-operadorea hautatzeko ebatzi nahi dugun problemarako soluzioen kodetzea aintzat hartu behar dugu. 
+
+Badaude zenbait operadore kodeketa klasikoekin erabil daitezkeenak. Ezagunena puntu bakarreko gurutzatzea -- \textit{one-point crossover}, ingelesez -- deritzona da. Demagun soluzioak bektoreen bidez kodetzen ditugula. Bi soluzio, $s_1$ eta $s_2$ parametro gisa hartuz, operadore honek beste bi soluzio berri sortzen ditu. Horretarako, lehenik eta behin, ausazko posizio bat $i$ aukeratu behar da. Gero, lehenengo soluzio berria $s_1$ soluziotik lehenengo $i$ elementuak eta $s_2$ soluziotik beste gainontzekoak kopiatuz sortuko dugu. Era berean, bigarren soluzio berria $s_2$-tik lehenengo elementuak eta besteak $s_1$-etik kopiatuz sortuko dugu.  \ref{fig:point_crossover} irudiaren ezkerraldean adibide bat ikus daiteke. Irudiak ideia nola orokor daitekeen ere erakusten du, puntu bakar bat hartuz bi, hiru, etab. puntu hartuz.
+
+\begin{figure}[t]
+\centering
+\includegraphics[height=0.25\textheight]{./Irudiak/GA}
+\caption{Algoritmo genetikoen eskema}
+\label{fig:GA}
+\end{figure}
+
+Ikusitako operadorea bektore arruntekin erabil daiteke baina, bektorea permutazio bat bada, zuzenean erabiltzen badugu lortutako soluzioak ez dira permutazioak izango; permutazioen bidezko kodeketa erabili behar badugu, beste operadore motak beharko ditugu. 
+
+Aukera asko izan arren, hemen puntu bakarreko gurutzatze operadorearen baliokidea ikusiko dugu. Lehenik eta behin, ikus dezagun zergatik puntu bakarreko operadorea ezin da zuzenean aplikatu permutazioei. Izan bitez bi permutazio, $s_1 = 12345678$ eta $s_2=87654321$, eta gurutzatze puntu bat, $i=3$. Lehenengo soluzio berria lortzeko $s_1$ soluziotik lehendabiziko hiru posizioak kopiatuko ditugu, hau da, $123$, eta besteak $s_2$-tik, hots, $54321$. Hortaz, lortutako soluzioa $s^\prime = 12354321$ izango zen, baina zoritxarrez hau ez da permutazio bat.
+
+Nola saihestu daiteke arazo hau? Soluzio sinple bat hauxe da: lehenengo posizioak zuzenean soluzio batetik kopiatzea; besteak zuzenean beste soluziotik kopiatu beharrean, ordena bakarrik erabiliko dugu. Hau da, soluzio berria sortzeko $s_1$-etik lehenengo 3 elementuak kopiatuko ditugu, $123$, eta falta direnak, $45678$, $s_2$-an agertzen den ordenean kopiatuko ditugu, hots, $87654$. Emaitza, beraz, $s^\prime = 12387654$ izango da eta beraz, orain bai, permutazio bat lortu dugu. Era berean, beste soluzio berri bat sor daiteke $s_2$-tik lehenengo hiru posizioak kopiatuz ($876$) eta beste gainontzeko guztiak $s_1$-an duten ordenean kopiatuz ($12345$); beste soluzioa, beraz, $87612345$ izango da.
+
+Operadore honetaz gain, badaude literaturan beste zenbait aukera, hala nola, ...
+
+\textbf{Mutazioa.} Naturan bezala, gure populazioa eboluzionatzeko dibertsitatea garrantzitsua da. Hori dela eta, behin soluzio berriak lortuta gurutzatze-operadorearen bidez, soluzio hauetan ausazko aldaketak eragin ohi da. Aldaketa hauek mutazio operadorearen bidez sortzen dira. 
+
+Mutazioaren kontzeptua ILS algoritmoan agertu zen perturbazioaren antzerakoa da. Izan ere, operadore berdinak erabil daitezke. Esate baterako, permutazio bat mutatzeko ausazko trukaketak erabil ditzakegu. ILS-an bezala, algoritmoa diseinatzean erabaki behar dugu zenbat aldaketak sortuko ditugun -- adibidean, zenbat posizio trukatuko ditugun --.
+
+Kontutan hartu behar dugu operadorea era probabilistikoan aplikatzen dela; hau da, ez da soluzio guztiei aplikatzen. Beraz, mutazioaren tamainaz gain, zein probabilitatearekin aplikatuko den ere algoritmoaren parametro bat da.
+
+\subsubsection{Hautespena}
+
+Algoritmo genetikoetan badaude bi pausu non soluzioak aukeratu behar diren: Gurutzatze-operadore aplikatzean eta populazioa murrizterakoan. Bai kasu batean bai bestean soluzio onak aukeratzeko joera izan behar dugu, hautespen naturalean gertatzen den legez.
+
+Badaude zenbait estrategia soluzioak aukeratzeko. Hona hemen gehien erabiltzen direnak.
+
+\textbf{Hautespen elitista}. Ideia oso sinplea da: populazioaren zati bat hautatu behar badugu, ebaluazio onena dutenak bakarrik hautatuko ditugu. Estrategia hau populazioa murrizterakoan erabiltzen da, gehien bat. 
+
+\textbf{Erruleta-hautespena}. Ingelesez \textit{Roulette Wheel selection} deritzon estrategian indibiduoak erruleta batean kokatzen dira; indibiduo bakoitzari dagokion erruletaren zatia bere ebaluazioarekiko proportzionala izango da. \ref{fig:roulette} irudian ikus daitekeen bezala, erruleta jaurtitzen den bakoitzean indibiduo bat hautatzen da; hautatua izateko probabilitatea erruleta zatiaren tamaina eta, hortaz, indibiduoen ebaluazioarekiko proportzionala da. 
+
+Indibiduo bat baino gehiago aukeratu behar baldin badugu, behar ditugun erruletaren jaurtiketak egin ditzakegu. Alabaina, honek alborapenak sor ditzake; efektu hau saihesteko erruletan puntu bakar bat markatu beharrean (gezia, \ref{fig:roulette} irudian), behar ditugun puntuak finkatu ahal ditugu, puntutik puntura dagoen distantzia kasu guztietan berdina izanik. Era honetan, jaurtiketa bakar batekin nahikoa da behar ditugun indibiduo guztiak hautatzeko. Teknika hau populazioa murrizteko zein indibiduoak gurutzatzeko hautespenean erabil daiteke.
+
+Ebaluazioaren magnitudea problema eta, are gehiago, instantzien araberakoa da. Hori dela eta, probabilitateak zuzenean ebaluazioarekiko proportzionalak badira, oso distribuzio radikalak izan ditzakegu. Arazo hau ekiditeko, ebaluazio funtzioa erabili beharrean soluzioen ranking-a erabili ohi da.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.7\linewidth]{./Irudiak/roulette}
+\caption{Erruleta-hautespena. Indibiduo bakoitzaren erruletaren zatia bere ebaluazioarekiko proportzionala da. Erruleta jaurtitzen den bakoitzean indibiduo bat aukeratzen da, bere ebaluazioarekiko proportzionala den probabilitatearekin. Adibidean, 2. indibiduoa da hautatu dena.}
+\label{fig:roulette}
+\end{figure}
+
+\textbf{Lehiaketa-hautespena}. Estrategia honetan hautespena bi pausutan egiten da. Lehenengo urratsean indibiduo guztietatik azpi-multzo bat aukeratzen da, guztiz ausaz (ebaluazioa kontutan hartu barik). Ondoren, aukeratu ditugun indibiduoetatik onena hautatzen dugu. Metodo hau indibiduoak gurutzatzeko hautatzean erabiltzen da, batik bat.
+ 
+
+\begin{ifalgorithm}[t]\label{alg:algoritmo_genetikoak}
+\begin{ifpseudo}{Algoritmo Genetikoak}
+\item \In\ \texttt{evaluate}, \texttt{select\_reproduction}, \texttt{select\_replacement}, \texttt{cross}, \texttt{mutate} eta \texttt{!stop\_criterion} operadoreak
+\item \In\ \texttt{init\_pop} hasierako populazioa
+\item \In\ \texttt{mut\_prob} mutazio probabilitatea
+\item \Out\ \texttt{best\_sol}
+\item \texttt{pop=init\_pop}
+\item \While \texttt{stop\_criterion} \Do
+\item \T{\texttt{evaluate(pop)}}
+\item \T{\texttt{ind\_rep = select\_reproduction(pop)}}
+\item \T{\texttt{new\_ind = reproduce(ind\_rep)}}
+\item \T{\textbf{for} \textbf{each} \texttt{n} in \texttt{new\_ind} \Do}
+\item \TT{\texttt{mut\_prob} probabilitatearekin egin \texttt{mutate(n)}}
+\item \T{\Done}
+\item \T{\texttt{evaluate(new\_ind)}}
+\item \T{\If \texttt{new\_ind} multzoan \texttt{best\_ind} baino hobea den soluziorik badago}
+\item \TT{Eguneratu \texttt{best\_sol}}
+\item \T{\EIf}
+\item \T{\texttt{pop=select\_replacement(pop,new\_ind)}}
+\item \Done
+\end{ifpseudo}
+\caption{Algoritmo genetikoen sasikodea}
+\end{ifalgorithm}
+
+\subsection{Estimation of Distribution Algorithms}
+
+Algoritmo genetikoetan uneko populazioa indibiduo berriak sortzeko erabiltzen da. Prozesu honetan, naturan inspiratutako operadoreen bidez burutzen dena, populazioan dauden ezaugarriak mantentzea espero dugu. Zenbait ikertzaile ideia hau hartu eta ikuspen matematikotik birformulatu zuten; gurutzatze-operadoreak erabili beharrean, eredu probabilistikoak erabiltzea proposatu zuten, populazioaren \zkk esentzia\skk\ kapturatzeko helburuarekin. Hauxe da EDA -- \textit{Estimation of Distribution Algorithms} -- algoritmotan erabiltzen den ideia.
+
+Algoritmo genetikoen eta EDA motako algoritmoen artean dagoen diferentzia bakarra indibiduo berriak sortzean dago. Gurutzatzea eta mutazioa erabili beharrean, uneko populazioa eredu probabilistiko bat \zkk ikasteko\skk\ erabiltzen da. Ondoren, eredu hori laginduko dugu nahi dugun indibiduo adina sortzeko.
+
+EDA algoritmoen gakoa, beraz, eredu probabilistikoa da. Ildo honetan, esan beharra dago eredua soluzioen kodeketari lotuta dagoela, soluzio adierazpide bakoitzari probabilitate bat esleitu beharko diolako. Partikularki, ikusi ditugun kodeketa estandarretatik badago bat bereziki zaila dena EDAtan erabiltzeko: permutazioak.
+
+Konplexutasun ezberdineko eredu probabilistikoen erabilera proposatu da literaturan, baina badago hurbilketa sinple bat oso hedatua dagoen: UMDA -- \textit{Univariate Marginal Distribution Algorithm} --. Kasu honetan soluzioaren osagaiak -- bektore bat bada, bere posizioak -- independenteak direla suposatuko dugu eta, hortaz, osagai bakoitzari dagokion probabilitate marjinala estimatu beharko dugu. Gero, indibiduoak sortzean osagaiak banan-banan aukeratuko ditugu probabilitate hauek kontutan hartuz. 
+
+Ikus dezagun adibide bat. Demagun $n=4$ tamainako problema bat dugula, non soluzioak bektore bitarren bidez kodetzen diren. Uneko populazioa, bost indibiduo dituena, jarraian dagoen matrizean adierazten da:
+
+\begin{align*}
+\left (
+\begin{array}{llll}
+0 & 1 & 1 & 0\\
+1 & 1 & 0 & 0\\
+1 & 0 & 0 & 0\\
+1 & 1 & 1 & 0\\
+0 & 1 & 1 & 0\\
+\end{array}\right )
+\end{align*}
+
+Populazio honetatik eredu bat sortu behar dugu. UMDA kasuan, eredu horrek bektore posizio bakoitzaren probabilitate marjinalak gordeko ditu. Beraz lau probabilitate izango ditugu, $P(X_1=1), P(X_2=1), P(X_3=1)$ eta $P(X_4=1)$\footnote{Kontutan hartu edozein osagarriarentzat $P(X_i=0) = 1-P(X_n=1)$ betetzen dela}. Lehenengo probabilitatea kalkulatzeko matrizearen lehendabiziko zutabeari erreparatu behar diogu. Bertan bost indibiduoetatik hirutan $X_1=1$ dela ikus daiteke; hortaz, $P(X_1=1)=0.6$ izango da. Era berean, beste probabilitate guztiak estimatuko ditugu: $P(X_2=1)=0.8, P(X_3=1)=0.6$ eta $P(X_4=1)=0$. 
+
+Indibiduo berriak sortzeko lau osagarrien balioak erabaki behar ditugu, estimatu ditugun probabilitateak errespetatuz betiere. Beraz, $X_1$-ek $1$ balioa hartuko du $0.6$ probabilitatearekin, $X_2$-k $0.8$ probabilitatearekin, etab. 
+
+
+
+\section{Swarm Intelligence}\label{sec:swarm}
+
+Eboluzioaz gain, badago populazioetan oinarritzen diren algoritmoen artean beste intuizio edo inspirazio nagusia arrakasta handia lortu duena, \textit{swarm intelligence} deritzona. Naturan badaude hainbat espezie zeinen indibiduoen portaera, indibidualki, oso sinplea den baina, taldeka daudenean, ataza zailak burutzeko gai diren. Intsektuak dira, zalantzarik gabe, adibiderik ezagunena. Hauen artean inurriak, erleak eta termitak dira adibide aipagarrienak.
+
+\subsection{Inurri Kolonien Algoritmoak}
+
+Inurriek, janaria topatzen dutenean, beraien koloniatik janarira biderik motzena topatzeko gaitasuna dute. Inurri bakar batek ezin du horrelakorik egin baina, taldeka, komunikazio mekanismo sinpleei esker ataza burutzeko gai dira. Erabiltzen den komunikabidea zeharkakoa da, darien molekula berezi bati esker: feromona. Inurri bakoitza mugitzen denean feromona-lorratz bat uzten du eta, atzetik datozen inurriak lorratz hori jarraitzeko gai dira. Geroz eta feromona gehiago, orduan eta probabilitate handiagoa datozen inurriak utzitako lorratza jarraitzeko. 
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.75\linewidth]{../Liburua/kapituluak/Irudiak/ants}
+\caption{Feromonaren erabileraren adibidea. Hasierako egoeran biderik motzena feromonaren bidez markatuta dago. Bidea mozte dugunean, inurriek eskumara edo ezkerrera joango dira, probabilitate berdinarekin feromonarik ez dagoelako. Eskumako bidea luzeagoa da eta, ondorioz, ezkerreko bidearekiko inurrien fluxua txikiagoa da. Denbora igaro ahala eskumako lorratza ahulduko da; ezkerrekoa, berriz, indartuko da. Honek inurrien erabakia baldintzatuko du, ezkerretik joateko joera handiago sortuz eta, ondorioz, bi bideen arteko diferentziak handituz. Denbora nahiko igarotzen denean eskumako lorratza guztiz galduko da; koloniak bide motzena topatu du}
+\label{fig:ants}
+\end{figure}
+
+
+Topatutako elikagai-iturriaren kalitatearen arabera, utzitako feromona kopurua ezberdina da; geroz eta kalitate handiagoa, orduan eta feromona gehiago. Kontutan hartuz feromona lurrunkorra dela, hau da, denborarekin baporatzen dela, koloniak komunikazio sistemari esker biderik motzena topatzeko gai dira. 
+
+Mekanismoaren erabilera \ref{fig:ants} irudian ikus daiteke. Hasieran bide motzena feromona lorratzaren bidez markatuta dute inurriek. Bidea mozten dugunean, eskuman eta ezkerrean ez dago feromonarik eta, hortaz, inurri batzuk eskumatik eta beste batzuk ezkerretik joango dira, probabilitate berdinarekin. Ezkerreko bidea motzagoa denez, denbora berdinean ezkerretik inurri gehiago igaroko dira, ezkerreko bidean feromona gehiago utziz. Ondorioz, datozen inurriak ezkerretik joateko joera handiago izango dute, bide hori indartuz. Eskumako bidean lorratza apurka-apurka baporatuko da eta, denbora nahiko igarotzen bada, zeharo galduko da.
+
+Intuizio hau optimizazio problemak ebazteko erabil daiteke. Ikus dezagun adibide bat.
+
+\subsection{Adibidea: \textit{Linear ordering problem}}
+
+\textit{Linear Ordering Problem}, LOP, optimizazio problema klasiko bat da. Matrize karratu bat emanda, honen errenkadak eta zutabeak ordenatu behar dira, aldi berean, diagonaletik gora dauden elementuen batura minimizatzeko. Demagun ondoko matrizea daukagula:
+
+\begin{align*}
+\begin{array}{l|llll}
+& Z_1 & Z_2 & Z_3 & Z_4\\
+\hline
+E_1 & 9 & 4 & 2 & 3\\
+E_2 & 2 & 4 & 6 & 1\\
+E_3 & 1 & 3 & 6 & 3 \\
+E_4 & 7 & 4 & 4 & 8 \\
+\end{array}
+\end{align*}
+
+Edozein ordenazio emanda, matrizeen errenkadak eta zutabeak ordena daitezke, matrize berri bat sortuz. Esate baterako, 2. eta 3. zutabe/errenkada trukatzen baditugu, ondoko matrizea lortuko dugu:
+
+\begin{align*}
+\begin{array}{l|llll}
+& Z_1 & Z_3 & Z_2 & Z_4\\
+\hline
+E_1 & 9 & 2 & 4 & 3\\
+E_3 & 1 & 6 & 3 & 3\\
+E_2 & 2 & 6 & 4 & 1 \\
+E_4 & 7 & 4 & 4 & 8 \\
+\end{array}
+\end{align*}
+
+Ordenazio hau LOP-rako soluzio bat da, $[1324]$ permutazioaren bidez adieraziko duguna. Edozein permutazio problemarako soluzio bat izango da, zeinen ebaluazioa jarraian nabarmendua dauden elementuen batura den.
+
+\begin{align*}
+\begin{array}{l|llll}
+& Z_1 & Z_3 & Z_2 & Z_4\\
+\hline
+E_1 & 9 & \mathbf{2} & \mathbf{4} & \mathbf{3}\\
+E_3 & 1 & 6 & \mathbf{3} & \mathbf{3}\\
+E_2 & 2 & 6 & 4 & \mathbf{1} \\
+E_4 & 7 & 4 & 4 & 8 \\
+\end{array}
+\end{align*}
+
+\noindent hau da, kasu honetan 16. 
+
+Beraz, LOP-rako soluzioak permutazioak dira. $n$ nodoko grafo osoa hartzen badugu, non nodoak zenbatuta dauden, edozein ziklo Hamiltoniarra\footnote{Gogoratu ziklo bat Hamiltoniarra dela erpin guztietatik behin eta bakarrik behin pasatzen bada} permutazio bat da. \ref{fig:ant_builders} irudian adibideko permutazioari dagokion zikloa ikus daiteke.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\linewidth]{../Liburua/kapituluak/Irudiak/ant_builders}
+\caption{Soluzioen eraikuntza. Grafo osotik abiatuta, edozein permutazioa ziklo Hamiltoniar baten bidez adieraz daiteke. Inurrien portaera soluzioak eraikitzeko erabil daiteke, pausu bakoitzean inurria uneko erpinetik zein erpinera mugituko den erabakiz.}
+\label{fig:ant_builders}
+\end{figure}
+
+Grafoen bidezko permutazioen adierazpidea erabiliz, inurri \zkk artifizialak\skk\ erabil ditzakegu LOP-rako soluzioak eraikitzeko. Demagun 1. nodoan inurri bat kokatzen dugula. Inurriak ziklo bat osatzeko zein nodora mugituko den erabaki beharko du; hau da, 1. nodotik 2., 3. edo 4. nodora joango den erabaki beharko du. Demagun 3. nodora joaten dela, hurrengo urratsean 2. eta 4. nodoen artean bat aukeratu beharko du inurriak. 2. nodoa aukeratzen bada, zikloa osatzeko 4. nodora eta, handik 1. nodora joan beharko da. Prozesu hau jarraituz adibideko permutazioa eraiki dezakegu; \ref{fig:ant_builders} irudiak prozesua erakusten du.
+
+Inurri artifizialen bidez soluzioak eraiki daitezke baina, nola erabaki uneko nodotik nora abiatu?. Galdera honi erantzuteko naturan gertatzen denari erreparatuko diogu. Egiazko inurriek bidea ausaz aukeratzen dute, baina bide bat edo bestea aukeratzeko probabilitatea feromona kopuruarekiko proportzionala da. Era berean, grafoaren ertz bakoitzari feromona kopuru bat esleitzen badiogu, gure inurri artifizialak bidea erabakitzeko feromona erabili ahal izango du.
+
+Hortaz, uneoro ertz bakoitzean zenbat feromona dagoen gorde beharko dugu $F$ matrizean, non $f_{i,j}$ $i$ nodotik $j$ nodora joateari dagokion feromona kopurua den\footnote{Kontutan hartu naturan ez bezala, bidearen noranzkoa garrantzitsua izan daitekeela; hau da, ez da berdina $i$-tik $j$-ra edo $j$-tik $i$-ra joatea}. Feromona kopurua eguneratu barik, inurri-koloniak ez luke bide motzena topatuko. Era berean, gure problema ebazteko feromona matrizea eguneratu beharko dugu. Naturan bezala, feromona kopurua eguneratzeko bi pausu izango ditugu: lurrunketa eta feromona lagatzea. Hasieran matrizearen posizio guztien feromona kopurua berdina izango da; hortik aurrera inurriek erabilitako bideak kontutan hartu beharko ditugu feromona kopurua eguneratzeko. 
+
+Lurrunketa egiteko $F$ matrize posizio guztiak txikiagotuko ditugu, $f_{i,j} = \alpha f_{i,j}$ eginez, non $0<\alpha<1$ izango den. Lagatze prozesuari dagokionez, oso era sinplean egin daiteke, soluzio bakoitza sortzean erabilitako ertzei balio finko bat gehituz. Hau da, inurri bat soluzioa eraikitzeko 2. nodotik 3. nodora joaten bada, $f_{2,3}$ eguneratuko dugu balio finko bat $d$ gehituz. \ref{alg:ant} algoritmoan prozeduraren sasikodea ikus daiteke. Algoritmoa aplikatzeko zenbait funtzio beharko ditugu:
+
+\begin{itemize}
+\item \texttt{initialize\_matrix} - Funtzio honek feromona matrizea hasieratzen du, posizio guztiei -- diagonala izan ezik -- balio finko bat esleituz
+\item  \texttt{build\_solution(pheromone\_matrix)} - \texttt{pheromone\_matrix} feromona matrizea erabiliz, funtzio honek pausuz pausu soluzio bat eraikitzen du. Lehen pausua nodo bat ausaz aukeratzea da. Gero, urrats bakoitzean uneko nodotik zein nodoetara joan gaitezkeen jakin behar dugu -- bisitatu barik daudenak, alegia --. Aukera guztietatik bat ausaz aukeratuko dugu; aukera bakoitzari dagokion probabilitatea feromona matrizean dauden balioak erabiliz kalkulatuko dugu.
+\item \texttt{evaporate(pheromone\_matrix)} - Funtzio honek feromona matrizea hartzen du eta posizio bakoitza eguneratzen du, 0 eta 1 tartean dagoen balio bat biderkatuz.
+\item \texttt{add\_pheromone (pheromone\_matrix,solution)} - Funtzio honek, soluzio bat emanda, soluzio hori eraikitzeko jarraitutako bidean dauden ertz guztiei balio finko bat gehitzen die.
+\end{itemize}
+
+\subsection{ACO algoritmoak diseinatzen}
+
+Aurreko atalean LOP nola ebatz daitekeen ikusi dugu. Orokorrean, optimizazio problema bat ACO motako algoritmo baten bidez ebatzi nahi badugu, bi elementu nagusi beharko ditugu: soluzioak eraikitzeko prozedura bat\footnote{Hau dela eta, ACO algoritmoak erraz diseina daitezke ebatzi nahi dugun problema ebazteko algoritmo eraikitzaile onak existitzen badira} eta feromona eredu bat. Algoritmo eraikitzaileetan pausu bakoitzean zenbait aukera izaten ditugu; ACO bat diseinatzeko feromona ereduak aukera bakoitzaren feromona kopurua mantenduko du.
+
+
+\begin{ifalgorithm}[t]\label{alg:ant}
+\begin{ifpseudo}{Inurri-kolonien algoritmoa}
+\item \In\ \texttt{build\_solution}, \texttt{evaporate}, \texttt{add\_pheromone }, \texttt{initalize\_matrix} eta \texttt{stop\_criterion} operadoreak
+\item \In\ \texttt{k\_size} koloniaren tamaina
+\item \Out\ \texttt{opt\_solution}
+\item \texttt{pheromone\_matrix} = \texttt{initialize\_matrix()}
+\item \While !\texttt{stop\_criterion()}
+\item \T{\textbf{for} \texttt{i} \textbf{in} 1:\texttt{k\_size}}
+\item \TT{\texttt{solution} = \texttt{build\_solution(pheromone\_matrix)}}
+\item \TT{\texttt{pheromone\_matrix} = \texttt{add\_pheromone(pheromone\_matrix,solution)}}
+\item \TT{\If \texttt{solution} \texttt{opt\_solution} baino hobea da}
+\item \TTT{\texttt{opt\_solution}=\texttt{solution}}
+\item \TT{\EIf}
+\item \T{\Done}
+\item \T{\texttt{pheromone\_matrix} = \texttt{evaporate(pheromone\_matrix)}}
+\item \Done
+\end{ifpseudo}
+\caption{Inurri-kolonien algoritmoaren sasikodea}
+\end{ifalgorithm}
+
+
+
+Aurreko atalaren adibidean inurri guztiek era finkoan eguneratzen zuten feromona eredua; edonola era, aukera hau ez da bakarra. Ereduaren eguneraketa diseinatzean bi gauza hartu behar ditugu aintzat. Alde batetik, zein inurriak eguneratuko du eredua; bestetik, nola eredua nola eguneratu. Lehenengo puntuari dagokionez, hiru aukera ditugu:
+
+\begin{itemize}
+\item \textbf{Inurri guztiak} - Soluzio bat eraikitzen den bakoitzean, erabilitako elementuen feromona kopurua handitu.
+\item \textbf{Iterazioko soluziorik onena} - Behin koloniako inurri guztiek beraien soluzioak eraiki, guztietatik zein den onena identifikatu eta bakarrik soluzio hori eraikitzeko erabili diren elementuak eguneratu.
+\item \textbf{Algoritmoak topatutako soluziorik onena} - Bilaketa areagotu nahi badugu, iterazioko soluziorik onena erabili beharrean, aurreko iterazioetan eraiki den soluziorik onena erabil dezakegu.
+\end{itemize}
+
+Adibidean feromona lorratzak eguneratzean inurri guztien ekarpena berdina zen; alabaina, beste zenbait aukera ditugu:
+
+\begin{itemize}
+\item \textbf{Soluzioaren ebaluazioaren arabera} - Naturan inurriak utzitako lorratzaren intentsitatea janari iturriaren kalitatearen araberakoa da; era berean, gure algoritmoan soluzioaren ebaluazioa erabil dezakegu soluzio onenen ekarpena handiagoa izan dadin.
+\item \textbf{Inurrien ranking-aren arabera} - Ebaluazio funtzioaren magnitudea problemaren eta instantziaren araberakoa da\footnote{TSP-an, adibidez, ez da berdina 10 herri Gipuzkoan izatea edo 100 herri Europan zehar banatuta}. Eskala arazo hauek saihesteko zuzenean ebaluazioa erabili beharrean, soluzioen ranking-a erabil dezakegu; era honetan soluziorik onenaren ekarpena azkenarena baino handiago izango da, baina lehenengo eta azkenaren soluzioen arteko diferentziak murriztuta egongo dira.
+\end{itemize}
+
+\subsection{Particle Swarm Optimization}
+
+Intsektu sozialen portaera \textit{swarm} adimenaren adibide tipikoak dira, baina ez dira bakarrak; animali handiagotan ere inspirazioa bila daiteke. Esate baterako, txori-saldotan ehunaka indibiduo batera mugitzen dira beraien arteak talka egin gabe. Multzo horietan ez dago indibiduo bat taldea kontrolatzen duena, txori bakoitzak bere inguruneko txorien portaera aztertzen du, berea egokitzeko. Era horretan, arau sinple batzuk (txori batetik gertuegi banago, urrundu egiten naiz, adibidez) besterik ez dira behar sistema osoa antolatzeko.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.6\linewidth]{./Irudiak/PSO_1}
+\caption{PSO algoritmoak erabiltzen dituen partikulen adibidea. Partikula bakoitzak bere kokapena $(x_i,y_i)$ eta bere abiadura ($\mathbf{v}_i$) du}\label{fig:PSO}
+\end{figure}
+
+
+\textit{Particle Swarm Optimization} (PSO) algoritmoaren inspirazioa animali-talde hauen mugimenduak dira. Gure sisteman bilaketa espazioan mugitzen diren zenbait partikula izango ditugu; partikula bakoitzak kokapen eta abiadura konkretuak izango dituzte. Partikularen kokapenak berak partikulari dagokion soluzioa izango da; abiadurak, hurrengo iterazioan nora mugituko den esango digu. Ikus dezagun adibide sinple bat. \ref{fig:PSO} irudian bi dimentsioko bilaketa espazio bat adierazten da. Bertan, bost partikula ditugu; bakoitzak problemarako soluzio bat adierazten du. Adibidez, $p_1$ partikulak $X=x_1; Y=y_1$ soluzioa adierazten du.
+
+PSO algoritmoan partikulek bilaketa espazioa aztertzen dute, posizio batetik bestera mugituz. Beraz, iterazio bakoitzean partikula guztien kokapena eguneratzen da, beraien abiadura erabiliz. Partikulen abiadurak finko mantentzen baditugu, partikula guztiak infinitura joango dira. Hori ez gertatzeko, iterazio bakoitzean abiadura ere eguneratu behar da; eguneraketa honetan datza, hain zuzen, algoritmoaren gakoa. PSO \textit{swarm intelligence}-ko algoritmo bat denez, indibiduoen arteko (partikulen arteko, kasu honetan) komunikazioa ezinbestekoa da. Komunikazio hau abiadura eguneratze-prozesuan erabiltzen da, partikula bakoitzak bere abiadura eguneratzeko ingurunean dauden partikulak aintzat hartuko baititu. 
+
+Beraz, algoritmoa aplikatzeko ingurune kontzeptua definitu behar dugu. PSO-n, ingurune kontzeptua ez da bilaketa lokalean erabiltzen den berdina, partikula bakoitzaren ingurunea aurrez aurretik ezarritakoa baita; ez du partikularen kokapenarekin zerikusirik, alegia. Partikula bakoitzaren ingurunea grafo baten bidez adieraz daiteke, non bi partikula konektatuta dauden baldin eta bakarrik baldin bata bestearen ingurunean badaude. Lehenengo hurbilketa grafo osoa erabiltzea da, hots, edozein partikularen ingurunean beste gainontzeko partikula guztiak egongo dira; grafo osoa erabili beharrean, beste zenbait topologia ere erabil daitezke (eraztunak, izarrak, toroideak, etab.).
+
+Partikula baten abiadura eguneratzeko bi elementu erabiltzen dira. Alde batetik, partikula horrek bisitatu duen soluziorik onena, hau da, bere \zkk arrakasta pertsonala\skk. Soluzio honi ingelesez \textit{personal best} deritzo, eta $\mathbf{p}_i$ sinboloaren bidez adieraziko dugu. Bestaldetik, ingurunean dauden partikulen arrakasta ere kontutan hartzen da, partikularen ingurunean dauden beste partikulek lortu duten soluziorik onena, alegia. Soluzio honi ingelesez \textit{global best}\footnote{Ingurunea definitzeko grafo osoa erabiltzen ez bada, partikula baten ingurunean lortutako soluziorik onenari \textit{global best} baino \textit{local best} esaten zaio} deritzo, eta $\mathbf{p}_g$ sinboloaren bidez adieraziko dugu.
+
+Hau dena kontutan hartuta, $i$. partikulak $t$ iterazioan erabiliko duen abiadura aurreko iterazioan erabilitakoa ondoko ekuazioaren bidez kalkulatuko dugu:
+
+\begin{align*}
+\mathbf{v}_i(t) = \mathbf{v}_i(t-1) + \rho_1 C_1 [\mathbf{p}_i - \mathbf{x}_i(t-1)] + \rho_2 C_2 [\mathbf{p}_g - \mathbf{x}_i(t-1)]
+\end{align*}
+
+Ekuazioan bi konstante ditugu, $C_1$ eta $C_2$; balio hauek partikulak eta ingurunean topatutako soluzioen eragina kontrolatzeko erabiltze dira. Konstante hauetaz gain, bi ausazko aldagai ditugu, $\rho_1$ eta $\rho_2$. Bi aldagai hauek ausazko balioak hartzen dituzte $[0,1]$ tartean. 
+
+Lortutako abiadura bektore bat da. Arazoak saihesteko, bektore horren modulua mugatuta dago, aurrez aurretik abiadura maximoa ezarriz. Kalkulatutako abiaduraren modulua handiagoa bada, balio maximora eramaten da.
+
+Behin uneko iterazioaren abiadura kalkulatuta, abiadura partikularen kokapena eguneratzeko erabiltzen da:
+
+\begin{align*}
+\mathbf{x}_i(t) = \mathbf{x}_i(t-1) + \mathbf{v}_i(t-1)
+\end{align*}
+
+Iterazio bakoitzean lortutako soluzioak ebaluatu eta, beharrezkoa bada, partikulen \textit{personal} eta \textit{global best} eguneratu behar dira. Pasu guzti hauek \ref{alg:pso} algoritmoan biltzen dira.
+
+
+\begin{ifalgorithm}[t]\label{alg:pso}
+\begin{ifpseudo}{PSO algoritmoa}
+\item \In\ \texttt{initialize\_position}, \texttt{initialize\_velocity}, \texttt{update\_velocity}, \texttt{evaluate} eta \texttt{stop\_criterion} operadoreak
+\item \In\ \texttt{num\_particles} partikula kopurua
+\item \Out\ \texttt{opt\_solution}
+\item \texttt{gbest = p[1]}
+\item \textbf{for each} \texttt{i} \textbf{in} \texttt{1:num\_particles} \Do
+\item \T{\texttt{p[i]=initialize\_position(i)}}
+\item \T{\texttt{v[i]=initialize\_velocity(i)}}
+\item \T{\texttt{pbest[i]=p[i]}}
+\item \T{\If \texttt{evaluate(p[i])<evaluate(gbest)}}
+\item \TT{\texttt{gbest = p[i]}}
+\item \T{\EIf}
+\item \Done
+\item \While !\texttt{stop\_criterion()} \Do
+\item \T{\textbf{for each} \texttt{i} \textbf{in} \texttt{particle\_set}}
+\item \T{\Do}
+\item \TT{\texttt{v[i]} = update\_velocity(i)}}
+\item \TT{\texttt{p[i] = p[i] + v[i]}}
+\item \TT{\If \texttt{evaluate(p[i])<evaluate(pbest[i])}}
+\item \TTT{\texttt{pbest[i]}=\texttt{p[i]}}
+\item \TT{\EIf}
+\item \TT{\If \texttt{evaluate(p[i])<evaluate(gbest)}}
+\item \TTT{\texttt{gbest}=\texttt{p[i]}}
+\item \TT{\EIf}
+\item \T{\Done}
+\item \Done
+\item \texttt{opt\_solution = gbest}
+\end{ifpseudo}
+\caption{\textit{Particle Swarm Optimization} algoritmoaren sasikodea}
+\end{ifalgorithm}
+
+
+
+
+%\subsection{Oinarrizko Egiturak}
+%\subsubsection{Soluzioen errepresentazioa: Indibiduoak}
+%\subsubsection{Populazioaren hasieraketa}
+%\subsubsection{Aukeraketa irizpideak}
+%Roulette-Wheel, Tournament, Rank-Based Selection...
+%\subsubsection{Soluzioen berrien sorrera prozedurak}
+%Algoritmoaren menpekoa, GAk mutation and crossover, EDAk learn a model, and sample solutions.
+%\subsubsection{Gelditze Irizpideak}
+
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

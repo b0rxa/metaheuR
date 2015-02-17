@@ -1,0 +1,55 @@
+import(ggplot2)
+
+exportClasses(
+  Permutation,
+  CResource,
+  SwapNeighborhood,
+  FlipNeighborhood,
+  MHResult
+)
+
+exportMethods(
+  swap,
+  insert,
+  shuffle,
+  what.finished,
+  is.finished,
+  add.consumed,
+  remaining.time,
+  remaining.evaluations,
+  remaining.iterations,
+  consumed.time,
+  consumed.evaluations,
+  consumed.iterations,
+  next.neighbor,
+  has.more.neighbors,
+  reset.neighborhood,
+  description,
+  algorithm,
+  parameters,
+  optima,
+  evaluation,
+  resources,
+  progress,
+  plot.progress,
+  plot.correlation
+)
+
+export(
+  permutation,
+  random.permutation,
+  identity.permutation,
+  tsp.problem,
+  knapsack.problem,
+  graph.coloring.problem,
+  cresource,
+  swapNeighborhood ,
+  basic.local.search,
+  multistart.local.search,
+  iterated.local.search,
+  tsp.greedy,
+  greedy.selector,
+  first.improvement.selector,
+  mhresult,
+  flipNeighborhood
+)
