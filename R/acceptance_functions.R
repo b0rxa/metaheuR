@@ -9,7 +9,7 @@
 #' always.accept (-1)
 #' always.accept (1)
 
-always.accept <- function (delta , ..) return(TRUE)
+always.accept <- function (delta , ...) return(TRUE)
 
 #' Acceptance based on a threshold
 #' 
@@ -25,7 +25,6 @@ always.accept <- function (delta , ..) return(TRUE)
 #' threshold.accept (delta = -1 , th = 0)
 
 threshold.accept <- function (delta, th = 0 , ...){
-  cat(th,"\n")
   return(delta < th)
 }
 
@@ -42,7 +41,7 @@ threshold.accept <- function (delta, th = 0 , ...){
 #' boltzmann.accept (delta = -3 , th = -2)
 #' boltzmann.accept (delta = -1 , th = 0)
 
-boltzmann.accept <- function (delta, temperature = 1){
+boltzmann.accept <- function (delta, temperature = 1 , ...){
   if (temperature <= 0) stop("The temperature has to be strictly greter than 0")
   if (delta<0){
     accpet <- TRUE

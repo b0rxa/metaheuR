@@ -5,6 +5,7 @@ exportClasses(
   CResource,
   SwapNeighborhood,
   FlipNeighborhood,
+  ExchangeNeighborhood,
   MHResult
 )
 
@@ -54,5 +55,6 @@ export(
   greedy.selector,
   first.improvement.selector,
   mhresult,
-  flipNeighborhood
+  flipNeighborhood,
+  exchangeNeighborhood
 )

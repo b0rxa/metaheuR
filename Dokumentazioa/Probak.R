@@ -9,15 +9,20 @@ cost<-matrix(runif(n^2),n)
 tsp.rnd.50<-tsp.problem(cost)
 ## Neighborhood
 swp.ngh<-swapNeighborhood(base = identity.permutation(n),random = FALSE)
+exc.ngh<-exchangeNeighborhood(base = identity.permutation(n),random = FALSE)
 
 ## Basic local search with no limits. Starting from identity permutation and greedy selector
-bls.result<-basic.local.search(evaluate = tsp.rnd.50$evaluate , initial.solution = identity.permutation(n),
+swap.bls.result<-basic.local.search(evaluate = tsp.rnd.50$evaluate , initial.solution = identity.permutation(n),
                                neighborhood = swp.ngh , selector = greedy.selector)
-  
-## Visualization of the results
-bls.result
-plot.progress(bls.result)
 
+exchange.bls.result<-basic.local.search(evaluate = tsp.rnd.50$evaluate , initial.solution = identity.permutation(n),
+                                    neighborhood = exc.ngh , selector = greedy.selector)
+
+## Visualization of the results
+swap.bls.result
+exchange.bls.result
+plot.progress(swap.bls.result)
+plot.progress(exchange.bls.result)
 
 ## Generator of random permutations of size n (for the multistart approach)
 rnd.permutation.generator<-function(n){
@@ -46,8 +51,8 @@ resources <- cresource(evaluations = 10 * n^2 , time = 5)
 perturbation.ratio <- 0.1
 ## Example of execution with no feedback
 ils<-iterated.local.search(evaluate = tsp.rnd.50$evaluate , verbose = T , do.log = T , initial.solution = identity.permutation(n) , 
-                           accept = threshold.accept , perturb = perturb.func.generator(perturbation.ratio) , num.restarts = restarts , 
-                           neighborhood = swp.ngh , selector = greedy.selector, resources = resources , KK = 0)
+                           accept = boltzmann.accept , perturb = perturb.func.generator(perturbation.ratio) , num.restarts = restarts , 
+                           neighborhood = swp.ngh , selector = greedy.selector, resources = resources , th = 5 , temperature = 2)
 
 
 plot.progress(ils , col="blue" , size=1.1)

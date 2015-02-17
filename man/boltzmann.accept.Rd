@@ -4,7 +4,7 @@
 \alias{boltzmann.accept}
 \title{Probabilistic acceptance based on Boltzmann's distribution}
 \usage{
-boltzmann.accept(delta, temperature = 1, ...)
+boltzmann.accept(delta, temperature = 1)
 }
 \arguments{
 \item{delta}{Increment in the evaluation function computed as the evaluation of the new solution minus the evaluation of the existing solution}
