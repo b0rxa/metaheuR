@@ -18,6 +18,7 @@ Collate: Neighborhood.R
   graph_problems.R
   FlipNeighborhood.R
   SwapNeighborhood.R
+  ExchangeNeighborhood.R
   HammingNeighborhood.R
   acceptance_functions.R
   neighbor_selectors.R
