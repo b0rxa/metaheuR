@@ -19,7 +19,8 @@ Collate: Neighborhood.R
   FlipNeighborhood.R
   SwapNeighborhood.R
   HammingNeighborhood.R
-  neighborSelectors.R
+  acceptance_functions.R
+  neighbor_selectors.R
   local_search.R
   constructive_algorithms.R
   metaheuR.R

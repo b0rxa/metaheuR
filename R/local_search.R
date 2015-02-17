@@ -154,6 +154,8 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
 #' @param initial.solution Solution from where the search will start
 #' @param neighborhood Object representing the type of neighborhood to be used
 #' @param selector A function used to select a solution from the neighborhood. For an example of the parameters required and the result it should produce, see \code{\link{greedy.selector}}
+#' @param perturb A perturbation function. This function has to contain at least one parameter, named \code{solution}, the solution to be perturbed
+#' @param accept A function to determine when a new local optimum is accepted. This function has to have, at least, one parameter named \code{delta}, corresponding to the difference between the evaluation of the new solution and the existing one.
 #' @param num.restarts Number of restarts to perform. If NULL, then restarts will be performed unitl the resources are finished
 #' @param do.log Logic value to indicate whether the progress shoul be tracked or not
 #' @param verbose Logic value to indicate whether the function should print information about the search
@@ -161,12 +163,13 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
 #' @param valid A function that, given a solution, determines whether it is valid or not
 #' @param correct A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option
 #' @param resources Object of class \code{\link{CResource}} representing the available computational resources for the search
+#' @param ... Additional parameters to the functions passed as argument
 #' @return The function returns an object of class \code{\link{MHResult}} with all the information about the search
 #' @details If the function provided in the \code{generate.solution} parameter generates solutions completely at random, then the function performs a random multistart search; if the funciton generates random greedy solutions, then the function performs a GRASP-like search
 
-iterated.local.search<-function (evaluate , initial.solution , neighborhood, selector , perturb , num.restarts = NULL, 
-                                 do.log = TRUE , verbose = TRUE , non.valid='ignore' ,
-                                 valid=function(solution){TRUE} , correct=function(solution){solution}, resources = cresource()){
+iterated.local.search<-function (evaluate , initial.solution , neighborhood, selector , perturb , accept = threshold.accept , 
+                                 num.restarts = NULL , do.log = TRUE , verbose = TRUE , non.valid='ignore' , valid=function(solution){TRUE} , 
+                                 correct=function(solution){solution}, resources = cresource() , ...){
   ## Perform the initial local search
   search.result <- basic.local.search(evaluate = evaluate , initial.solution = initial.solution , 
                                       neighborhood = neighborhood , selector = selector , 
@@ -176,6 +179,8 @@ iterated.local.search<-function (evaluate , initial.solution , neighborhood, sel
   ## Extract the best solution and its evaluation, as well as the remaining resources
   current.solution <- optima(search.result)[[1]]
   current.evaluation <- evaluation(search.result)
+  best.solution <- current.solution
+  best.evaluation <- current.evaluation
   resources <- resources(search.result)
   log <- progress(search.result)
   restarts <- 0
@@ -192,10 +197,16 @@ iterated.local.search<-function (evaluate , initial.solution , neighborhood, sel
                                         non.valid = non.valid , valid = valid , 
                                         correct = correct , resources = resources)
     ## If we have a better solution, update the current best
-    if (evaluation(search.result) < current.evaluation){
+    if (evaluation(search.result) < best.evaluation){
+      best.solution <- optima(search.result)[[1]]
+      best.evaluation <- evaluation(search.result)
+    }
+    ## Modify the current solution
+    if (accept(delta = evaluation(search.result) - best.evaluation , ...)){
       current.solution <- optima(search.result)[[1]]
       current.evaluation <- evaluation(search.result)
     }
+    
     ## Get the updated resources
     resources <- resources(search.result)
     
@@ -209,8 +220,8 @@ iterated.local.search<-function (evaluate , initial.solution , neighborhood, sel
            parameters = list(selector = deparse(substitute(selector)) , 
                              neighborhood = deparse(substitute(neighborhood)) , 
                              restarts = num.restarts) ,
-           optima = list (current.solution) , 
-           evaluation = current.evaluation , 
+           optima = list (best.solution) , 
+           evaluation = best.evaluation , 
            resources = resources ,
            log = log)
 }
