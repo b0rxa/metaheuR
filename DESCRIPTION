@@ -25,4 +25,6 @@ Collate: Neighborhood.R
   local_search.R
   constructive_algorithms.R
   metaheuR.R
+  cooling_schemes.R
+  ls_acceptance.R
   

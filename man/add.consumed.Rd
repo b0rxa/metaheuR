@@ -16,7 +16,7 @@ add.consumed(resource, t = 0, ev = 0, it = 0)
 \item{it}{Number of iterations to add}
 }
 \value{
-A new object of class \code{\link{CResource}} with the updated consumed resources
+This method does not return any output. For efficiecy reasons the object passed is modified. This can lead to problems if not handled properly, so use with caution!
 }
 \description{
 This function increases the consumed resources

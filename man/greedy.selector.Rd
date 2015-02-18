@@ -6,7 +6,8 @@
 \usage{
 greedy.selector(neighborhood, evaluate, initial.solution, initial.evaluation,
   non.valid = "ignore", valid = function(solution) {     TRUE },
-  correct = function(solution) {     solution }, resources = cresource())
+  correct = function(solution) {     solution }, resources = cresource(),
+  ....)
 }
 \arguments{
 \item{neighborhood}{Object representing the type of neighborhood to be used}
@@ -24,9 +25,11 @@ greedy.selector(neighborhood, evaluate, initial.solution, initial.evaluation,
 \item{correct}{A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option}
 
 \item{resources}{Object of class \code{\link{CResource}} representing the available computational resources for the search}
+
+\item{...}{Special argument to pass additional parameters to the functions used in the search}
 }
 \value{
-The funtion return a list with with two fields, \code{'solution'},  \code{'evaluation'}, contining the best found solution and its evaluation and \code{'resources'}, the remaining computational resources. If the initial solution corresponds to a local optimum, the function returns NULL in the \code{'solution'} field.
+The funtion return a list with with three fields, \code{'solution'},  \code{'evaluation'}, contining the best found solution and its evaluation and \code{'resources'}, the remaining computational resources. If the initial solution corresponds to a local optimum, the function returns NULL in the \code{'solution'} field.
 }
 \description{
 This function explores a neighborhood testing all the posible solutions and picks up the best one

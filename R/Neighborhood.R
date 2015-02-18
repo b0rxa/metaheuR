@@ -17,7 +17,7 @@ setGeneric(name = "next.neighbor", def = function(neighborhood){standardGeneric(
 #' 
 #' @family neighborhoods
 #' @param neighborhood Object representing the neighborhood
-#' @return \code{TRUE} if there are more solutions to explore, \case{FALSE} in other case
+#' @return \code{TRUE} if there are more solutions to explore, \code{FALSE} in other case
 #' @seealso \code{\link{nextNeighbor}} \code{\link{resetNeighborhood}}
 setGeneric(name = "has.more.neighbors", def = function(neighborhood){standardGeneric("has.more.neighbors")})
 

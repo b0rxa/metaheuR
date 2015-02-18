@@ -10,7 +10,7 @@ has.more.neighbors(neighborhood)
 \item{neighborhood}{Object representing the neighborhood}
 }
 \value{
-\code{TRUE} if there are more solutions to explore, \case{FALSE} in other case
+\code{TRUE} if there are more solutions to explore, \code{FALSE} in other case
 }
 \description{
 This is one of the functions that has to be implemented by any object to be used as a neighborhood

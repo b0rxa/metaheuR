@@ -7,7 +7,8 @@
 multistart.local.search(evaluate, generate.solution, neighborhood, selector,
   num.restarts = NULL, do.log = TRUE, verbose = TRUE,
   non.valid = "ignore", valid = function(solution) {     TRUE },
-  correct = function(solution) {     solution }, resources = cresource())
+  correct = function(solution) {     solution }, resources = cresource(),
+  ...)
 }
 \arguments{
 \item{evaluate}{Function of a single parameter. Given a solution, the function returns its evaluation as a real number}
@@ -31,6 +32,8 @@ multistart.local.search(evaluate, generate.solution, neighborhood, selector,
 \item{correct}{A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option}
 
 \item{resources}{Object of class \code{\link{CResource}} representing the available computational resources for the search}
+
+\item{...}{Special argument to pass additional parameters to the functions used in the search}
 }
 \value{
 The function returns an object of class \code{\link{MHResult}} with all the information about the search

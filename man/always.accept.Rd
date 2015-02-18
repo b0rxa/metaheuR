@@ -4,7 +4,7 @@
 \alias{always.accept}
 \title{Dummy function to always accept changes}
 \usage{
-always.accept(delta, ..)
+always.accept(delta, ...)
 }
 \arguments{
 \item{delta}{Increment in the evaluation function computed as the evaluation of the new solution minus the evaluation of the existing solution}

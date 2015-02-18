@@ -11,7 +11,8 @@
 #' @param valid A function that, given a solution, determines whether it is valid or not
 #' @param correct A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option
 #' @param resources Object of class \code{\link{CResource}} representing the available computational resources for the search
-#' @return The funtion return a list with with two fields, \code{'solution'},  \code{'evaluation'}, contining the best found solution and its evaluation and \code{'resources'}, the remaining computational resources. If the initial solution corresponds to a local optimum, the function returns NULL in the \code{'solution'} field.
+#' @param ... Special argument to pass additional parameters to the functions used in the search
+#' @return The funtion return a list with with three fields, \code{'solution'},  \code{'evaluation'}, contining the best found solution and its evaluation and \code{'resources'}, the remaining computational resources. If the initial solution corresponds to a local optimum, the function returns NULL in the \code{'solution'} field.
 #' @details In case all the solutions are valid, set the \code{non.valid} parameter to \code{'ignore'} for efficiency. The \code{'neighborhood'} object can be of any type, as long as it has defined
 #' the function \code{'reset.neighborhood'},  \code{'has.more.neighbors'} and  \code{'next.neighbor'}
 #' @seealso  \code{\link{first.improvement.selector}}, \code{\link{basic.local.search}}, \code{\link{multistart.local.search}},  \code{\link{iterated.local.search}}
@@ -19,7 +20,7 @@
 
 greedy.selector<-function (neighborhood, evaluate , initial.solution, initial.evaluation , 
                            non.valid='ignore', valid=function(solution){TRUE} , 
-                           correct=function(solution){solution}, resources = cresource()){
+                           correct=function(solution){solution}, resources = cresource() , ....){
   
   best.sol<-initial.solution
   best.eval<-initial.evaluation
@@ -47,8 +48,7 @@ greedy.selector<-function (neighborhood, evaluate , initial.solution, initial.ev
       best.eval<-new.eval
       improved<-TRUE
     }
-    resources<-add.consumed(resources,
-                            t = as.numeric(Sys.time()-t0), ev = 1)
+    add.consumed(resources , t = as.numeric(Sys.time()-t0), ev = 1)
   }
   ## If no improvement, return null. Otherwise, return the best solution and its evaluation
   
@@ -78,7 +78,8 @@ greedy.selector<-function (neighborhood, evaluate , initial.solution, initial.ev
 #' @param valid A function that, given a solution, determines whether it is valid or not
 #' @param correct A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option
 #' @param resources Object of class \code{\link{CResource}} representing the available computational resources for the search
-#' @return The funtion return a list with with two fields, \code{'solution'},  \code{'evaluation'}, contining the best found solution and its evaluation and \code{'resources'}, the remaining computational resources. If the initial solution corresponds to a local optimum, the function returns NULL in the \code{'solution'} field.
+#' @param ... Special argument to pass additional parameters to the functions used in the search
+#' @return The funtion return a list with with three fields, \code{'solution'},  \code{'evaluation'}, contining the best found solution and its evaluation and \code{'resources'}, the remaining computational resources. If the initial solution corresponds to a local optimum, the function returns NULL in the \code{'solution'} field.
 #' @details In case all the solutions are valid, set the \code{non.valid} parameter to \code{'ignore'} for efficiency. The \code{'neighborhood'} object can be of any type, as long as it has defined
 #' the function \code{'reset.neighborhood'},  \code{'has.more.neighbors'} and  \code{'next.neighbor'}
 #' @seealso  \code{\link{greedy.selector}}, \code{\link{basic.local.search}}, \code{\link{multistart.local.search}},  \code{\link{iterated.local.search}}
@@ -86,7 +87,7 @@ greedy.selector<-function (neighborhood, evaluate , initial.solution, initial.ev
 
 first.improvement.selector<-function (neighborhood, evaluate , initial.solution, initial.evaluation ,
                                       non.valid='ignore', valid=function(solution){TRUE} ,
-                                      correct=function(solution){solution}, resources = cresource()){
+                                      correct=function(solution){solution}, resources = cresource() , ...){
   
   best.sol<-initial.solution
   best.eval<-initial.evaluation
@@ -114,8 +115,7 @@ first.improvement.selector<-function (neighborhood, evaluate , initial.solution,
       best.eval<-new.eval
       improved<-TRUE
     }
-    resources<-add.consumed(resources,
-                            t = as.numeric(Sys.time()-t0), ev = 1)
+    add.consumed(resources , t = as.numeric(Sys.time()-t0), ev = 1)
   }
   ## If no improvement, return null. Otherwise, return the best solution and its evaluation
   

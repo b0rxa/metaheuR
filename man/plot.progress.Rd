@@ -4,12 +4,15 @@
 \alias{plot.progress}
 \title{Function to plot the evolution of the evaluation function during the search}
 \usage{
-plot.progress(result, vs = "evaluations", ...)
+plot.progress(result, x = "evaluations", y = "current", type = "line",
+  ...)
 }
 \arguments{
 \item{result}{Object of class \code{\link{MHResult}} whose log will be visualized}
 
-\item{vs}{Parameter indicating the value for the X axis. Valid options are 'time', 'evaluations' and 'iterations'}
+\item{x}{Parameter indicating the value for the X axis. Valid options are 'time', 'evaluations' and 'iterations'}
+
+\item{y}{Parameter indicating the value for the Y axis. Valid options are 'current' and 'best'}
 
 \item{...}{Additional parameters for the function \code{\link{geom_line}} used to draw the line}
 }

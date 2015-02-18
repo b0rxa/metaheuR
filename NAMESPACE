@@ -51,6 +51,8 @@ export(
   boltzmann.accept,
   multistart.local.search,
   iterated.local.search,
+  simulated.annealing,
+  linear.cooling,
   tsp.greedy,
   greedy.selector,
   first.improvement.selector,

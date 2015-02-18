@@ -43,9 +43,8 @@ threshold.accept <- function (delta, th = 0 , ...){
 
 boltzmann.accept <- function (delta, temperature = 1 , ...){
   if (temperature <= 0) stop("The temperature has to be strictly greter than 0")
-  if (delta<0){
-    accpet <- TRUE
-  }else{
+  accept <- TRUE
+  if (delta>0){
     accept <- runif(1) < exp(-1*delta/temperature)
   }
   accept

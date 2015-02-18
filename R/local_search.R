@@ -11,26 +11,28 @@
 #' @param valid A function that, given a solution, determines whether it is valid or not
 #' @param correct A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option
 #' @param resources Object of class \code{\link{CResource}} representing the available computational resources for the search
+#' @param ... Special argument to pass additional parameters to the functions used in the search
 #' @return The function returns an object of class \code{\link{MHResult}} with all the information about the search
 
 basic.local.search<-function (evaluate, initial.solution, neighborhood, selector, do.log = TRUE , verbose = TRUE ,
                               non.valid='ignore', valid=function(solution){TRUE}, 
-                              correct=function(solution){solution}, resources = cresource()){
+                              correct=function(solution){solution}, resources = cresource() , ...){
   if (!valid(initial.solution)) stop ("A valid solution has to be provided as the initial solution")
   ## Evaluate the initial solution and initialize the counters
   t0 <- Sys.time()
   current.solution <- initial.solution
   current.evaluation <- evaluate(current.solution)
-  resources<-add.consumed(resources,
-                         t = as.numeric(Sys.time() - t0) , ev = 1)
+  add.consumed(resources , t = as.numeric(Sys.time() - t0) , ev = 1)
   stop <- is.finished(resources)
   iteration <- 0
   log <- NULL
   if (do.log){
     log <- data.frame(Iterations = consumed.iterations(resources) ,
-                    Evaluations = consumed.evaluations(resources) ,
-                    Time = consumed.time (resources) , 
-                    Solution = current.evaluation)
+                      Evaluations = consumed.evaluations(resources) ,
+                      Time = consumed.time (resources) , 
+                      Current_sol = current.evaluation ,
+                      Current_sd = NA ,
+                      Best_sol = current.evaluation)
   }
   ## Main loop of the search, get each neighbor and evaluate it
   while(!stop){
@@ -58,7 +60,9 @@ basic.local.search<-function (evaluate, initial.solution, neighborhood, selector
       log <- rbind(log , data.frame(Iterations = consumed.iterations(resources) ,
                                     Evaluations = consumed.evaluations(resources) ,
                                     Time = consumed.time (resources) , 
-                                    Solution = current.evaluation))
+                                    Current_sol = current.evaluation , 
+                                    Current_sd = NA , 
+                                    Best_sol = current.evaluation))
     }
   }
   
@@ -89,12 +93,13 @@ basic.local.search<-function (evaluate, initial.solution, neighborhood, selector
 #' @param valid A function that, given a solution, determines whether it is valid or not
 #' @param correct A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option
 #' @param resources Object of class \code{\link{CResource}} representing the available computational resources for the search
+#' @param ... Special argument to pass additional parameters to the functions used in the search
 #' @return The function returns an object of class \code{\link{MHResult}} with all the information about the search
 #' @details If the function provided in the \code{generate.solution} parameter generates solutions completely at random, then the function performs a random multistart search; if the funciton generates random greedy solutions, then the function performs a GRASP-like search
 
 multistart.local.search<-function (evaluate , generate.solution , neighborhood, selector , num.restarts = NULL ,  
                                    do.log = TRUE , verbose = TRUE , non.valid='ignore' , 
-                                   valid=function(solution){TRUE} , correct=function(solution){solution}, resources = cresource()){
+                                   valid=function(solution){TRUE} , correct=function(solution){solution}, resources = cresource() , ...){
   ## Perform the initial local search
   initial.solution <- generate.solution() 
   search.result <- basic.local.search(evaluate = evaluate , initial.solution = initial.solution , 
@@ -163,7 +168,7 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
 #' @param valid A function that, given a solution, determines whether it is valid or not
 #' @param correct A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option
 #' @param resources Object of class \code{\link{CResource}} representing the available computational resources for the search
-#' @param ... Additional parameters to the functions passed as argument
+#' @param ... Special argument to pass additional parameters to the functions used in the search
 #' @return The function returns an object of class \code{\link{MHResult}} with all the information about the search
 #' @details If the function provided in the \code{generate.solution} parameter generates solutions completely at random, then the function performs a random multistart search; if the funciton generates random greedy solutions, then the function performs a GRASP-like search
 

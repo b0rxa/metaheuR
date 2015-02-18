@@ -37,7 +37,7 @@ iterated.local.search(evaluate, initial.solution, neighborhood, selector,
 
 \item{resources}{Object of class \code{\link{CResource}} representing the available computational resources for the search}
 
-\item{...}{Additional parameters to the functions passed as argument}
+\item{...}{Special argument to pass additional parameters to the functions used in the search}
 }
 \value{
 The function returns an object of class \code{\link{MHResult}} with all the information about the search
