@@ -6,6 +6,7 @@ exportClasses(
   SwapNeighborhood,
   FlipNeighborhood,
   ExchangeNeighborhood,
+  InsertNeighborhood,
   MHResult
 )
 
@@ -53,5 +54,6 @@ export(
   first.improvement.selector,
   mhresult,
   flipNeighborhood,
-  exchangeNeighborhood
+  exchangeNeighborhood,
+  insertNeighborhood
 )

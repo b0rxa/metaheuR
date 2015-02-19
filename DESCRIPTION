@@ -19,6 +19,7 @@ Collate: Neighborhood.R
   FlipNeighborhood.R
   SwapNeighborhood.R
   ExchangeNeighborhood.R
+  InsertNeighborhood.R
   HammingNeighborhood.R
   neighborSelectors.R
   local_search.R
