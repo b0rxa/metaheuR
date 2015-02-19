@@ -138,7 +138,7 @@ setMethod(
         newpermu<-c(1:(i2-1),i1)
       }
       if (i1==n){
-        newpermu<-c(newpermu,i2:n)
+        newpermu<-c(newpermu,i2:(n-1))
       }else{
         newpermu<-c(newpermu,c(i2:(i1-1),(i1+1):n))
       }

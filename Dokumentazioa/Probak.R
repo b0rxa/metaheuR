@@ -46,13 +46,13 @@ perturb.func.generator<-function(ratio){
 }
 
 ## ILS limited by the number of evaluations and time
-restarts <- NULL
+restarts <- 10
 resources <- cresource(evaluations = 10 * n^2 , time = 5)
-perturbation.ratio <- 0.25
+perturbation.ratio <- 0.1
 ## Example of execution with no feedback
-ils<-iterated.local.search(evaluate = tsp.rnd.50$evaluate , verbose = F , do.log = T , initial.solution = identity.permutation(n) , 
-                           perturb = perturb.func.generator(perturbation.ratio) , num.restarts = restarts , neighborhood = swp.ngh,
-                           selector = greedy.selector, resources = resources)
+ils<-iterated.local.search(evaluate = tsp.rnd.50$evaluate , verbose = T , do.log = T , initial.solution = identity.permutation(n) , 
+                           accept = boltzmann.accept , perturb = perturb.func.generator(perturbation.ratio) , num.restarts = restarts , 
+                           neighborhood = swp.ngh , selector = greedy.selector, resources = resources , th = 5 , temperature = 2)
 
 
 plot.progress(ils , col="blue" , size=1.1)

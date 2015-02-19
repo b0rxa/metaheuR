@@ -5,9 +5,10 @@
 \title{Iterated local search (ILS)}
 \usage{
 iterated.local.search(evaluate, initial.solution, neighborhood, selector,
-  perturb, num.restarts = NULL, do.log = TRUE, verbose = TRUE,
-  non.valid = "ignore", valid = function(solution) {     TRUE },
-  correct = function(solution) {     solution }, resources = cresource())
+  perturb, accept = threshold.accept, num.restarts = NULL, do.log = TRUE,
+  verbose = TRUE, non.valid = "ignore", valid = function(solution) {    
+  TRUE }, correct = function(solution) {     solution },
+  resources = cresource(), ...)
 }
 \arguments{
 \item{evaluate}{Function of a single parameter. Given a solution, the function returns its evaluation as a real number}
@@ -17,6 +18,10 @@ iterated.local.search(evaluate, initial.solution, neighborhood, selector,
 \item{neighborhood}{Object representing the type of neighborhood to be used}
 
 \item{selector}{A function used to select a solution from the neighborhood. For an example of the parameters required and the result it should produce, see \code{\link{greedy.selector}}}
+
+\item{perturb}{A perturbation function. This function has to contain at least one parameter, named \code{solution}, the solution to be perturbed}
+
+\item{accept}{A function to determine when a new local optimum is accepted. This function has to have, at least, one parameter named \code{delta}, corresponding to the difference between the evaluation of the new solution and the existing one.}
 
 \item{num.restarts}{Number of restarts to perform. If NULL, then restarts will be performed unitl the resources are finished}
 
@@ -31,6 +36,8 @@ iterated.local.search(evaluate, initial.solution, neighborhood, selector,
 \item{correct}{A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option}
 
 \item{resources}{Object of class \code{\link{CResource}} representing the available computational resources for the search}
+
+\item{...}{Special argument to pass additional parameters to the functions used in the search}
 }
 \value{
 The function returns an object of class \code{\link{MHResult}} with all the information about the search

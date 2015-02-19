@@ -1,3 +1,15 @@
+#' Constructive greedy algorithm for the TSP problem
+#' 
+#' This function implements a simple constructive greedy algorithm for the TSP problem.
+#' @param cmatrix Cost matrix associated to the TSP instance
+#' @return A permutation contining a solution for the problem
+#' @details The algorithm builds the solution iteratively, selecting, at each step, the closest city to the one added in the previous step.
+#' @examples
+#' n <- 10
+#' cost.matrix <- matrix(runif(n^2) , ncol = n)
+#' tsp.greedy (cost.matrix)
+
+
 tsp.greedy <- function (cmatrix){
   diag(cmatrix) <- NA
   ## Get the position with the minimum value

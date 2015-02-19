@@ -11,7 +11,7 @@ setClassUnion("DFORNull", c("data.frame", "NULL"))
 #' @slot optima List of optimal solutions
 #' @slot evaluation Evaluation of the best solution(s)
 #' @slot resources Object contining the information about the available and consumed computational resources
-#' @slot log A numeric matrix containing the evolution of the search. The matrix should have four columns, named as \code{Time}, \code{Evaluations}, \code{Iterations} and \code{Solution}
+#' @slot log A numeric matrix containing the evolution of the search. The matrix should have four columns, named as \code{Time}, \code{Evaluations}, \code{Iterations}, \code{Current_sol}, \code{Current_sd} and \code{Best_sol}
 setClass(
   Class = "MHResult", 
   representation = representation(description = "character",
@@ -26,7 +26,7 @@ setClass(
 setValidity(
   Class = "MHResult", 
   method = function(object){
-    if (!all(names(object@log) %in% c("Time","Evaluations","Iterations","Solution"))) stop ("The definition of the log data.frame is not correct. It has to have four columns named 'Time', 'Evaluations', 'Iterations' and 'Solution'")
+    if (!all(names(object@log) %in% c("Time" , "Evaluations" , "Iterations" , "Current_sol" , "Current_sd" , "Best_sol"))) stop ("The definition of the log data.frame is not correct. It has to have six columns named 'Time', 'Evaluations', 'Iterations', 'Current_sol', 'Current_sd' and 'Best_sol'")
     return (TRUE)
   }
 )
@@ -98,7 +98,6 @@ setMethod(
   }
 )
 
-
 #' @title Accession function for the \code{parameters} slot of the object
 #'
 #' @description Accession function for the \code{parameters} slot of the object
@@ -115,9 +114,6 @@ setMethod(
     result@parameters
   }
 )
-
-
-
 
 #' @title Accession function for the \code{optima} slot of the object
 #'
@@ -198,30 +194,46 @@ setMethod(
 #'
 #' @description This function produces an object of class \code{\link{ggplot}} with the evolution of the search
 #' @param result Object of class \code{\link{MHResult}} whose log will be visualized
-#' @param vs Parameter indicating the value for the X axis. Valid options are 'time', 'evaluations' and 'iterations'
+#' @param x Parameter indicating the value for the X axis. Valid options are 'time', 'evaluations' and 'iterations'
+#' @param y Parameter indicating the value for the Y axis. Valid options are 'current' and 'best'
 #' @param ... Additional parameters for the function \code{\link{geom_line}} used to draw the line
 #' @return An object of class \code{\link{ggplot}} 
 
-setGeneric(name = "plot.progress", def = function(result,vs='evaluations',...){standardGeneric("plot.progress")})
+setGeneric(name = "plot.progress" , def = function(result , x = 'evaluations' , y = 'current', type = 'line' , ...){standardGeneric("plot.progress")})
 
 setMethod(
   f="plot.progress", 
   signature = "MHResult", 
-  definition = function(result,vs='evaluations',...) {
+  definition = function(result , x = 'evaluations' , y = 'current' , type = 'line' , ...) {
     require("ggplot2")
-    aes <- switch(vs , 
+    aes <- switch(x , 
                   "evaluations" = {
-                    aes(x=Evaluations , y=Solution)  
+                    aes(x=Evaluations)  
                   }, 
                   "time" = {
-                    aes(x=Time , y=Solution)  
+                    aes(x=Time)  
                   }, 
                   "iterations" = {
-                    aes(x=Iterations , y=Solution)  
+                    aes(x=Iterations)  
                   },
                   stop("No-valid argument for the 'vs' parameter. Valid options are 'evaluations', 'time' and 'iterations'")
     )
-    ggplot(result@log , mapping = aes) + geom_line(...)
+    aes$y <- switch(y ,
+                    "current" = {
+                      aes(y=Current_sol)$y
+                    },
+                    "best" = {
+                      aes(y=Best_sol)$y
+                    },
+                    stop("Non-valid argument for the y parameter. Valid options are 'current' and 'best'"))
+    
+    g <- ggplot(result@log , mapping = aes)
+    switch(type,
+           'line' = g <- g + geom_line(...) ,
+           'point' = g <- g + geom_point(...) ,
+           stop ("Type not known. Try 'line' or 'point'")
+           )
+    return(g)
   }
 )
 

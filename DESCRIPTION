@@ -21,8 +21,11 @@ Collate: Neighborhood.R
   ExchangeNeighborhood.R
   InsertNeighborhood.R
   HammingNeighborhood.R
-  neighborSelectors.R
+  acceptance_functions.R
+  neighbor_selectors.R
   local_search.R
   constructive_algorithms.R
   metaheuR.R
+  cooling_schemes.R
+  ls_acceptance.R
   

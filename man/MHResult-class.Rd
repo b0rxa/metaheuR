@@ -22,6 +22,6 @@ An S4 class to represent the output of a search heuristic
 
 \item{\code{resources}}{Object contining the information about the available and consumed computational resources}
 
-\item{\code{log}}{A numeric matrix containing the evolution of the search. The matrix should have four columns, named as \code{Time}, \code{Evaluations}, \code{Iterations} and \code{Solution}}
+\item{\code{log}}{A numeric matrix containing the evolution of the search. The matrix should have four columns, named as \code{Time}, \code{Evaluations}, \code{Iterations}, \code{Current_sol}, \code{Current_sd} and \code{Best_sol}}
 }}
 

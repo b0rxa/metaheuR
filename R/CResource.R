@@ -44,7 +44,7 @@ setValidity(
 #' @param t Time to add
 #' @param ev Number of evaluations to add
 #' @param it Number of iterations to add
-#' @return A new object of class \code{\link{CResource}} with the updated consumed resources
+#' @return This method does not return any output. For efficiecy reasons the object passed is modified. This can lead to problems if not handled properly, so use with caution!
 
 setGeneric(name = "add.consumed", def = function(resource,t=0,ev=0,it=0){standardGeneric("add.consumed")})
 
@@ -54,15 +54,12 @@ setMethod(
   definition = function(resource,t=0,ev=0,it=0) {
     aux<-c(t,ev,it)
     if (length(aux)!=3 || !all(!is.na(aux)) || min(aux)<0) stop("Only positive values are accepted for all the parameters")
-    
-    tc <- resource@time_consumed + t
-    ec <- resource@evaluations_consumed + round(ev)
-    ic <- resource@iterations_consumed + round(it)
-    
-    new("CResource" , 
-        time_total = resource@time_total , time_consumed = tc ,
-        evaluations_total = resource@evaluations_total , evaluations_consumed = ec , 
-        iterations_total = resource@iterations_total , iterations_consumed = ic)
+    ## Replace the object passed as parameter
+    objectGlobalName <- deparse(substitute(resource))
+    resource@time_consumed <- resource@time_consumed + t
+    resource@evaluations_consumed <- resource@evaluations_consumed + round(ev)
+    resource@iterations_consumed <- resource@iterations_consumed + round(it)
+    assign(objectGlobalName,resource,envir=parent.frame())  
   }
 )
 
