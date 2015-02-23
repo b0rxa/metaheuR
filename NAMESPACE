@@ -6,6 +6,7 @@ exportClasses(
   SwapNeighborhood,
   FlipNeighborhood,
   ExchangeNeighborhood,
+  InsertNeighborhood,
   MHResult
 )
 
@@ -61,5 +62,6 @@ export(
   flipNeighborhood,
   exchangeNeighborhood,
   hammingNeighborhood,
-  tsplib.parser
+  tsplib.parser,
+  insertNeighborhood
 )
