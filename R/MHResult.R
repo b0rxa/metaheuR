@@ -67,7 +67,7 @@ setMethod(
 #' @title Accession function for the \code{description} slot of the object
 #'
 #' @description Accession function for the \code{description} slot of the object
-#' @param result Object of class \code{\link{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{description} slot
 
@@ -84,7 +84,7 @@ setMethod(
 #' @title Accession function for the \code{algorithm} slot of the object
 #'
 #' @description Accession function for the \code{algorithm} slot of the object
-#' @param result Object of class \code{\link{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{algorithm} slot
 
@@ -101,7 +101,7 @@ setMethod(
 #' @title Accession function for the \code{parameters} slot of the object
 #'
 #' @description Accession function for the \code{parameters} slot of the object
-#' @param result Object of class \code{\link{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{parameters} slot
 
@@ -118,7 +118,7 @@ setMethod(
 #' @title Accession function for the \code{optima} slot of the object
 #'
 #' @description Accession function for the \code{optima} slot of the object
-#' @param result Object of class \code{\link{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{optima} slot
 
@@ -138,7 +138,7 @@ setMethod(
 #' @title Accession function for the \code{evaluation} slot of the object
 #'
 #' @description Accession function for the \code{evaluation} slot of the object
-#' @param result Object of class \code{\link{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{evaluation} slot
 
@@ -157,7 +157,7 @@ setMethod(
 #' @title Accession function for the \code{resources} slot of the object
 #'
 #' @description Accession function for the \code{resources} slot of the object
-#' @param result Object of class \code{\link{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{resources} slot
 
@@ -176,7 +176,7 @@ setMethod(
 #' @title Accession function for the \code{progress} slot of the object
 #'
 #' @description Accession function for the \code{progress} slot of the object
-#' @param result Object of class \code{\link{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{progress} slot
 
@@ -193,7 +193,7 @@ setMethod(
 #' @title Function to plot the evolution of the evaluation function during the search
 #'
 #' @description This function produces an object of class \code{\link{ggplot}} with the evolution of the search
-#' @param result Object of class \code{\link{MHResult}} whose log will be visualized
+#' @param result Object of class \code{\linkS4class{MHResult}} whose log will be visualized or a named list of objects
 #' @param x Parameter indicating the value for the X axis. Valid options are 'time', 'evaluations' and 'iterations'
 #' @param y Parameter indicating the value for the Y axis. Valid options are 'current' and 'best'
 #' @param ... Additional parameters for the function \code{\link{geom_line}} used to draw the line
@@ -232,7 +232,46 @@ setMethod(
            'line' = g <- g + geom_line(...) ,
            'point' = g <- g + geom_point(...) ,
            stop ("Type not known. Try 'line' or 'point'")
-           )
+    )
+    return(g)
+  }
+)
+
+
+setMethod(
+  f="plot.progress", 
+  signature = "list", 
+  definition = function(result , x = 'evaluations' , y = 'current' , type = 'line' , ...) {
+    require("ggplot2")
+    aux <- lapply (1:length(result) , FUN = function(i) {cbind(progress(result[[i]]) , Group = names(result)[i])})
+    df <- do.call(rbind , aux)
+    aes <- switch(x , 
+                  "evaluations" = {
+                    aes(x=Evaluations , color=Group)  
+                  }, 
+                  "time" = {
+                    aes(x=Time , color=Group)  
+                  }, 
+                  "iterations" = {
+                    aes(x=Iterations , color=Group)  
+                  },
+                  stop("No-valid argument for the 'vs' parameter. Valid options are 'evaluations', 'time' and 'iterations'")
+    )
+    aes$y <- switch(y ,
+                    "current" = {
+                      aes(y=Current_sol)$y
+                    },
+                    "best" = {
+                      aes(y=Best_sol)$y
+                    },
+                    stop("Non-valid argument for the y parameter. Valid options are 'current' and 'best'"))
+    
+    g <- ggplot(df , mapping = aes)
+    switch(type,
+           'line' = g <- g + geom_line(...) ,
+           'point' = g <- g + geom_point(...) ,
+           stop ("Type not known. Try 'line' or 'point'")
+    )
     return(g)
   }
 )

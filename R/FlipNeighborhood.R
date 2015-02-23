@@ -1,4 +1,12 @@
 
+#' An S4 class to represent flip neighborhoods for binary vectors
+#'
+#' @slot base A logical vector representing the base solution whose neighborhood we will explore
+#' @slot position.list \code{\linkS4class{Permutation}} indicating the oreder in which the exploration is carried out
+#' @slot random A logical value indicating whether the exploration is at random or not
+#' @slot id Numeric value indicating the current position (in the \code{position.list}) that will be used to generate a new neighbor
+#' @details The new neighbors are generated modifying each position of the vector individually, replacing it with the negation of the current value. The modifications are carried out using the \code{pair.list}, which is iterated using the order defined by \code{index.list}
+
 setClass(
   Class = "FlipNeighborhood", 
   representation = representation(base = "logical" , 
@@ -68,6 +76,17 @@ setMethod(
 
 
 # CONSTRUCTOR -------------------------------------------------------------
+
+#' Bais consturctor of flip neighborhoods
+#' 
+#' This function creates an object of class \code{\linkS4class{FlipNeighborhood}}
+#' 
+#' @family neighborhoods
+#' @param base Base solution for the neighborhood. It has to be a logical vector
+#' @param random A logical value indicating whether the exploration should be done at random
+#' @return An object of class \code{\linkS4class{FlipNeighobrhood}}
+#' @seealso \code{\link{hasMoreNeighbors}} \code{\link{resetNeighborhood}} \code{\link{nextNeighbor}}
+
 
 flipNeighborhood<-function(base,random = FALSE){
   n <- length(base)

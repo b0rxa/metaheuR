@@ -7,7 +7,7 @@
 add.consumed(resource, t = 0, ev = 0, it = 0)
 }
 \arguments{
-\item{resource}{Object of class \code{\link{CResource}} to which the consumption will be added}
+\item{resource}{Object of class \code{\linkS4class{CResource}} to which the consumption will be added}
 
 \item{t}{Time to add}
 

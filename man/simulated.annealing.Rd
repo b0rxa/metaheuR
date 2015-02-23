@@ -38,12 +38,12 @@ simulated.annealing(evaluate, initial.solution, neighborhood, cooling.scheme,
 
 \item{correct}{A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option}
 
-\item{resources}{Object of class \code{\link{CResource}} representing the available computational resources for the search. Bear in mind that there is no other stop criterion beyond a limited amount of resources. Therefore, you should set, at least, a limit to the total time, evaluations or iterations}
+\item{resources}{Object of class \code{\linkS4class{CResource}} representing the available computational resources for the search. Bear in mind that there is no other stop criterion beyond a limited amount of resources. Therefore, you should set, at least, a limit to the total time, evaluations or iterations}
 
 \item{...}{Special argument to pass additional parameters to the functions used in the search}
 }
 \value{
-The function returns an object of class \code{\link{MHResult}} with all the information about the search
+The function returns an object of class \code{\linkS4class{MHResult}} with all the information about the search
 }
 \description{
 This function performs a basic simulated annealing search

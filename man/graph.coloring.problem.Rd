@@ -19,7 +19,7 @@ This function generates an evaluation, validity and correction functions associa
 library("igraph")
 n <- 10
 rnd.graph <- random.graph.game(n , p.or.m = 0.5)
-rnd.sol <- factor (paste("c",sample(1:5 , size = n , replace = T) , sep="") ,
+rnd.sol <- factor (paste("c",sample(1:5 , size = n , replace = TRUE) , sep="") ,
                    levels = paste("c" , 1:n , sep=""))
 gcol.problem <- graph.coloring.problem (rnd.graph)
 gcol.problem$is.valid(rnd.sol)

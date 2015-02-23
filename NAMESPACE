@@ -53,10 +53,13 @@ export(
   iterated.local.search,
   simulated.annealing,
   linear.cooling,
+  geometric.cooling,
   tsp.greedy,
   greedy.selector,
   first.improvement.selector,
   mhresult,
   flipNeighborhood,
-  exchangeNeighborhood
+  exchangeNeighborhood,
+  hammingNeighborhood,
+  tsplib.parser
 )

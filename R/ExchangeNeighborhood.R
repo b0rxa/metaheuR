@@ -1,7 +1,12 @@
 
-#' An S4 class to represent exchange neighborhood for permutations
+#' An S4 class to represent exchange (2-opt) neighborhoods
 #'
-#' @slot time_total A positive real number representing the total time available. It can be null, indicating that there is no time limit
+#' @slot base A factor vector which will be the solution whose neighborhood we will explore
+#' @slot position.list A mtrix with pairs of positions in the permutation 
+#' @slot random A logical value indicating whether the exploration is at random or not
+#' @slot id Numeric value indicating the current position (in the \code{position.list}) that will be used to generate a new neighbor
+#' @details The new neighbors are generated swapping positions indicated in \code{position.list}.
+
 setClass(
   Class = "ExchangeNeighborhood", 
   representation = representation(base = "Permutation" , 
@@ -72,6 +77,30 @@ setMethod(
 
 
 # CONSTRUCTOR -------------------------------------------------------------
+
+#' Basic consturctor of exchange (2-opt) neighborhoods
+#' 
+#' This function creates an object of class \code{\linkS4class{ExchangeNeighborhood}}
+#' 
+#' @family neighborhoods
+#' @param base Base solution for the neighborhood. It has to be an object of class \code{\linkS4class{Permutation}}
+#' @param random A logical value indicating whether the exploration should be done at random
+#' @return An object of class \code{\linkS4class{ExchangeNeighobrhood}}
+#' @seealso \code{\link{hasMoreNeighbors}} \code{\link{resetNeighborhood}} \code{\link{nextNeighbor}} \code{\link{swapNeighborhood}}
+
+hammingNeighborhood<-function(base,random = FALSE){
+  n <- length(base)
+  l <- levels(base)
+  aux <- lapply (1:n, FUN=function(i){data.frame(Position=i,Value=subset(l,l!=l[i]))})
+  pair.list <- do.call(rbind,aux)
+  if (random){
+    index.list <- random.permutation(dim(pair.list)[1])
+  }else{
+    index.list <- identity.permutation(dim(pair.list)[1])
+  }
+  new("HammingNeighborhood",base=base, pair.list = pair.list, index.list = index.list , random = random, id.pos = 1)
+}
+
 
 exchangeNeighborhood<-function(base,random = FALSE){
   n <- length(base)

@@ -1,24 +1,34 @@
 
-#' An S4 class to represent swap neighborhood for permutations
+#' An S4 class to represent Hamming neighborhoods
 #'
-#' @slot time_total A positive real number representing the total time available. It can be null, indicating that there is no time limit
+#' @slot base A factor vector which will be the solution whose neighborhood we will explore
+#' @slot pair.list A data.frame with pairs position, new value 
+#' @slot index.list A vector indicating the order in which pair.list is used to generate new neighbors
+#' @slot random A logical value indicating whether the exploration is at random or not
+#' @slot id.pos Numeric value indicating the current position (in the \code{position.list}) that will be used to generate a new neighbor
+#' @details The new neighbors are generated modifying each position of the vector individually, replacing it with each of the possible values (levels of the factor). The modifications are carried out using the \code{pair.list}, which is iterated using the order defined by \code{index.list}
+
 setClass(
   Class = "HammingNeighborhood", 
   representation = representation(base = "factor" , 
-                                  position.list = "Permutation" ,
-                                  level.list = "Permutation" ,
+                                  pair.list = "data.frame" ,
+                                  index.list = "Permutation" , 
                                   random = "logical" ,
-                                  id.pos = "numeric" ,
-                                  id.level = "numeric")
-)
+                                  id.pos = "numeric" ))
 
 setValidity(
   Class = "HammingNeighborhood", 
   method = function(object){
-    if (length(object@base) != length(object@position.list)) stop ("The positions list and the ase vector should have the length")
-    if (length(object@level.list) - length(levels(object@base)) != -1) stop ("The levels list should have a size equal to the number of levels - 1")
+    if (!all(names(object@pair.list) %in% c("Position","Value"))) stop ("The list of positions has to be a data frame with two columns named 'Position' and 'Value'")
+    if (!is.numeric(object@pair.list$Position)) stop ("The column 'Position' in the data frame pair.list has to be numeric")
+    n <- length(object@base)
+    l <- levels(object@base)
+    aux <- lapply (1:n, FUN=function(i){data.frame(Position=i,Value=subset(l,l!=l[i]))})
+    pair.list <- do.call(rbind,aux)
+    index.list <- 1:dim(pair.list)[1]
+    if(!all(sort(object@pair.list$Position)==pair.list$Position)) stop ("The provided list of positions is not valid")
+    if(!all(sort(object@pair.list$Value)==sort(pair.list$Value))) stop ("The provided list of positions is not valid")
     if (object@id.pos!=1) stop ("The first id to be used has to be 1")
-    if (object@id.level!=1) stop ("The first id to be used has to be 1")
     return (TRUE)
   }
 )
@@ -33,18 +43,13 @@ setMethod(
     if (has.more.neighbors(neighborhood)){
       ## We do not use directly the id, but the position in the postion list!!
       
-      levels <- levels(neighborhood@base)
+      pos <- neighborhood@index.list[neighborhood@id.pos]
       nxt <- neighborhood@base
-      nxt[neighborhood@position.list[neighborhood@id.pos]] <- 
-        levels[neighborhood@levels.list[neighborhood@id.levels]]
-      neighborhood@id.levels <- neighborhood@id.levels + 1
-      ## If we have explored all the values associated to the current position, now we reset the list of levels 
-      
-      
+      nxt[neighborhood@pair.list[pos,1]] <- neighborhood@pair.list[pos,2]
       ## Update the object
       ## obtain the global name of the variable to modify
       objectGlobalName <- deparse(substitute(neighborhood))
-      neighborhood@id <- neighborhood@id + 1
+      neighborhood@id.pos <- neighborhood@id.pos + 1
       ## assign the local variable to the global variable 
       assign(objectGlobalName,neighborhood,envir=parent.frame())  
     }else{
@@ -58,7 +63,7 @@ setMethod(
   f="has.more.neighbors", 
   signature = "HammingNeighborhood", 
   definition = function(neighborhood) {
-    neighborhood@id <= length(neighborhood@position.list)
+    neighborhood@id.pos <= length(neighborhood@index.list)
   })
 
 
@@ -67,12 +72,22 @@ setMethod(
   signature = "HammingNeighborhood", 
   definition = function(neighborhood , solution) {
     if(length(solution)!=length(neighborhood@base)) stop ("The new solution is not of the correct size")
+    n <- length(solution)
+    l <- levels(solution)
+    aux <- lapply (1:n, FUN=function(i){data.frame(Position=i,Value=subset(l,l!=l[i]))})
+    pair.list <- do.call(rbind,aux)
+    if (neighborhood@random){
+      index.list <- random.permutation(dim(pair.list)[1])
+    }else{
+      index.list <- identity.permutation(dim(pair.list)[1])
+    }
+    
     ## obtain the global name of the variable to modify
     objectGlobalName <- deparse(substitute(neighborhood))
-    neighborhood@id <- 1
     neighborhood@base <- solution
-    ## If the search is random, shuffle the position list
-    if (neighborhood@random) neighborhood@position.list <- random.permutation(length(neighborhood@position.list))
+    neighborhood@pair.list <- pair.list
+    neighborhood@index.list <- index.list
+    neighborhood@id.pos <- 1
     ## assign the local variable to the global variable
     assign(objectGlobalName,neighborhood,envir=parent.frame())  
   })
@@ -81,12 +96,25 @@ setMethod(
 
 # CONSTRUCTOR -------------------------------------------------------------
 
-HammingNeighborhood<-function(base,random = FALSE){
+#' Basic consturctor of Hamming neighborhoods
+#' 
+#' This function creates an object of class \code{\linkS4class{HammingNeighborhood}}
+#' 
+#' @family neighborhoods
+#' @param base Base solution for the neighborhood. It has to be a vector of factors (all with the same levels)
+#' @param random A logical value indicating whether the exploration should be done at random
+#' @return An object of class \code{\linkS4class{HammingNeighobrhood}}
+#' @seealso \code{\link{hasMoreNeighbors}} \code{\link{resetNeighborhood}} \code{\link{nextNeighbor}}
+
+hammingNeighborhood<-function(base,random = FALSE){
   n <- length(base)
+  l <- levels(base)
+  aux <- lapply (1:n, FUN=function(i){data.frame(Position=i,Value=subset(l,l!=l[i]))})
+  pair.list <- do.call(rbind,aux)
   if (random){
-    positions <- random.permutation(n-1)
+    index.list <- random.permutation(dim(pair.list)[1])
   }else{
-    positions <- identity.permutation(n-1)
+    index.list <- identity.permutation(dim(pair.list)[1])
   }
-  new("HammingNeighborhood",base=base, position.list=positions, random=random, id=1)
+  new("HammingNeighborhood",base=base, pair.list = pair.list, index.list = index.list , random = random, id.pos = 1)
 }

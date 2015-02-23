@@ -28,12 +28,12 @@ basic.local.search(evaluate, initial.solution, neighborhood, selector,
 
 \item{correct}{A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option}
 
-\item{resources}{Object of class \code{\link{CResource}} representing the available computational resources for the search}
+\item{resources}{Object of class \code{\linkS4class{CResource}} representing the available computational resources for the search}
 
 \item{...}{Special argument to pass additional parameters to the functions used in the search}
 }
 \value{
-The function returns an object of class \code{\link{MHResult}} with all the information about the search
+The function returns an object of class \code{\linkS4class{MHResult}} with all the information about the search
 }
 \description{
 \code{basic.local.search} performs a simple local search and returns the best solution

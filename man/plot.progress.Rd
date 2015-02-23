@@ -8,7 +8,7 @@ plot.progress(result, x = "evaluations", y = "current", type = "line",
   ...)
 }
 \arguments{
-\item{result}{Object of class \code{\link{MHResult}} whose log will be visualized}
+\item{result}{Object of class \code{\linkS4class{MHResult}} whose log will be visualized or a named list of objects}
 
 \item{x}{Parameter indicating the value for the X axis. Valid options are 'time', 'evaluations' and 'iterations'}
 

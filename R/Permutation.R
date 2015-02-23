@@ -60,10 +60,10 @@ if (!isGeneric("swap")) setGeneric(name = "swap", def = function(permutation, i1
 ##' Function to swap positions in a permutation
 ##' 
 ##' @description This function swaps two positions in a permutation
-##' @param permutation Object of class \code{\link{Permutation}} whose positions will be swapped
+##' @param permutation Object of class \code{\linkS4class{Permutation}} whose positions will be swapped
 ##' @param i1 First position to be permuted
 ##' @param i2 Second position to be permuted
-##' @return A new object of class \code{\link{Permutation}} equal to \code{permutation} but with positions \code{i1} and \code{i2} swapped
+##' @return A new object of class \code{\linkS4class{Permutation}} equal to \code{permutation} but with positions \code{i1} and \code{i2} swapped
 
 setMethod(
   f="swap", 
@@ -87,9 +87,9 @@ if (!isGeneric("shuffle")) setGeneric(name = "shuffle", def = function(permutati
 ##' Function to randomize permutations
 ##' 
 ##' @description This function reorders the elements of a permutation randomly
-##' @param permutation Object of class \code{\link{Permutation}} to be randomized
+##' @param permutation Object of class \code{\linkS4class{Permutation}} to be randomized
 ##' @param ratio Ratio of positions to be randomly reordered. Note that this value can be grater than 1 if we want to perform more random movements than positions in the permutation
-##' @return A new object of class \code{\link{Permutation}} with randomly reordered positions
+##' @return A new object of class \code{\linkS4class{Permutation}} with randomly reordered positions
 
 setMethod(
   f="shuffle", 
@@ -107,10 +107,10 @@ if (!isGeneric("insert")) setGeneric(name = "insert", def = function(permutation
 ##' Function to insert one element of a permutation into another position
 ##' 
 ##' @description This function performs the input operation in permutations
-##' @param permutation Object of class \code{\link{Permutation}} where the insert will be carried out
+##' @param permutation Object of class \code{\linkS4class{Permutation}} where the insert will be carried out
 ##' @param i1 Element to be inserted
 ##' @param i2 Position where the element will be inserted
-##' @return A new object of class \code{\link{Permutation}} equal to \code{permutation} but with \code{i1}-th element inserted into \code{i2}
+##' @return A new object of class \code{\linkS4class{Permutation}} equal to \code{permutation} but with \code{i1}-th element inserted into \code{i2}
 
 setMethod(
   f="insert", 

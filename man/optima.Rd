@@ -7,7 +7,7 @@
 optima(result)
 }
 \arguments{
-\item{result}{Object of class \code{\link{MHResult}} whose information we are quering}
+\item{result}{Object of class \code{\linkS4class{MHResult}} whose information we are quering}
 }
 \value{
 Content of the \code{optima} slot

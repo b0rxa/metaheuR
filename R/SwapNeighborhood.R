@@ -1,7 +1,11 @@
 
 #' An S4 class to represent swap neighborhood for permutations
 #'
-#' @slot time_total A positive real number representing the total time available. It can be null, indicating that there is no time limit
+#' @slot base An object of class \code{\linkS4class{Permutation}}, which will be the solution whose neighborhood we will explore
+#' @slot position.list A permutation indicating the order in which the exploration will be carried out. Each time a neighbohr is created, this list is used to get the first position of the swap movement (the other position will be the one inmediately after that in the base permutation)
+#' @slot random A logical value indicating whether the exploration is at random or not
+#' @slot id Numeric value indicating the current position (in the \code{position.list}) that will be used to generate a new neighbor
+
 setClass(
   Class = "SwapNeighborhood", 
   representation = representation(base = "Permutation" , 
@@ -69,6 +73,16 @@ setMethod(
 
 
 # CONSTRUCTOR -------------------------------------------------------------
+
+#' Bais consturctor of swap neighborhoods
+#' 
+#' This function creates an object of class \code{\linkS4class{SwapNeighborhood}}
+#' 
+#' @family neighborhoods
+#' @param base Base solution for the neighborhood. It has to be an object of class \code{\linkS4class{Permutation}}
+#' @param random A logical value indicating whether the exploration should be done at random
+#' @return An object of class \code{\linkS4class{SwapNeighborhood}}
+#' @seealso \code{\link{hasMoreNeighbors}} \code{\link{resetNeighborhood}} \code{\link{nextNeighbor}}
 
 swapNeighborhood<-function(base,random = FALSE){
   n <- length(base)

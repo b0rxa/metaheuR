@@ -10,9 +10,9 @@
 #' @param non.valid Action to be performed when a non valid solution is considered. The options are \code{'ignore'}, meaning that the solution is considered anyway, \code{'discard'}, meaning that the solution is not considered and \code{'correct'}, meaning that the solution has to be corrected. This parameter has to be set only when there can be non valid solutions
 #' @param valid A function that, given a solution, determines whether it is valid or not
 #' @param correct A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option
-#' @param resources Object of class \code{\link{CResource}} representing the available computational resources for the search
+#' @param resources Object of class \code{\linkS4class{CResource}} representing the available computational resources for the search
 #' @param ... Special argument to pass additional parameters to the functions used in the search
-#' @return The function returns an object of class \code{\link{MHResult}} with all the information about the search
+#' @return The function returns an object of class \code{\linkS4class{MHResult}} with all the information about the search
 
 basic.local.search<-function (evaluate, initial.solution, neighborhood, selector, do.log = TRUE , verbose = TRUE ,
                               non.valid='ignore', valid=function(solution){TRUE}, 
@@ -51,6 +51,7 @@ basic.local.search<-function (evaluate, initial.solution, neighborhood, selector
       current.evaluation <- selection$evaluation
       resources <- add.consumed(resources , it = 1)
       stop <- is.finished(resources)
+      reset.neighborhood(neighborhood = neighborhood , solution = current.solution)
     }else{
       stop <- TRUE
     }

@@ -18,7 +18,11 @@ This is one of the functions that has to be implemented by any object to be used
 \seealso{
 \code{\link{nextNeighbor}} \code{\link{resetNeighborhood}}
 
-Other neighborhoods: \code{\link{next.neighbor}};
-  \code{\link{reset.neighborhood}}
+Other neighborhoods: \code{\link{flipNeighborhood}};
+  \code{\link{hammingNeighborhood}},
+  \code{\link{hammingNeighborhood}};
+  \code{\link{next.neighbor}};
+  \code{\link{reset.neighborhood}};
+  \code{\link{swapNeighborhood}}
 }
 

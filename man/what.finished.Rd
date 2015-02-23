@@ -7,7 +7,7 @@
 what.finished(resource)
 }
 \arguments{
-\item{resource}{Object of class \code{\link{CResource}} to which the values will be substracted}
+\item{resource}{Object of class \code{\linkS4class{CResource}} to which the values will be substracted}
 }
 \value{
 A vector of characters that may include \code{'time'}, \code{'evaluations'} and/or \code{'iterations'}. In case it is empty, there are still resources available

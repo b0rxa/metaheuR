@@ -8,14 +8,14 @@
 \S4method{swap}{Permutation}(permutation, i1, i2)
 }
 \arguments{
-\item{permutation}{Object of class \code{\link{Permutation}} whose positions will be swapped}
+\item{permutation}{Object of class \code{\linkS4class{Permutation}} whose positions will be swapped}
 
 \item{i1}{First position to be permuted}
 
 \item{i2}{Second position to be permuted}
 }
 \value{
-A new object of class \code{\link{Permutation}} equal to \code{permutation} but with positions \code{i1} and \code{i2} swapped
+A new object of class \code{\linkS4class{Permutation}} equal to \code{permutation} but with positions \code{i1} and \code{i2} swapped
 }
 \description{
 This function swaps two positions in a permutation

@@ -8,12 +8,12 @@
 \S4method{shuffle}{Permutation}(permutation, ratio = 1)
 }
 \arguments{
-\item{permutation}{Object of class \code{\link{Permutation}} to be randomized}
+\item{permutation}{Object of class \code{\linkS4class{Permutation}} to be randomized}
 
 \item{ratio}{Ratio of positions to be randomly reordered. Note that this value can be grater than 1 if we want to perform more random movements than positions in the permutation}
 }
 \value{
-A new object of class \code{\link{Permutation}} with randomly reordered positions
+A new object of class \code{\linkS4class{Permutation}} with randomly reordered positions
 }
 \description{
 This function reorders the elements of a permutation randomly

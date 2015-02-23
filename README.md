@@ -10,3 +10,5 @@ if (!require("devtools"))
 
 devtools::install_github("b0rxa/metaheuR")
 ```
+
+The package is at a very early stage of development so no stable version is available. Many basic aspects of the package may change, so use it with caution.
