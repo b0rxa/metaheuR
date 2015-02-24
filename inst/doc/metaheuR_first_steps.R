@@ -1,7 +1,5 @@
-## ----,eval=FALSE,echo=FALSE----------------------------------------------
-#  devtools::build_vignettes()
-
 ## ----,echo=FALSE---------------------------------------------------------
+library("knitr")
 knit_theme$set("earendel")
 
 ## ----,message=FALSE------------------------------------------------------

@@ -2,19 +2,17 @@
 title: "metaheuR: First steps"
 author: "Borja Calvo and Usue Mori"
 date: "`r Sys.Date()`"
-output: rmarkdown::html
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{metaheuR: First steps}
   %\VignetteEngine{knitr::docco_linear}
-  \usepackage[utf8]{inputenc}
+  %\usepackage[utf8]{inputenc}
 ---
-```{r,eval=FALSE,echo=FALSE}
-devtools::build_vignettes()
-```
 ```{r,echo=FALSE}
+library("knitr")
 knit_theme$set("earendel")
 ```
-# `metaheuR`: First steps
+# metaheuR: First steps
 
 
 The `metaheuR` package is an `R`pacakge being developed for its use in the course [Bilaketa Heuristikoak](http://www.ehu.eus/p200-content/eu/pls/entrada/plew0040.htm_asignatura_next?p_sesion=&p_cod_idioma=EUS&p_en_portal=S&p_cod_centro=226&p_cod_plan=GINFOR20&p_anyoAcad=act&p_pestanya=3&p_menu=principal&p_cod_asig=26222&p_ciclo=X&p_curso=4&p_vengo_de=asig_cursos) (Search Heuristics) taught at the [University of the Basque Country](www.ehu.eus). As so, this package has been designed to help students experimenting with the different aspect of the metaheuristics. **It is, by no means, an efficient package** to do actual optimization. If you are looking for a package to solve real problems, look for elsewere :(.
@@ -51,7 +49,7 @@ gcp <- graph.coloring.problem (graph = rnd.graph)
 names(gcp)
 ```
 
-This function creates a list that includes four functions, used to evaluate, check, correct and plot solutions. Now we can create a solution for this problem, consisting in assigning the same color to all the nodes (obviously, this is not a valid solution for the problem).
+This function creates a list that includes four functions, used to evaluate, check, correct and plot solutions. Now we can create a solution for this problem, consisting in assigning the same color to all the nodes (obviously, this is not a valid solution for the problem). We can plot this solutions using the `plot` function provided by `graph.coloring.problem`.
 
 ```{r,message=FALSE}
 solution <- factor(rep("C1",num.nodes) , levels=paste("C",1:num.nodes,sep=""))
@@ -61,7 +59,7 @@ gcp$evaluate(solution)
 gcp$plot(solution , node.size=10 , label.cex = 1)
 ```
 
-The proposed solution only uses 1 color and that is, precisely, it's evaluation. However, it is not a valid solution. The problem creating function `graph.coloring.problem` provides us with a function to correct solutions. Applying this funciton to our proposed solution we obtain a new, valid one that uses `r gcp$evaluate(corrected.solution)` colors. We can also plot this solutions with the `plot` function provided by `graph.coloring.problem`
+The proposed solution only uses 1 color and that is, precisely, it's evaluation. However, it is not a valid solution. The problem creating function `graph.coloring.problem` provides us with a function to correct solutions. Applying this funciton to our proposed solution we obtain a new, valid one. 
 
 ```{r,message=FALSE}
 corrected.solution <- gcp$correct(solution)
