@@ -3,12 +3,13 @@ Type: Package
 Title: Package including classical metaheuristics and combinatorial optimization problems
 Version: 0.1
 Date: 2014-12-08
-Author: Borja Calvo
+Author: Borja Calvo and Usue Mori
 Maintainer: Borja Calvo <borja.calvo@ehu.eus>
 Description: This pacakge includes classical algorithms such as local search, iterated local search, simulated anneling or genetic algorithms. It also includes problems such as TSP, QAP, Graph Coloring, etc. The main goal of the package is to used to teach metaheuristics.
 License: GPL-2
-Suggests: testthat
+Suggests: testthat, knitr
 Depends: ggplot2, XML, igraph, colorspace
+VignetteBuilder: knitr 
 Collate: Neighborhood.R
   Permutation.R
   CResource.R

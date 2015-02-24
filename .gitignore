@@ -1,3 +1,10 @@
 .Rproj.user
 .Rhistory
 .RData
+metaheuR.Rproj
+Documents
+*.bbl
+*.log
+*.tex
+*.synctex.gz
+Dokumentazioa/cache
