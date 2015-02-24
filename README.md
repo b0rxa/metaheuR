@@ -13,8 +13,9 @@ devtools::install_github("b0rxa/metaheuR")
 
 The package is at a very early stage of development so no stable version is available. Many basic aspects of the package may change, so use it with caution.
 
-As a starting point, once you have installed the package you can type:
+To access the avialable vignettes for the package, type:
 
 ```r
-vignette("metaheuR_first_steps")
+library("metaheuR")
+browseVignettes("metaheuR")
 ```

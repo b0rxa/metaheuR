@@ -109,8 +109,9 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
                                       non.valid = non.valid , valid = valid , 
                                       correct = correct , resources = resources)
   ## Extract the best solution and its evaluation, as well as the remaining resources
-  current.solution <- optima(search.result)[[1]]
-  current.evaluation <- evaluation(search.result)
+  best.solution <- optima(search.result)[[1]]
+  best.evaluation <- evaluation(search.result)
+    
   resources <- resources(search.result)
   log <- progress(search.result)
   restarts <- 0
@@ -118,7 +119,7 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
     restarts <- restarts + 1
     if (verbose) cat(paste("\n## Restart #" , restarts , " out of " , 
                            ifelse(is.null(num.restarts),"no limit",num.restarts) , 
-                           "; Best solution so far: " , current.evaluation , "\n" , sep = ""))
+                           "; Best solution so far: " , best.evaluation , "\n" , sep = ""))
     if (verbose) cat(paste("## -----------------------------------------------\n\n" , sep = ""))
     initial.solution <- generate.solution() 
     search.result <- basic.local.search(evaluate = evaluate , initial.solution = initial.solution , 
@@ -127,15 +128,17 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
                                         non.valid = non.valid , valid = valid , 
                                         correct = correct , resources = resources)
     ## If we have a better solution, update the current best
-    if (evaluation(search.result) < current.evaluation){
-      current.solution <- optima(search.result)[[1]]
-      current.evaluation <- evaluation(search.result)
+    if (evaluation(search.result) < best.evaluation){
+      best.solution <- optima(search.result)[[1]]
+      best.evaluation <- evaluation(search.result)
     }
     ## Get the updated resources
     resources <- resources(search.result)
     
     ## Append the new search to the log
-    log <- rbind (log , progress(search.result))
+    newlog <- progress(search.result)
+    newlog$Best_sol <- best.evaluation
+    log <- rbind (log , newlog)
   }
   
   ## Build the output
@@ -144,8 +147,8 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
            parameters = list(selector = deparse(substitute(selector)) , 
                              neighborhood = deparse(substitute(neighborhood)) , 
                              restarts = num.restarts) ,
-           optima = list (current.solution) , 
-           evaluation = current.evaluation , 
+           optima = list (best.solution) , 
+           evaluation = best.evaluation , 
            resources = resources ,
            log = log)
 }

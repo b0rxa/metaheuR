@@ -1,0 +1,5 @@
+<!--
+%\VignetteIndexEntry{First steps}
+%\VignetteEngine{knitr::docco_linear}
+%\usepackage[utf8]{inputenc}
+-->
