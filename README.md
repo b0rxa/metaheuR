@@ -19,3 +19,7 @@ To access the avialable vignettes for the package, type:
 library("metaheuR")
 browseVignettes("metaheuR")
 ```
+The currently available vignettes are:
+
+* [First steps](http://htmlpreview.github.io/?https://github.com/b0rxa/metaheuR/blob/master/inst/doc/metaheuR_first_steps.html)
+* [Optimization problems](https://github.com/b0rxa/metaheuR/blob/master/inst/doc/metaheuR_optimization_problems.html)
