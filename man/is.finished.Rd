@@ -7,7 +7,7 @@
 is.finished(resource)
 }
 \arguments{
-\item{resource}{Object of class \code{\link{CResource}} to which the values will be substracted}
+\item{resource}{Object of class \code{\linkS4class{CResource}} to which the values will be substracted}
 }
 \value{
 A logical value, \code{TRUE} if any of the resources is finished

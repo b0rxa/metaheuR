@@ -40,7 +40,7 @@ setValidity(
 #' @title Function to increase the consumed resources
 #'
 #' @description This function increases the consumed resources
-#' @param resource Object of class \code{\link{CResource}} to which the consumption will be added
+#' @param resource Object of class \code{\linkS4class{CResource}} to which the consumption will be added
 #' @param t Time to add
 #' @param ev Number of evaluations to add
 #' @param it Number of iterations to add
@@ -66,7 +66,7 @@ setMethod(
 #' @title Function check what computational resources are finished (if any)
 #'
 #' @description This function determines what (time, evaluations and/or iterations) is finished
-#' @param resource Object of class \code{\link{CResource}} to which the values will be substracted
+#' @param resource Object of class \code{\linkS4class{CResource}} to which the values will be substracted
 #' @return A vector of characters that may include \code{'time'}, \code{'evaluations'} and/or \code{'iterations'}. In case it is empty, there are still resources available
 
 setGeneric(name = "what.finished", def = function(resource){standardGeneric("what.finished")})
@@ -96,7 +96,7 @@ setMethod(
 #' @title Function check whether the computational resources are finished
 #'
 #' @description This function determines what (time, evaluations and/or iterations) is finished
-#' @param resource Object of class \code{\link{CResource}} to which the values will be substracted
+#' @param resource Object of class \code{\linkS4class{CResource}} to which the values will be substracted
 #' @return A logical value, \code{TRUE} if any of the resources is finished
 
 setGeneric(name = "is.finished", def = function(resource){standardGeneric("is.finished")})
@@ -113,7 +113,7 @@ setMethod(
 #' @title Function to get the remaining time available
 #'
 #' @description This function returns the remaining time available
-#' @param resource Object of class \code{\link{CResource}} whose information we are quering
+#' @param resource Object of class \code{\linkS4class{CResource}} whose information we are quering
 #' @return Remaining time
 
 setGeneric(name = "remaining.time", def = function(resource){standardGeneric("remaining.time")})
@@ -131,7 +131,7 @@ setMethod(
 #' @title Function to get the remaining evaluations available
 #'
 #' @description This function returns the remaining evaluations available
-#' @param resource Object of class \code{\link{CResource}} whose information we are quering
+#' @param resource Object of class \code{\linkS4class{CResource}} whose information we are quering
 #' @return Remaining number of evaluations
 
 setGeneric(name = "remaining.evaluations", def = function(resource){standardGeneric("remaining.evaluations")})
@@ -149,7 +149,7 @@ setMethod(
 #' @title Function to get the remaining iterations available
 #'
 #' @description This function returns the remaining iterations available
-#' @param resource Object of class \code{\link{CResource}} whose information we are quering
+#' @param resource Object of class \code{\linkS4class{CResource}} whose information we are quering
 #' @return Remaining time
 
 setGeneric(name = "remaining.iterations", def = function(resource){standardGeneric("remaining.iterations")})
@@ -167,7 +167,7 @@ setMethod(
 #' @title Function to get the consumed time
 #'
 #' @description This function returns the time consumed so far
-#' @param resource Object of class \code{\link{CResource}} whose information we are quering
+#' @param resource Object of class \code{\linkS4class{CResource}} whose information we are quering
 #' @return Consumed time
 
 setGeneric(name = "consumed.time", def = function(resource){standardGeneric("consumed.time")})
@@ -184,7 +184,7 @@ setMethod(
 #' @title Function to get the number of evaluations consumed
 #'
 #' @description This function returns the number of evaluations consumed so far
-#' @param resource Object of class \code{\link{CResource}} whose information we are quering
+#' @param resource Object of class \code{\linkS4class{CResource}} whose information we are quering
 #' @return Number of evaluations consumed
 
 setGeneric(name = "consumed.evaluations", def = function(resource){standardGeneric("consumed.evaluations")})
@@ -201,7 +201,7 @@ setMethod(
 #' @title Function to get the number of iterations consumed
 #'
 #' @description This function returns the number of iterations consumed so far
-#' @param resource Object of class \code{\link{CResource}} whose information we are quering
+#' @param resource Object of class \code{\linkS4class{CResource}} whose information we are quering
 #' @return Number of iterations consumed
 
 setGeneric(name = "consumed.iterations", def = function(resource){standardGeneric("consumed.iterations")})

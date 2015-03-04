@@ -17,7 +17,11 @@ This is one of the functions that has to be implemented by any object to be used
 \seealso{
 \code{\link{nextNeighbor}} \code{\link{resetNeighborhood}}
 
-Other neighborhoods: \code{\link{has.more.neighbors}};
-  \code{\link{next.neighbor}}
+Other neighborhoods: \code{\link{flipNeighborhood}};
+  \code{\link{hammingNeighborhood}},
+  \code{\link{hammingNeighborhood}};
+  \code{\link{has.more.neighbors}};
+  \code{\link{next.neighbor}};
+  \code{\link{swapNeighborhood}}
 }
 

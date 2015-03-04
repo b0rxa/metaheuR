@@ -24,7 +24,7 @@ greedy.selector(neighborhood, evaluate, initial.solution, initial.evaluation,
 
 \item{correct}{A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option}
 
-\item{resources}{Object of class \code{\link{CResource}} representing the available computational resources for the search}
+\item{resources}{Object of class \code{\linkS4class{CResource}} representing the available computational resources for the search}
 
 \item{...}{Special argument to pass additional parameters to the functions used in the search}
 }

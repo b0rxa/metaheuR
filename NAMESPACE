@@ -44,6 +44,7 @@ export(
   tsp.problem,
   knapsack.problem,
   graph.coloring.problem,
+  mis.problem,
   cresource,
   swapNeighborhood ,
   basic.local.search,
@@ -54,11 +55,15 @@ export(
   iterated.local.search,
   simulated.annealing,
   linear.cooling,
+  geometric.cooling,
   tsp.greedy,
+  mis.greedy,
   greedy.selector,
   first.improvement.selector,
   mhresult,
   flipNeighborhood,
   exchangeNeighborhood,
+  hammingNeighborhood,
+  tsplib.parser,
   insertNeighborhood
 )

@@ -3,13 +3,24 @@
 \docType{class}
 \name{HammingNeighborhood-class}
 \alias{HammingNeighborhood-class}
-\title{An S4 class to represent swap neighborhood for permutations}
+\title{An S4 class to represent Hamming neighborhoods}
 \description{
-An S4 class to represent swap neighborhood for permutations
+An S4 class to represent Hamming neighborhoods
+}
+\details{
+The new neighbors are generated modifying each position of the vector individually, replacing it with each of the possible values (levels of the factor). The modifications are carried out using the \code{pair.list}, which is iterated using the order defined by \code{index.list}
 }
 \section{Slots}{
 
 \describe{
-\item{\code{time_total}}{A positive real number representing the total time available. It can be null, indicating that there is no time limit}
+\item{\code{base}}{A factor vector which will be the solution whose neighborhood we will explore}
+
+\item{\code{pair.list}}{A data.frame with pairs position, new value}
+
+\item{\code{index.list}}{A vector indicating the order in which pair.list is used to generate new neighbors}
+
+\item{\code{random}}{A logical value indicating whether the exploration is at random or not}
+
+\item{\code{id.pos}}{Numeric value indicating the current position (in the \code{position.list}) that will be used to generate a new neighbor}
 }}
 

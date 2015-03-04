@@ -10,9 +10,9 @@
 #' @param non.valid Action to be performed when a non valid solution is considered. The options are \code{'ignore'}, meaning that the solution is considered anyway, \code{'discard'}, meaning that the solution is not considered and \code{'correct'}, meaning that the solution has to be corrected. This parameter has to be set only when there can be non valid solutions
 #' @param valid A function that, given a solution, determines whether it is valid or not
 #' @param correct A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option
-#' @param resources Object of class \code{\link{CResource}} representing the available computational resources for the search
+#' @param resources Object of class \code{\linkS4class{CResource}} representing the available computational resources for the search
 #' @param ... Special argument to pass additional parameters to the functions used in the search
-#' @return The function returns an object of class \code{\link{MHResult}} with all the information about the search
+#' @return The function returns an object of class \code{\linkS4class{MHResult}} with all the information about the search
 
 basic.local.search<-function (evaluate, initial.solution, neighborhood, selector, do.log = TRUE , verbose = TRUE ,
                               non.valid='ignore', valid=function(solution){TRUE}, 
@@ -51,6 +51,7 @@ basic.local.search<-function (evaluate, initial.solution, neighborhood, selector
       current.evaluation <- selection$evaluation
       resources <- add.consumed(resources , it = 1)
       stop <- is.finished(resources)
+      reset.neighborhood(neighborhood = neighborhood , solution = current.solution)
     }else{
       stop <- TRUE
     }
@@ -108,8 +109,9 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
                                       non.valid = non.valid , valid = valid , 
                                       correct = correct , resources = resources)
   ## Extract the best solution and its evaluation, as well as the remaining resources
-  current.solution <- optima(search.result)[[1]]
-  current.evaluation <- evaluation(search.result)
+  best.solution <- optima(search.result)[[1]]
+  best.evaluation <- evaluation(search.result)
+    
   resources <- resources(search.result)
   log <- progress(search.result)
   restarts <- 0
@@ -117,7 +119,7 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
     restarts <- restarts + 1
     if (verbose) cat(paste("\n## Restart #" , restarts , " out of " , 
                            ifelse(is.null(num.restarts),"no limit",num.restarts) , 
-                           "; Best solution so far: " , current.evaluation , "\n" , sep = ""))
+                           "; Best solution so far: " , best.evaluation , "\n" , sep = ""))
     if (verbose) cat(paste("## -----------------------------------------------\n\n" , sep = ""))
     initial.solution <- generate.solution() 
     search.result <- basic.local.search(evaluate = evaluate , initial.solution = initial.solution , 
@@ -126,15 +128,17 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
                                         non.valid = non.valid , valid = valid , 
                                         correct = correct , resources = resources)
     ## If we have a better solution, update the current best
-    if (evaluation(search.result) < current.evaluation){
-      current.solution <- optima(search.result)[[1]]
-      current.evaluation <- evaluation(search.result)
+    if (evaluation(search.result) < best.evaluation){
+      best.solution <- optima(search.result)[[1]]
+      best.evaluation <- evaluation(search.result)
     }
     ## Get the updated resources
     resources <- resources(search.result)
     
     ## Append the new search to the log
-    log <- rbind (log , progress(search.result))
+    newlog <- progress(search.result)
+    newlog$Best_sol <- best.evaluation
+    log <- rbind (log , newlog)
   }
   
   ## Build the output
@@ -143,8 +147,8 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
            parameters = list(selector = deparse(substitute(selector)) , 
                              neighborhood = deparse(substitute(neighborhood)) , 
                              restarts = num.restarts) ,
-           optima = list (current.solution) , 
-           evaluation = current.evaluation , 
+           optima = list (best.solution) , 
+           evaluation = best.evaluation , 
            resources = resources ,
            log = log)
 }

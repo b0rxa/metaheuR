@@ -14,9 +14,9 @@
 #' @param non.valid Action to be performed when a non valid solution is considered. The options are \code{'ignore'}, meaning that the solution is considered anyway, \code{'discard'}, meaning that the solution is not considered and \code{'correct'}, meaning that the solution has to be corrected. This parameter has to be set only when there can be non valid solutions
 #' @param valid A function that, given a solution, determines whether it is valid or not
 #' @param correct A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option
-#' @param resources Object of class \code{\link{CResource}} representing the available computational resources for the search. Bear in mind that there is no other stop criterion beyond a limited amount of resources. Therefore, you should set, at least, a limit to the total time, evaluations or iterations
+#' @param resources Object of class \code{\linkS4class{CResource}} representing the available computational resources for the search. Bear in mind that there is no other stop criterion beyond a limited amount of resources. Therefore, you should set, at least, a limit to the total time, evaluations or iterations
 #' @param ... Special argument to pass additional parameters to the functions used in the search
-#' @return The function returns an object of class \code{\link{MHResult}} with all the information about the search
+#' @return The function returns an object of class \code{\linkS4class{MHResult}} with all the information about the search
 #' @details The \code{cooling.scheme} function has to have at least one parameter, \code{temperature}, and it should produce a value smaller than the one provided in that parameter. For an example, see \code{\link{linear.cooling}}
 
 simulated.annealing<-function (evaluate, initial.solution, neighborhood, cooling.scheme, initial.temperature, final.temperature, eq.criterion = 'evaluations', 

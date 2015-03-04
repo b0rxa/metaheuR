@@ -10,7 +10,7 @@ graph.coloring.problem(graph)
 \item{graph}{Graph to color}
 }
 \value{
-A list of functions to be used to solve a graph coloring problem. This includes the functions \code{evaluate}, for the evaluation of a solution, \code{is.valid}, to check whetehr a solution is valid or not and 'correct', to correct a non-valid solution; all the functions have a single argument,  \code{solution}, representing the solution considered. Note that, given that the goal in all the algorithms in the library is minimizing the objective function, the \code{evaluate}. The solutions have to be vectors of factors indicating the color of each node
+A list of functions to be used to solve a graph coloring problem. This includes the functions \code{evaluate}, for the evaluation of a solution, \code{is.valid}, to check whetehr a solution is valid or not, \code{correct}, to correct a non-valid solution and \code{plot} to graphically show the solution; all the functions have a single argument,  \code{solution}, representing the solution considered. Note that, given that the goal in all the algorithms in the library is minimizing the objective function, the \code{evaluate}. The solutions have to be vectors of factors indicating the color of each node
 }
 \description{
 This function generates an evaluation, validity and correction functions associated  with a classical graph coloring problem
@@ -19,7 +19,7 @@ This function generates an evaluation, validity and correction functions associa
 library("igraph")
 n <- 10
 rnd.graph <- random.graph.game(n , p.or.m = 0.5)
-rnd.sol <- factor (paste("c",sample(1:5 , size = n , replace = T) , sep="") ,
+rnd.sol <- factor (paste("c",sample(1:5 , size = n , replace = TRUE) , sep="") ,
                    levels = paste("c" , 1:n , sep=""))
 gcol.problem <- graph.coloring.problem (rnd.graph)
 gcol.problem$is.valid(rnd.sol)
@@ -27,5 +27,8 @@ corrected.sol <- gcol.problem$correct(rnd.sol)
 gcol.problem$is.valid(corrected.sol)
 gcol.problem$plot(rnd.sol)
 gcol.problem$plot(corrected.sol)
+}
+\concept{
+Optimization_problems
 }
 

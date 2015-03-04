@@ -8,14 +8,14 @@
 \S4method{insert}{Permutation}(permutation, i1, i2)
 }
 \arguments{
-\item{permutation}{Object of class \code{\link{Permutation}} where the insert will be carried out}
+\item{permutation}{Object of class \code{\linkS4class{Permutation}} where the insert will be carried out}
 
 \item{i1}{Element to be inserted}
 
 \item{i2}{Position where the element will be inserted}
 }
 \value{
-A new object of class \code{\link{Permutation}} equal to \code{permutation} but with \code{i1}-th element inserted into \code{i2}
+A new object of class \code{\linkS4class{Permutation}} equal to \code{permutation} but with \code{i1}-th element inserted into \code{i2}
 }
 \description{
 This function performs the input operation in permutations

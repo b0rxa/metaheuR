@@ -1,0 +1,141 @@
+---
+title: "metaheuR: Optimization problems"
+author: "Borja Calvo and Usue Mori"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+
+vignette: >
+  %\VignetteIndexEntry{Optimization problems}
+  %\VignetteEngine{knitr::docco_linear}
+  %\usepackage[utf8]{inputenc}
+---
+
+# metaheuR: Optimization problems
+
+When working with an optimization problem there are two questions that have to be defined: The solution representation and the evaluation function. Depending on the problem and the codification used, there could be solutions that are not feasible.
+
+When we create an optimization problem in `metaheuR` we have to define, at least, a function to evaluate solutions. This function has to have a single parameter `solution`, the solution to be evaluated, and has to return a numeric value. The implementation of this function will depend on how the solutions are codified, so we need to have very clear what kind of object the function requires. 
+
+As an example, the function `tsp.problem` creates the evaluation function used to solve instances of the _Travelling Salesperson Problem_. In this problem, we have `n` cities and a matrix containing the cost of traveling between any two cities. The goal in this problem is finding the minimum cost circuit that passes through every single city once and only once. 
+
+In order to cerate an instance of the problem, we need a cost matrix. For example, we can create a random instance of the problem using a random matrix.
+
+```{r,message=FALSE}
+library("metaheuR")
+n <- 50
+rnd.matrix <- matrix(runif(n^2) , ncol = n)
+rnd.tsp <- tsp.problem(cmatrix = rnd.matrix)
+names(rnd.tsp)
+```
+
+As can be seen in the code, the function returns a list with a single function, named `evaluate`. This function evaluates any solution taking into account the cost matrix passed as argument the `tsp.problem` function. In this implementation of the problem the solutions are represented by permutations. As it is a quite frequent representation, the package includes a class, `Permutation`, to handle this type of solution. We can now create a random solution using the `random.permutation` function and evaluate it using the function we have just built.
+
+```{r}
+rnd.solution <- random.permutation(length = n)
+rnd.tsp$evaluate(rnd.solution)
+```
+
+The package also includes a function to load cost matrices from the well known [TSPlib repository](http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/). This function can be used to load XML files and it accepts both local and remote files, either zip compressed or uncompressed.
+
+
+```{r}
+
+cost.matrix <- tsplib.parser(file = "http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/XML-TSPLIB/instances/brazil58.xml.zip")
+tsp.brazil <- tsp.problem(cost.matrix)
+```
+
+Now that we have the evaluation function we can evaluate the identity permutation as a solution to the problem
+
+```{r}
+n <- dim(cost.matrix)[1]
+csol <- identity.permutation(n)
+tsp.brazil$evaluate(csol)
+```
+
+## Problems with restrictions
+
+In some optimization problems there are solutions that may not be feasible. In such cases, it is the problem generating function that have to provide functions to handle them. In particular, the function provides two additional functions, `is.valid` and `correct`. Both functions have only one parameter, `solution`. The first function should `TRUE` if the solution is valid and `FALSE` otherwise. The second function should apply any required modification to non-valid solutions to make them valid.
+
+An example of this kind of problem is the Knapsack Problem. We have a knapsack and a list of items. Each item has a _weight_ and a _value_, and the knapsack has a maximum capacity. The goal is to fill the knapsack with items maximizing the total value of them and without surpassing the limit of the knapsak. We can create a random knapsack problem generating two random vectors and a random value. To make it more realistic, the values will be correlted with the weight and the limit will be determined summing the weight of some random items.
+
+```{r}
+n <- 10
+weight <- runif(n)
+value <- weight + 0.2*runif(n)
+capacity <- sum(sample(weight , size = 0.25*n , replace = FALSE))
+ksp <- knapsack.problem(weight = weight , value = value , limit = capacity)
+names(ksp)
+```
+
+The function `knapsack.problem` returns functions to check and correct any solution. We can try them with a solution that is obviously non-valid, the one that includes all the items. In this problem the solutions are represented as a vector of logic values, so the solution that includes all the items in the knapsack is a vector of size `r n` where all the values are `TRUE`.
+
+```{r}
+all.in.solution <- rep(TRUE , n)
+ksp$is.valid(all.in.solution)
+corrected.solution <- ksp$correct(all.in.solution)
+ksp$is.valid(corrected.solution)
+```
+
+In some problems the way unfeasible solutions are handled adding a penalization term in the evaluation function. The package has another problem implementation that includes this posibility, the `mis.problem` function.
+
+This function creates the functions needed to solve Maximum Independece Set (MIS) problems. Given a graph, in a MIS problem the goal is finding the biggest subset of nodes such that there is no link between any two nodes in the subset. Such a subset is called _independent set_, and the solution to the problem is the maximum one, that is, the biggest _independet set_. 
+
+The `mis.problem` function has two parameters, `graph` and `penalization`. The first parameter is the graph representing the instance of the problem. The second one is used to penalized non valid solutions, i.e., substes of nodes that are not independent. The penalization term is computed as the product of the parameter (`penalization`) and the number of nodes that violate the independence condition.
+
+Let us see the effect of the penalization in an example based on a random graph.
+
+```{r}
+set.seed(1)
+library(igraph)
+n <- 100
+rnd.graph <- random.graph.game (n = n , p.or.m = 0.05)
+misp <- mis.problem(graph = rnd.graph , penalization = 0)
+misp.penalized <- mis.problem(graph = rnd.graph , penalization = 0.5)
+```
+
+We have created two versions of the problem, with and without penalization. Now we create a random subset of the nodes and check the evaluation assigned by each of the problems.
+
+```{r}
+rnd.solution <- runif(n) > 0.4
+misp$is.valid(rnd.solution)
+misp$evaluate(rnd.solution)
+misp.penalized$evaluate(rnd.solution)
+```
+
+Note that the evaluations are negative. This is because the objective in MIS problems is maximizing the size of the set, but in the package all the algorithms are programmed to minimize the objective function. In such situations we just need to replace the original objective function $f$ (in this case, the size of the set) with a new function $g=-f$. We can see it just typing:
+
+```{r}
+misp$evaluate
+```
+
+Therefore, the smallest solution the better, that is, penalization terms will increase the value of the objective function. 
+
+If we correct the solution, then it will be a feasible solution so it will not have any penalization and, thus, the evaluation will be the same with both versions of the problem.
+
+```{r}
+valid.solution <- misp$correct (rnd.solution)
+misp$evaluate(valid.solution)
+misp.penalized$evaluate(valid.solution)
+```
+
+## Additional functions
+
+In some problem implementations we can find additional functions that may help visualizing solutions. In the particular case of graph problems, the problem generating function returns a function called `plot`, that can be used to plot any solution in the actual graph.
+
+```{r}
+misp$plot(rnd.solution , node.size = 5)
+misp$plot(valid.solution)
+```
+
+
+## List of function
+
+The complete list of problems implemented in the current vesion of the packages is the following
+
+Problem{.center} | Function
+--------|----------
+Traveling Salesperson Problem | `tsp.problem`
+Knapsack Problem | `knpasack.problem`
+Graph Colorig Problem | `graph.coloring.problem`
+Maximum Independent Set Problem | `mis.problem`
+

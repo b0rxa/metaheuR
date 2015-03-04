@@ -7,7 +7,7 @@
 consumed.time(resource)
 }
 \arguments{
-\item{resource}{Object of class \code{\link{CResource}} whose information we are quering}
+\item{resource}{Object of class \code{\linkS4class{CResource}} whose information we are quering}
 }
 \value{
 Consumed time

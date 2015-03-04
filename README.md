@@ -10,3 +10,16 @@ if (!require("devtools"))
 
 devtools::install_github("b0rxa/metaheuR")
 ```
+
+The package is at a very early stage of development so no stable version is available. Many basic aspects of the package may change, so use it with caution.
+
+To access the avialable vignettes for the package, type:
+
+```r
+library("metaheuR")
+browseVignettes("metaheuR")
+```
+The currently available vignettes are:
+
+* [First steps](http://htmlpreview.github.io/?https://github.com/b0rxa/metaheuR/blob/master/inst/doc/metaheuR_first_steps.html)
+* [Optimization problems](http://htmlpreview.github.io/?https://github.com/b0rxa/metaheuR/blob/master/inst/doc/metaheuR_optimization_problems.html)

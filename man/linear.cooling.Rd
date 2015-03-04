@@ -20,8 +20,11 @@ A function that, given a temperature, returns the updated temperature according 
 This function updates the temperature decreasing it linearly
 }
 \examples{
-boltzmann.accept (delta = -1 , temperature = 2)
-boltzmann.accept (delta = -3 , th = -2)
-boltzmann.accept (delta = -1 , th = 0)
+update <- linear.cooling(initial.temperature = 100 , final.temperature = 10 , steps = 9)
+update(100)
+update(update(100))
+}
+\seealso{
+Other Cooling schemes: \code{\link{geometric.cooling}}
 }
 

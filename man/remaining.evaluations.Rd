@@ -7,7 +7,7 @@
 remaining.evaluations(resource)
 }
 \arguments{
-\item{resource}{Object of class \code{\link{CResource}} whose information we are quering}
+\item{resource}{Object of class \code{\linkS4class{CResource}} whose information we are quering}
 }
 \value{
 Remaining number of evaluations
