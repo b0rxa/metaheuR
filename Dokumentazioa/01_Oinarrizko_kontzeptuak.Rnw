@@ -12,7 +12,7 @@
 \newcommand{\code}[1]{\texttt{#1}}
 
 \begin{document}
-\SweaveOpts{concordance=TRUE}
+%\SweaveOpts{concordance=TRUE}
 \ikasturtea{2013/2014}
 \irakasgaia{Bilaketa Heuristikoak}
 \title{BHLN: Oinarrizko Kontzeptuak}
