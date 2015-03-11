@@ -12,6 +12,7 @@
 \newcommand{\code}[1]{\texttt{#1}}
 
 \begin{document}
+%\SweaveOpts{concordance=TRUE}
 \ikasturtea{2013/2014}
 \irakasgaia{Bilaketa Heuristikoak}
 \title{BHLN: Oinarrizko Kontzeptuak}
@@ -41,7 +42,7 @@ Optimizazioa oso kontzeptu hedatua da, askotan baitarabilgu --konturatu barik ba
  
 
 \subsection{Hastapen historikoa}
-I Munduko Gerra amaitu zenean garaileek Alemaniari oso baldintza gogorrak inposatu zizkioten Versalles-eko itunean; besteak beste, Alemaniak armada izatea zeharo debekatuta zeukan. Hare gehiago, itun honek jasotzen zituen baldintza ekonomikoak zirela eta hogeigarren hamarkadan Alemaniako egoera nahiko larria zen; hala ere, krisi momentu horretan, pertsona batek promes egin zuen herrialdea larrialdi horretatik aterako zuela... Pertsona hori Hitler zen eta 1933an hauteskundeak irabaziz boterea lortu zuen; orduan, II Munduko Gerran amaituko zuen gertakizun sekuentzia hasi zen.
+I Munduko Gerra amaitu zenean garaileek Alemaniari oso baldintza gogorrak inposatu zizkioten Versalles-eko itunean; besteak beste, Alemaniak armada izatea zeharo debekatuta zeukan. Are gehiago, itun honek jasotzen zituen baldintza ekonomikoak zirela eta hogeigarren hamarkadan Alemaniako egoera nahiko larria zen; hala ere, krisi momentu horretan, pertsona batek promes egin zuen herrialdea larrialdi horretatik aterako zuela... Pertsona hori Hitler zen eta 1933an hauteskundeak irabaziz boterea lortu zuen; orduan, II Munduko Gerran amaituko zuen gertakizun sekuentzia hasi zen.
 
 1934. urtean Hitler-ek Alemaniako berrarmatze prozesua agindu zuen, eta 1935eko udaberrirako bere aireko armada --Luftwaffea-- Britainiakoaren parekoa zela aldarrikatzen hasi zen. Nazien hegazkin bonbaketarien mehatxua arazo larri bihurtu zen Britaniko Gobernuarentzat eta, hortaz, aire defentsa antolatzeari ekin zion. Aireko estatu-idazkariak \zkk Imperial College of Science and Technology\skk -ko errektoreari aireko defentsaren arazoa aztertuko zuen batzordea sortzea eskatu zion; batzorde honen lanaren ondorioz, 1935eko udan radarra asmatu zuen Robert Watson-Watt-ek. Tresna oso erabilgarria izan arren, zuen ahalmen guztia ateratzeko, defentsa sisteman --behatokiak, ehiza-hegazkinak, antiaereoko artilleria, ...--  integratu beharra zegoen: alabaina, laster hau erraza ez zela izango konturatu ziren arduradunak. Izan ere, defentsa operazioen antolakuntza, bere osotasunean, oso arazo konplexua zen. Hori dela eta, problema hau ikuspegi matematikotik ikertzen hasi ziren; Ikerkuntza Operatiboa sortu zuten.
 
@@ -51,7 +52,7 @@ Gerra amaitu ostean, Europako herrialdeen egoera oso larria zen: herrialdeak sun
 
 Arlo berri honek ikertzaileen arreta erakarri zuen eta asko hedatu zen gerraosteko garaian. Hasierako urteetan planteatzen ziren algoritmoek soluzio zehatzak lortzea zuten helburu baina teknika hauek problema mota konkretuak ebazteko bakarrik erabili zitezkeen --problema linealak, adibidez--. Hirurogeita hamarreko hamarkadan zientzialariek problemen konplexutasuna aztertzeari ekin zioten. Bestalde, konputagailu pertsonalak agertu ziren merkatuan. Problema batzuentzat konplexutasun + tamaina konbinaketa zela eta soluzio zehatza lortzea ezinezkoa zen. Gauzak horrela, merkatuan algoritmo heuristikoak agertzen hasi ziren zeinek, soluzio zehatza ez bermatu arren, soluzio onak ematen zituzten denbora laburrean.
 
-Metodo heuristikoak oso interesgarriak ziren, baina desegokiak problema berrietan berrerabiltzeko. Hori dela eta, 1975etik aurrera beste hurbilketa batzuk, bilaketa heurisktikoak edo metaheuristikak deritzenak, garatzen hasi ziren. Ona hemen adibide eta data batzuk:
+Metodo heuristikoak oso interesgarriak ziren, baina desegokiak problema berrietan berrerabiltzeko. Hori dela eta, 1975etik aurrera beste hurbilketa batzuk, bilaketa heurisktikoak edo metaheuristikak deritzenak, garatzen hasi ziren. Hona hemen adibide eta data batzuk:
 
 \begin{itemize}
 \item 1975 - John Hollandek algoritmo genetikoak proposatu zituen
@@ -222,7 +223,7 @@ Arrasate, Zarautz, Tolosa, Azpeitia, Donostia ibilbidea, irudian agertzen den pr
 \item Donostia - Arrasate: 70.7
 \end{itemize}
 
-Hortaz, helburu funtzioa --ibilbidearen distantzia totala, alegia-- 225.8 da. Ikus dezagun adibidea R-n. Lehenik eta behin, \code{metahuR} paketea kargatu eta problemaren helburu funtzioa sortuko dugu:
+Hortaz, helburu funtzioa --ibilbidearen distantzia totala, alegia-- 225.8 da. Ikus dezagun adibidea R-n. Lehenik eta behin, \code{metaheuR} paketea kargatu eta problemaren helburu funtzioa sortuko dugu:
 
 <<TSP_1 , prompt=TRUE , message=FALSE>>=
 library("metaheuR")
@@ -247,13 +248,13 @@ tsp.example$evaluate (solution)
 
 Hona hemen pentsatzeko galdera batzuk:
 \begin{itemize}
-  \item Distantzia totala 225.8km-koa da baina, ba al da ibilbide hau distantzia minimokoa?.  
+  \item Distantzia totala 225.8km-koa da baina, ibilbide hau distantzia minimokoa al da?.  
   \item Proba ezazu, adibidez, Azpeitia eta Tolosa trukatzen. Soluzio berri hau hobea ala okerragoa da?. 
-  \item Zenbat ibilbide daude bost herri hauek behin eta bakarrik behin bisitatzen dutenak?
+  \item Zenbat ibilbide daude bost herri hauek behin eta bakarrik behin bisitatzen dituztenak?
 \end{itemize}
 
 \begin{ifproblem}
-Inplementa ezazu funtzio bat \code{n} tamainako TSP problema bat eta bere ebaluazio funtzioa emanda, soluzio guztiak ebaluatzen dituena bide motzena topatzeko.
+Inplementa ezazu funtzio bat \code{n} tamainako TSP problema bat eta bere ebaluazio funtzioa emanda, soluzio guztiak ebaluatuz bide motzena topatzen duena.
 \end{ifproblem}
 
 Ikus dezagun nola formaliza daitekeen TSP problema matematikoki:
@@ -262,7 +263,7 @@ Ikus dezagun nola formaliza daitekeen TSP problema matematikoki:
 Izan bedi $H={h_1, \ldots, h_n}$ kokapen zerrenda eta $A\in\mathbb{R}^{n\times n}$ distantzia matrizea non $a_{ij}$, $h_i$ eta $h_j$ kokapenen artean dagoen distantzia den. TSP problema ibilbide optimoa topatzean datza, hau da, kokapen guztietatik behin eta bakarrik behin igarotzen diren ibilbideetatik motzena.
 \end{ifdefinition}
 
-TSP-aren definizioan kostu matrizea simetrikoa dela suposatzen da. Hala ere, kasu errealetan, posible da norabide batean istripu bat egotea edo bidea noranzko batean eta bestean ezberdinak izatea. Egoera hauetan biden kostuak simetrikoak direla suposatzea ez da problema modelatzeko aukerarik logikoena. Hortaz, bi TSP problema mota defini daitezke: simetrikoa eta asimetrikoa. 
+TSP-aren definizioan kostu matrizea simetrikoa dela suposatzen da. Hala ere, kasu errealetan, posible da norabide batean istripu bat egotea edo bidea noranzko batean eta bestean ezberdinak izatea. Egoera hauetan bideen kostuak simetrikoak direla suposatzea ez da problema modelatzeko aukerarik logikoena. Hortaz, bi TSP problema mota defini daitezke: simetrikoa eta asimetrikoa. 
 
 TSP-a oso erabilia da algoritmoak probatzean, eta TSPLIB liburutegian~\cite{reinelt1990} hainbat instantzia eskuragarri daude, orain arte lortutako soluziorik onenen informazioarekin batera.
 
@@ -294,11 +295,11 @@ Adibide gisa, jarraian, antolakuntza problemetan oso ezaguna den Muntaketa-katek
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.75\linewidth]{./Irudiak/PFSP}
-\caption{PFSP problemaren adibide bat. Goiko partean problemaren definizioa dago, hau da, lan bakoitza burutzeko makina bakoitzean behar den denbora. Beheko partean soluzio bat eta bere interpretazioa erakusten da. Helburua denbora totala minimizatzea bada, lana 3.1 hasten denetik lana 2.4 amaitzen den arte igarotzen duen denbora da soluzioaren ebaluazioa}
+\caption{PFSP problemaren adibide bat. Goiko partean problemaren definizioa dago, hau da, lan bakoitza burutzeko makina bakoitzean behar den denbora. Beheko partean soluzio bat eta bere interpretazioa erakusten da. Helburua denbora totala minimizatzea bada, 3.1 lana  hasten denetik 2.4 lana amaitzen den arte igarotzen duen denbora da soluzioaren ebaluazioa}
 \label{fig:pfsp}
 \end{figure}
 
-\ref{fig:pfsp} irudian problemaren instantzia bat ikus daiteke. Adibide honetan 3 lan egin behar dira, 4 makina ezberdinetan prozesatuz. Irudiaren goiko partean lan bakoitzak makina bakoitzean igaro behar duen denbora adierazten da, lauki zuzenen bidez. Irudiaren beheko partean soluzio bat proposatzen da; lanak 3,1,2 ordenean prozesatuko dira. Honek esan nahi du 3. lana 1. makinan sartuko dela. Behar duen denbora pasatzen denean, 2. makinan sartuko da eta 1. makinan 1. lana sartuko da. Prozesu guztiaren eskema irudian ikus daiteke. Problemaren helburua denbora total minimizatzea bada, soluzio honen helburu funtzioaren balioa lana 3.1 hasten denetik Lana 2.4 amaitzen den arte igarotzen duen denbora izango da.
+\ref{fig:pfsp} irudian problemaren instantzia bat ikus daiteke. Adibide honetan 3 lan egin behar dira, 4 makina ezberdinetan prozesatuz. Irudiaren goiko partean lan bakoitzak makina bakoitzean igaro behar duen denbora adierazten da, lauki zuzenen bidez. Irudiaren beheko partean soluzio bat proposatzen da; soluzio honetan, lanak 3,1,2 ordenean prozesatuko dira. Honek esan nahi du 3. lana 1. makinan sartuko dela. Behar duen denbora pasatzen denean, 2. makinan sartuko da eta 1. makinan 1. lana sartuko da. Prozesu guztiaren eskema irudian ikus daiteke. Problemaren helburua denbora totala minimizatzea bada, soluzio honen helburu funtzioaren balioa 3.1 lana hasten denetik 2.4 lana amaitzen den arte igarotzen den denbora izango da.
 
 
 PFSP, antolakuntza problemen murriztapenik gabeko problema teorikoa da. Problema errealetan, lan kopurua ez da finitua, etengabekoa baizik; kasu horietan, makinen okupazio maila altua izatea, denbora murriztea bezain garrantzitsua izaten da. Zentzu honetan, antzeko problemen aukera oso zabala da~\cite{taillard1993}.
@@ -333,7 +334,7 @@ rnd.graph <- random.graph.game(n , p.or.m = 0.2)
 gcol.problem <- graph.coloring.problem (rnd.graph)
 @
 
-Ausazko soluzio bat sortzen dugu, bakarrik 3 kolore erabiliz. Kontutan hartu behar da soluzioa \code{factor} motako bektore bat izan behar dela, non balio posibleen kopurua nodoen kopuru berdina izan behar den (kasurik txarrenean, grafo osoa denean, nodo bakoitzak kolore ezberdin bat izan beharko du). Ausazko soluzioa ea bideragarria denetz egiaztatuko dugu, problema definitzean \code{is.valid} sortutako funtzioa erabiliz.
+Ausazko soluzio bat sortzen dugu, bakarrik 3 kolore erabiliz. Kontutan hartu behar da soluzioa \code{factor} motako bektore bat izan behar dela, non balio posibleen kopurua nodo kopuruaren berdina izan behar den (kasurik txarrenean, grafo osoa denean, nodo bakoitzak kolore ezberdin bat izan beharko du). Ausazko soluzioa ea bideragarria denetz egiaztatuko dugu, problema definitzean \code{is.valid} sortutako funtzioa erabiliz.
 
 <<Graph_coloring_2 , prompt=TRUE , fig.path="./Irudiak/" , fig.keep='all' , fig.show='hide'>>=
 rnd.sol <- factor (paste("c",sample(1:3 , size = n , replace = T) , sep="") , 
@@ -436,14 +437,14 @@ Ebatz dezagun, algoritmo hau erabiliz, \ref{fig:tsp} irudian dagoen TSParen inst
 %Lehendabiziko herria finkaturik dagoenez, ibilbideko bigarren elementua topatzeko $n-1$ distantzia aztertu behar ditugu. Hirugarren elementua antzemateko $n-2$ distantzia alderatu behar ditugu, $n-3$ laugarrena topatzeko, etab. Sekuentzia hau jarraituz, azken-aurreko herria finkatzeko aukera bakarra dugunez, ez dugu konparaketarik egin behar. Laburbilduz, $(n-2) + (n-3) + \cdots + 2$ alderaketa beharko ditugu, hau da, $(\sum_{i=1}^{n-2} i) - 1 = \frac{(n-2)(n-1)}{2} - 1$; beraz, algoritmoaren konplexutasuna $o(n^2)$ da.
 %\end{ifsolution}
 
-Algoritmo hau \code{metaheuR} paketean inplementaturik dago, salbuespen bakar batekin; lehendabiziko hiria sartu beharrean algoritmoak aukeratzen du matrizean dagoen baliorik txikiena kontutan hartuz. Ikus dezagun algoritmoaren inplementazioa. Funtzioak parametro bakar bat jasotzen du, \code{cmatrix}, kostu matrizea dena, eta matrize hori erabiltzen du balio txikieneko elementua topatzeko; balioak aukeraezinak direlako \code{NA} erabiliko dugu. Kontutan hartuz diagonalean duaden balio guztiak aukeratu ezin direla (ez du zentzurik hiri batetik hiri berberara joatea), aukeraezin gisa finkatzen ditugu eta, gero, matrizean dagoen elementurik txikiena(k) aukeratuko d(it)ugu.
+Algoritmo hau \code{metaheuR} paketean inplementaturik dago, diferentzia txiki batekin; lehendabiziko hiria, erabiltzaileak sartu beharrean, algoritmoak aukeratzen du matrizean dagoen baliorik txikienari erreparatuz. Ikus dezagun algoritmoaren inplementazioa. Funtzioak parametro bakar bat jasotzen du, \code{cmatrix}, kostu matrizea dena; hasteko, aukeraezinak diren balioak adierazteko \code{NA}-k txertatuko ditugu matrizean. Kontutan hartuz diagonalean dauden balio guztiak ezin direla aukeratu (ez du zentzurik hiri batetik hiri berberara joatea), aukeraezin gisa finkatzen ditugu eta, gero, matrizean dagoen elementurik txikiena(k) aukeratuko d(it)ugu.
 
 <<TSP_greedy_1 , prompt=TRUE , eval=FALSE , purl=FALSE>>=
 diag(cmatrix) <- NA
 best.pair <- which(cmatrix == min(cmatrix,na.rm=T), arr.ind=TRUE)
 @
 
-Orain \code{best.pair} matrizean, errenkada bakoitzean elementu baten koordenatuak izango ditugu, lehenengo zutabean bere errenkada eta bigarrenean bere zutabea. Aintzat hartzekoa da elementu bat baino gehiago izan dezakegula (izan ere, matrizea simetrikoa bada beti izango ditugu, gutxienez, bi elementu). Lehenengo elementuarekin bakarrik geldituko gara, eta honek markatuko du zein diren ibilbidearen lehendabiziko bi hiriak. Algoritmoarekin jarraitzeko jakin behar dugu sartu dugun lehendabiziko hiritik (\code{best.pair[1,1]}) ezin garela abiatu. Hori dela eta, matrizean dagokion errenkada aukeraezin moduan markatu behar dugu. Era berean, hurrengo urratsetan ezin dugu aukeratu elementu bat sartu ditugun hirietan amaitzen dena, hots, hiri hauei dagokien zutabeak ere bideraezin gisa finkatu beharko ditugu.
+Orain \code{best.pair} matrizearen errenkada bakoitzean elementu baten koordenatuak izango ditugu, lehenengo zutabean bere errenkada eta bigarrenean bere zutabea. Aintzat hartzekoa da elementu bat baino gehiago izan dezakegula (izan ere, matrizea simetrikoa bada beti izango ditugu, gutxienez, bi elementu). Lehenengo elementua bakarrik hautatuko dugu, eta honek markatuko ditu ibilbideko lehendabiziko bi hiriak. Algoritmoarekin jarraitzeko jakin behar dugu sartu dugun lehenengo hiritik (\code{best.pair[1,1]}) ezin garela berriz igaro. Hori dela eta, matrizean dagokion errenkada aukeraezin moduan markatu behar dugu. Era berean, hurrengo urratsetan ezin dugu aukeratu sartu ditugun hirietan amaitzen den elementurik, hots, hiri hauei dagozkien zutabeak ere bideraezin gisa finkatu beharko ditugu.
 
 <<TSP_greedy_2 , prompt=TRUE , eval=FALSE , purl=FALSE>>=
 solution <- c(best.pair[1,1],best.pair[1,2])
@@ -451,7 +452,7 @@ cmatrix[best.pair[1,1],]<-NA
 cmatrix[ , best.pair[1,]]<-NA
 @
 
-Gure soluzioak, momentuz, bakarrik bi hiri ditu. Soluaio osoa eraikitzeko urrats bakoitzean azken pausuan sartutako hiritik aukeratu gabe dauden hirien artean gertuen dagoena aukeratu beharko dugu. Behin aukeraturik, matrziea eguneratu beharko dugu aukeraezin diren elementuei \code{NA} esleituz.
+Gure soluzioak, momentuz, bakarrik bi hiri ditu. Soluzio osoa eraikitzeko, urrats bakoitzean, azken pausuan sartutako hiritik aukeratu gabe dauden hirien artean gertuen dagoena aukeratu beharko dugu. Behin aukeraturik, matrizea eguneratu beharko dugu aukeraezin diren elementuei \code{NA} esleituz.
 
 <<TSP_greedy_3 , prompt=TRUE , eval=FALSE , purl=FALSE>>=
 for (i in 3:dim(cmatrix)[1]){
@@ -462,14 +463,14 @@ for (i in 3:dim(cmatrix)[1]){
 }
 @
 
-Une honetan \code{solution} bektoreak eraikitako soluzio badu. Dena dela, soluzioa permutazioaren bidez kodetu nahi dugunez, funtzioaren amaieran ondoko kodea izango dugu.
+Une honetan \code{solution} bektoreak eraikitako soluzio bat gordetzen du. Dena dela, soluzioa permutazio baten bidez kodetu nahi dugunez, funtzioaren amaieran ondoko kodea izango dugu.
 
 <<TSP_greedy_4 , prompt=TRUE , eval=FALSE , purl=FALSE>>=
 names(solution)<-NULL
 permutation(vector = solution)
 @
 
-Funtzioa grure problemari aplikatzen badiogu, hona hemen emaita:
+Funtzioa grure problemari aplikatzen badiogu, hona hemen emaitza:
 
 <<TSP_greedy_5 , prompt=TRUE>>=
 greedy.solution <- tsp.greedy(cost.matrix)
@@ -477,7 +478,7 @@ tsp.example$evaluate(greedy.solution)
 colnames(cost.matrix)[as.numeric(greedy.solution)]
 @
 
-Lortzen dugun soluzioa ezberdina da, baina bere kostua berdina da. Izan ere, nahiz eta soluzio ezberdina izan, definitzen duen zikloa berdina da, beste noranzkoa joan arren. Beste era batean esanda, goiko kodean dugun soluzioa atzetik aurrera irakurtzen badugu, lehen bilatutako soluzio berbera dugu!.
+Lortzen dugun soluzioa ezberdina da, baina bere kostua, ordea, berdina. Izan ere, nahiz eta soluzioa ezberdina izan, definitzen duen zikloa berdina da, beste noranzkoan izanda ere. Beste era batean esanda, goiko kodean dugun soluzioa atzetik aurrera irakurtzen badugu, lehen bilatutako soluzio berbera dugu!.
 
 Metodo heuristikoak oso interesgarriak dira, baina zailak \zkk birziklatzeko\skk\ --pentsa ezazu nola egoki daitekeen goiko algoritmoa grafoen koloreztatze-problema ebazteko, adibidez--. Arazo hau saihesteko, \textit{bilaketa heuristikoak} edo \textit{metaheuristikoak} proposatu ziren. Metodo hauek ere intuizioan oinarritzen dira, baina ez problemaren intuizioan, optimizazio prozeduraren intuizioan baizik;  hori dela eta, metodo hauek edozein problema ebazteko egoki daitezke. Hainbat metaheuristika daude, hala nola, bilaketa lokala, algoritmo genetikoak, inurri-kolonia algoritmoak, etab.; hauek hurrengo kapituluen aztergaiak izango dira.
 
@@ -566,7 +567,7 @@ $\alpha$ parametroa zigorra kontrolatzeko erabil daiteke; zigortze-maila txikieg
 \item \textbf{Soluzio bideraezinak konpondu} - Bilaketa prozesuan soluzio bideraezin bat topatzean, posible bada betiere, soluzioa \zkk konpondu\skk\ egin dezakegu. Estrategia hau erabilgarria izan dadin, erabiltzen diren konponketa-algoritmoak eraginkorrak izan behar dira, bilaketaren kostu konputazionalean albait eragin gutxien izan dezaten. Adibide gisa, motxilaren probleman kapazitate murrizketa dugu; hori dela eta, soluzio batek kapazitate-muga gainditzen badu, bideraezina izango da. Soluzioa konpontzeko banan-banan atera ditzakegu elementuak murrizketa bete arte.
 \end{itemize}
 
-Azken hurbilketa hau motxilaren probleman erabil dezakegu. Ikus dezagun algoritmo bat knapsack problemarako soluzioak konpontzeko. Lehenik eta behin, soluzioen bideragarritasuna aztertzeko funtzio bat inplementatuko dugu. Gogoratu soluzio bat bideragarria dela baldin eta motxilan sartutako elementuen pisua motxilaren muga baino txikigoa bada.
+Azken hurbilketa hau motxilaren probleman erabil dezakegu. Adibide gisa, ikus dezagun knapsack problemarako soluzioak konpontzeko algoritmo bat. Lehenik eta behin, soluzioen bideragarritasuna aztertzeko funtzio bat inplementatuko dugu. Gogoratu soluzio bat bideragarria dela baldin eta motxilan sartutako elementuen pisua motxilaren muga baino txikigoa bada.
 
 <<Knapsack_problem_1, prompt=TRUE>>=
 is.valid <- function(solution, weight, limit){
@@ -574,7 +575,7 @@ is.valid <- function(solution, weight, limit){
 }
 @
 
-Orain, funtzio hau kontutan hartuz, soluzioak zuzentzeko funtzioa inplementa dezakegu. Funtzioak inplementatzen duen sasi-kodea \ref{alg:motxila_problema_konpontzea} algoritmoan ikus daiteke. Oso algoritmoa sinplea da; soluzioa bideraezina den bitartean, pisu/balio ratio handiena duen elementua. 
+Orain, funtzio hau kontutan hartuz, soluzioak zuzentzeko funtzioa inplementa dezakegu. Funtzioak inplementatzen duen sasi-kodea \ref{alg:motxila_problema_konpontzea} algoritmoan ikus daiteke. Oso algoritmoa sinplea da; soluzioa bideraezina den bitartean, pisu/balio ratio handiena duen elementua motxilatik aterako da. 
 
 <<Knapsack_problem_2, prompt=TRUE>>=
 correct <- function(solution , weight , value , limit){
@@ -588,7 +589,7 @@ correct <- function(solution , weight , value , limit){
 }
 @
 
-Ikus dezagun adibide bat. Demagun $P=\{2,6,3,6,3\}$, $W=\{1,3,1,10,2\}$ eta $c_m = 5$ balio bektorea, pisu bektorea eta motxilaren edukiera maximoa direla. Motxilan elementu guztiak sartzen dituen soluzioa bideraezina da, pisu totala (8) limitea baino handiagoa baita.
+Ikus dezagun adibide bat. Demagun $P=\{2,6,3,6,3\}$, $W=\{1,3,1,10,2\}$ eta $c_m = 5$ balio bektorea, pisu bektorea eta motxilaren edukiera maximoa direla hurrenez hurren. Motxilan elementu guztiak sartzen dituen soluzioa bideraezina da, pisu totala (8) limitea baino handiagoa baita.
 
 <<Knapsack_problem_3, prompt=TRUE>>=
 P <- c(2 , 6 , 3 , 6 , 3)
@@ -599,7 +600,7 @@ is.valid(solution = solution , weight = W , limit = c_m)
 W/P
 @
 
-Azken lerroan ikus daiteke ratiorik handiena duena 4. elementua dela; bere balioa handia da, baina baite bere pisua ere. Beraz, elentu hori aterako dugun lehena izango da. Dena dela, aldaketa horrekin bakarrik ez dugu soluzio bideragarri bat lortuko ...
+Azken lerroan ikus daiteke ratiorik handiena duena 4. elementua dela; bere balioa handia da, baina baita bere pisua ere. Beraz, elementu hori motxilatik aterako dugun lehena izango da. Dena dela, aldaketa horrekin bakarrik ez dugu soluzio bideragarri bat lortuko. Hau ikusirik, ratiorik handiena duen bigarren elementua kenduko dugu: 5. elementua. Orain, bi aldaketa hauek egin ostean lortu dugun soluzioa bideragarria da
 
 <<Knapsack_problem_4, prompt=TRUE>>=
 solution
