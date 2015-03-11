@@ -38,7 +38,6 @@ knit_hooks$set(output = function(x, options) {
   hook_output(x, options)
 })
 knitr::opts_chunk$set(linewidth=100) 
-purl("02_Soluzio_bakarrak.Rnw")
 @
 
 
