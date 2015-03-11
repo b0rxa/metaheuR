@@ -103,7 +103,7 @@ mis.problem <- function (graph, penalization = 0){
   
   plot.solution <- function (solution, node.size = 5){
     V(graph)$color <- ifelse(1:length(V(graph))%in%which(solution), "black","white")
-    plot.igraph(graph , vertex.label = NA , edge.arrow.mode = "-")
+    plot.igraph(graph , vertex.size = node.size , vertex.label = NA , edge.arrow.mode = "-")
   }
   
   return(list(evaluate = evaluate , is.valid = is.valid , correct = correct , plot = plot.solution))

@@ -29,13 +29,13 @@ pre, code{font-size:90%;}
     <div class="page">
 <h1>metaheuR: Optimization problems</h1>
 
-<p>When working with an optimization problem there are two questions that have to be defined: The solution representation and the evaluation function. Depending on the problem and the codification used, there could be solutions that are not feasible.</p>
+<p>When working with an optimization problem there are two aspects that have to be defined: The solution representation and the evaluation function. Depending on the problem and the codification used, there could be solutions that are not feasible.</p>
 
-<p>When we create an optimization problem in <code>metaheuR</code> we have to define, at least, a function to evaluate solutions. This function has to have a single parameter <code>solution</code>, the solution to be evaluated, and has to return a numeric value. The implementation of this function will depend on how the solutions are codified, so we need to have very clear what kind of object the function requires. </p>
+<p>When we create an optimization problem in <code>metaheuR</code> we have to define, at least, a function to evaluate solutions. This function must have a single parameter <code>solution</code>, the solution to be evaluated, and must return a numeric value. The implementation of this function will depend on how the solutions are codified, so we need to be very clear about the kind of object that the function requires. </p>
 
-<p>As an example, the function <code>tsp.problem</code> creates the evaluation function used to solve instances of the <em>Travelling Salesperson Problem</em>. In this problem, we have <code>n</code> cities and a matrix containing the cost of traveling between any two cities. The goal in this problem is finding the minimum cost circuit that passes through every single city once and only once. </p>
+<p>As an example, the function <code>tsp.problem</code> creates the evaluation function used to solve instances of the <em>Travelling Salesperson Problem</em>. In this problem, we have <code>n</code> cities and a matrix containing the cost of traveling between any pair of cities. The goal of this problem is to find the minimum cost circuit that passes through every single city once and only once. </p>
 
-<p>In order to cerate an instance of the problem, we need a cost matrix. For example, we can create a random instance of the problem using a random matrix.</p>
+<p>In order to create an instance of the problem, we need a cost matrix. For example, we can create a random instance of the problem using a random matrix.</p>
 
 <pre><code class="r">library(&quot;metaheuR&quot;)
 n &lt;- 50
@@ -47,7 +47,7 @@ names(rnd.tsp)
 <pre><code>## [1] &quot;evaluate&quot;
 </code></pre>
 
-<p>As can be seen in the code, the function returns a list with a single function, named <code>evaluate</code>. This function evaluates any solution taking into account the cost matrix passed as argument the <code>tsp.problem</code> function. In this implementation of the problem the solutions are represented by permutations. As it is a quite frequent representation, the package includes a class, <code>Permutation</code>, to handle this type of solution. We can now create a random solution using the <code>random.permutation</code> function and evaluate it using the function we have just built.</p>
+<p>As can be seen in the code, the <code>tsp.problem</code> function returns a list with a single function, named <code>evaluate</code>. This function evaluates any solution taking into account the cost matrix introduced in the <code>tsp.problem</code> function. In this implementation of the problem, the solutions are represented by permutations. As it is quite a common representation, the package includes a class, <code>Permutation</code>, to handle this type of solution. We can now create a random solution using the <code>random.permutation</code> function and evaluate it using the function we have just built.</p>
 
 <pre><code class="r">rnd.solution &lt;- random.permutation(length = n)
 rnd.tsp$evaluate(rnd.solution)
@@ -79,9 +79,9 @@ tsp.brazil$evaluate(csol)
 
 <h2>Problems with restrictions</h2>
 
-<p>In some optimization problems there are solutions that may not be feasible. In such cases, it is the problem generating function that have to provide functions to handle them. In particular, the function provides two additional functions, <code>is.valid</code> and <code>correct</code>. Both functions have only one parameter, <code>solution</code>. The first function should <code>TRUE</code> if the solution is valid and <code>FALSE</code> otherwise. The second function should apply any required modification to non-valid solutions to make them valid.</p>
+<p>In some optimization problems there are solutions that may not be feasible. In such cases, the problem generating function must provide functions to handle them. In particular, these functions should provide two additional functions, <code>is.valid</code> and <code>correct</code>, with only one input parameter, <code>solution</code>. The first function should output <code>TRUE</code> if the introduced solution is valid and <code>FALSE</code> otherwise. The second function should modify non-valid solutions in some way in order to make them valid.</p>
 
-<p>An example of this kind of problem is the Knapsack Problem. We have a knapsack and a list of items. Each item has a <em>weight</em> and a <em>value</em>, and the knapsack has a maximum capacity. The goal is to fill the knapsack with items maximizing the total value of them and without surpassing the limit of the knapsak. We can create a random knapsack problem generating two random vectors and a random value. To make it more realistic, the values will be correlted with the weight and the limit will be determined summing the weight of some random items.</p>
+<p>An example of this kind of problem is the Knapsack Problem. We have a knapsack and a list of items. Each item has a <em>weight</em> and a <em>value</em>, and the knapsack has a maximum capacity. The goal is to fill the knapsack with items, maximizing the total value of them but without surpassing the limit of the knapsack. We can create a random knapsack problem generating two random vectors which correspond to the weights and values and a random value which defines the limit of the knapsack. To make it more realistic, the values will be correlated with the weights and the limit will be determined by summing the weight of some random items.</p>
 
 <pre><code class="r">n &lt;- 10
 weight &lt;- runif(n)
@@ -94,7 +94,7 @@ names(ksp)
 <pre><code>## [1] &quot;evaluate&quot; &quot;is.valid&quot; &quot;correct&quot;
 </code></pre>
 
-<p>The function <code>knapsack.problem</code> returns functions to check and correct any solution. We can try them with a solution that is obviously non-valid, the one that includes all the items. In this problem the solutions are represented as a vector of logic values, so the solution that includes all the items in the knapsack is a vector of size 10 where all the values are <code>TRUE</code>.</p>
+<p>The function <code>knapsack.problem</code> returns functions that can be used to check and correct any solution. We can test them with a solution that is obviously non-valid, the one that includes all the items. In this problem the solutions are represented as vectors of logic values, so the solution that includes all the items in the knapsack is a vector of size 10 where all the values are <code>TRUE</code>.</p>
 
 <pre><code class="r">all.in.solution &lt;- rep(TRUE , n)
 ksp$is.valid(all.in.solution)
@@ -110,11 +110,13 @@ ksp$is.valid(corrected.solution)
 <pre><code>## [1] TRUE
 </code></pre>
 
-<p>In some problems the way unfeasible solutions are handled adding a penalization term in the evaluation function. The package has another problem implementation that includes this posibility, the <code>mis.problem</code> function.</p>
+<p>In this case, the non-valid solutions are corrected by consecutively removing the items that have the highest weight/value ratio, until the limit is respected.</p>
 
-<p>This function creates the functions needed to solve Maximum Independece Set (MIS) problems. Given a graph, in a MIS problem the goal is finding the biggest subset of nodes such that there is no link between any two nodes in the subset. Such a subset is called <em>independent set</em>, and the solution to the problem is the maximum one, that is, the biggest <em>independet set</em>. </p>
+<p>In some other problems, unfeasible solutions are handled by adding a penalization term in the evaluation function. The package also incorporates a problem implementation that includes this posibility, the <code>mis.problem</code> function.</p>
 
-<p>The <code>mis.problem</code> function has two parameters, <code>graph</code> and <code>penalization</code>. The first parameter is the graph representing the instance of the problem. The second one is used to penalized non valid solutions, i.e., substes of nodes that are not independent. The penalization term is computed as the product of the parameter (<code>penalization</code>) and the number of nodes that violate the independence condition.</p>
+<p>This function creates the functions needed to solve Maximum Independece Set (MIS) problems. In these problems, given a graph, the goal is finding the biggest subset of nodes such that there is no link between any two nodes in the subset. Such a subset is called <em>independent set</em>, and the solution to the problem is the maximum one, that is, the biggest <em>independet set</em>. </p>
+
+<p>The <code>mis.problem</code> function has two parameters, <code>graph</code> and <code>penalization</code>. The first parameter is the graph representing the instance of the problem. The second one is used to penalize non valid solutions, i.e., subsets of nodes that are not independent. The penalization term is computed as the product of the parameter introduced (<code>penalization</code>) and the number of nodes that violate the independence condition.</p>
 
 <p>Let us see the effect of the penalization in an example based on a random graph.</p>
 
@@ -147,7 +149,7 @@ misp$is.valid(rnd.solution)
 <pre><code>## [1] -33.5
 </code></pre>
 
-<p>Note that the evaluations are negative. This is because the objective in MIS problems is maximizing the size of the set, but in the package all the algorithms are programmed to minimize the objective function. In such situations we just need to replace the original objective function \(f\) (in this case, the size of the set) with a new function \(g=-f\). We can see it just typing:</p>
+<p>Note that the evaluations are negative. This is because the objective in MIS problems is maximizing the size of the independent set. However, in the package, all the algorithms are programmed to minimize the objective function, so in such situations we replace the original objective function \(f\) (in this case, the size of the set) with a new function \(g=-f\). We can see this by typing:</p>
 
 <pre><code class="r">misp$evaluate
 </code></pre>
@@ -155,12 +157,12 @@ misp$is.valid(rnd.solution)
 <pre><code>## function (solution){
 ##     -1*(sum(solution) - penalization*num.violations(solution))
 ##   }
-## &lt;environment: 0x6eb4118&gt;
+## &lt;environment: 0x4bff410&gt;
 </code></pre>
 
 <p>Therefore, the smallest solution the better, that is, penalization terms will increase the value of the objective function. </p>
 
-<p>If we correct the solution, then it will be a feasible solution so it will not have any penalization and, thus, the evaluation will be the same with both versions of the problem.</p>
+<p>If we correct the solution, then it will become a feasible solution, it will not have any penalization and, thus, the evaluation will be the same with both versions of the problem.</p>
 
 <pre><code class="r">valid.solution &lt;- misp$correct (rnd.solution)
 misp$evaluate(valid.solution)
@@ -177,7 +179,7 @@ misp$evaluate(valid.solution)
 
 <h2>Additional functions</h2>
 
-<p>In some problem implementations we can find additional functions that may help visualizing solutions. In the particular case of graph problems, the problem generating function returns a function called <code>plot</code>, that can be used to plot any solution in the actual graph.</p>
+<p>In some problem implementations we can find additional functions that may help in visualizing solutions. In the particular case of graph problems, the problem generating function returns a function called <code>plot</code>, that can be used to plot any solution in the actual graph.</p>
 
 <pre><code class="r">misp$plot(rnd.solution , node.size = 5)
 </code></pre>

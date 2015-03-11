@@ -12,24 +12,24 @@ vignette: >
 # metaheuR: First steps
 
 
-The `metaheuR` package is an `R`pacakge being developed for its use in the course [Bilaketa Heuristikoak](http://www.ehu.eus/p200-content/eu/pls/entrada/plew0040.htm_asignatura_next?p_sesion=&p_cod_idioma=EUS&p_en_portal=S&p_cod_centro=226&p_cod_plan=GINFOR20&p_anyoAcad=act&p_pestanya=3&p_menu=principal&p_cod_asig=26222&p_ciclo=X&p_curso=4&p_vengo_de=asig_cursos) (Search Heuristics) taught at the [University of the Basque Country](www.ehu.eus). As so, this package has been designed to help students experimenting with the different aspect of the metaheuristics. **It is, by no means, an efficient package** to do actual optimization. If you are looking for a package to solve real problems, look for elsewere :(.
+The `metaheuR` package is an `R`package being developed for its use in the course [Bilaketa Heuristikoak](http://www.ehu.eus/p200-content/eu/pls/entrada/plew0040.htm_asignatura_next?p_sesion=&p_cod_idioma=EUS&p_en_portal=S&p_cod_centro=226&p_cod_plan=GINFOR20&p_anyoAcad=act&p_pestanya=3&p_menu=principal&p_cod_asig=26222&p_ciclo=X&p_curso=4&p_vengo_de=asig_cursos) (Search Heuristics) taught at the [University of the Basque Country](www.ehu.eus). As so, this package has been designed to help students experiment with the different aspects of the metaheuristics. **It is, by no means, an efficient package** to do actual optimization. If you are looking for a package to solve real problems, better look elsewere :(.
 
-In a very general way, we can define an optimaziotion problem as a problem for which there is a (usually huge) number of solutions that, somehow, can be evaluated; The goal is finding, among those solutions, the optimal one. There are many types of optimization problems, but this package focuses on those known as _combinatorial optimization problems_.
+In a very general way, we can define an optimization problem as a problem for which there is a (usually huge) number of solutions that can, somehow, be evaluated; The goal is to find the optimal one among those solutions. There are many types of optimization problems, but this package focuses on those known as _combinatorial optimization problems_.
 
-In any optimization problem we need to define, at least, a couple of elements. The first one is the _solution representation_, i.e., how the real-life solution can be represented in a computer. The second one is the procedure to evaluate the quality of a given solution, which is usually materialized in _objective function_. Depending on the problem, the concept of _optimizing_ will be translated as finding the solution that _maximizes_ or _minimizes_ the objective function. In this package we will assume that the goal is **minimizing the objective function**.
+In any optimization problem we need to define, at least, a couple of elements. The first one is the _solution representation_, i.e., how the real-life solutions can be represented in a computer. The second one is the procedure used to evaluate the quality of a given solution, which is usually materialized in an _objective function_. Depending on the problem, the concept of _optimizing_ will be translated to finding the solution that _maximizes_ or _minimizes_ the objective function. In this package we will assume that the goal is **to minimize the objective function**.
 
-Due to their complexity, many optimization problems cannot be efficiently solved to optimality using exact methods. In those cases, heuristic methods are typically used to generate good solutions in a reasonable amount of time. Heuristics are based on intuitions about the problem, but in many cases they are difficult to extrapolate to other problems. This is the reason why metaheuristic algorithms have been proposed. Very informally, we can think of metaheuristics as _templates_ to create heuristic algorithms. 
+Due to their complexity, many optimization problems cannot be efficiently solved using exact methods. In those cases, heuristic methods are typically used to generate good solutions in a reasonable amount of time. Heuristics are based on intuitions about the problem, but in many cases they can not be easily extrapolated to other problems. This is the reason why metaheuristic algorithms have been proposed. Very informally, we can think of metaheuristics as _templates_ that can be used to create heuristic algorithms. 
 
-This package includes, so far, a few meataheuristcs based on local search, as well as some classical optimization problems. The code can be roughly divided into four categories:
+This package, so far, includes, a few meataheuristcs based on local search, as well as some classical optimization problems. The code can be roughly divided into four categories:
 
-* **Optimization problems** - There are a number of functions that can be used to create optimization problems, which are just lists of functions, such as the evaluation function, required to solve a given problem.
-* **Metaheuristics** - A set of functions that implemente different algorithms to solve optimziation problems. These algorithms have a general implementation and, therefore, rely on the definition of different operators, i.e., functions that perform different operations on the solutions.
-* **Operators and related functions** - As we have said, the implemented algorithms depend on external functions that are able to manipulate solutions. These functions are dependant on the solution representation and/or the problem itself. The package includes some standard functions for all the operators required by the implemented algorithms, that can be used directly or as an example to create new ones.
-* **Execution control and visualization** - There are some classes and functions that are used to control de computational resources consumed during the search. Due to its teaching nature, the package also includes a number of functions to plot, solutions, the search progress, algorithms behaviour, etc.
+* **Optimization problems** - There are a number of functions that can be used to create optimization problems. Each optimization problem consists of a list of functions, such as the evaluation function, required to solve a given problem.
+* **Metaheuristics** - A set of functions that implement different algorithms to solve optimization problems. These algorithms follow a general implementation and, therefore, rely on the definition of different operators, i.e., functions that perform different operations on the solutions.
+* **Operators and related functions** - As we have said, the implemented algorithms depend on external functions that are able to manipulate solutions. These functions are dependant on the solution representation and/or the problem itself. The package includes some standard functions to define the operators required by the implemented algorithms. These can be used directly or as examples to create new ones.
+* **Execution control and visualization** - There are some classes and functions that are used to control the computational resources consumed during the search. Due to its teaching nature, the package also includes a number of functions to plot solutions, the search progress, algorithms behaviour, etc.
 
-In further vignettes we will cover each of these aspects individually, but as a starter, here is an example of use. The first step is to create a problem. In this case, the problem we will solve is a classical  _grap coloring problem_, where the goal is, given a graph, assigning to each node a color such that any two connected nodes do not have the same color assigned; the optimal solution is the one that uses the less number of colors.
+In further vignettes we will cover each of these aspects individually, but as a starter, here is an example of use. The first step is to create a problem. In this case, the problem we will solve is a classical  _graph coloring problem_, where, given a graph, the goal is assigning a color to each node such that any two connected nodes are not assigned with the same color; the optimal solution is the one that uses the less number of colors.
 
-In order to crete a new instance of the problem we need to a graph, that we will randomly create using the package [`igraph`](http://cran.r-project.org/web/packages/igraph/index.html)
+In order to create a new instance of the problem we need to a graph, that we will randomly create using the package [`igraph`](http://cran.r-project.org/web/packages/igraph/index.html)
 
 ```{r,message=FALSE}
 library("metaheuR")
@@ -46,7 +46,7 @@ gcp <- graph.coloring.problem (graph = rnd.graph)
 names(gcp)
 ```
 
-This function creates a list that includes four functions, used to evaluate, check, correct and plot solutions. Now we can create a solution for this problem, consisting in assigning the same color to all the nodes (obviously, this is not a valid solution for the problem). We can plot this solutions using the `plot` function provided by `graph.coloring.problem`.
+This function creates a list that includes four functions which can be used to evaluate, check, correct and plot solutions. Now we can create an example solution for this problem, which consists in assigning the same color to all the nodes (obviously, this is not a valid solution for the problem). We can plot this solution using the `plot` function provided by `graph.coloring.problem`.
 
 ```{r,message=FALSE}
 solution <- factor(rep("C1",num.nodes) , levels=paste("C",1:num.nodes,sep=""))
@@ -56,7 +56,7 @@ gcp$evaluate(solution)
 gcp$plot(solution , node.size=10 , label.cex = 1)
 ```
 
-The proposed solution only uses 1 color and that is, precisely, it's evaluation. However, it is not a valid solution. The problem creating function `graph.coloring.problem` provides us with a function to correct solutions. Applying this funciton to our proposed solution we obtain a new, valid one. 
+The proposed solution only uses 1 color and that is, precisely, it's evaluation. However, it is not a valid solution. In order to deal with this problem, the  `graph.coloring.problem` function provides us with a function to correct solutions. Applying this function to our proposed solution we obtain a new, valid one. 
 
 ```{r,message=FALSE}
 corrected.solution <- gcp$correct(solution)
@@ -66,7 +66,7 @@ gcp$evaluate(corrected.solution)
 gcp$plot(corrected.solution , node.size=10 , label.cex = 1)
 ```
 
-A trivial solution for the problem is one that assigns a different color to each node.
+A trivial solution for the  _graph coloring problem_ is one that assigns a different color to each node.
 
 ```{r,message=FALSE}
 trivial.solution <- factor(paste("C",1:num.nodes,sep="") , 
@@ -76,7 +76,7 @@ gcp$is.valid(trivial.solution)
 gcp$evaluate(trivial.solution)
 ```
 
-We can improve this solution using a basic local search algorithm. In order to do so, we need a neighborhood definition and a procedure to select a solution from the neighborhood. We will define as neighbor solutions those that a are at a Hamming distance of 1. Regarding the selection of the neighbor solution we will use a greedy strategy, i.e., we will always select the best neighbor; These and other aspects of the algorithms will be treated in more detail in further vignettes.
+We can improve this solution using a basic local search algorithm. In order to do so, we need a neighborhood definition and a procedure to select a solution from the neighborhood. In this case, we restrict the neighborhood to those solutions that are at a Hamming distance of 1. Regarding the selection of the neighbor solution we will use a greedy strategy, i.e., we will always select the best neighbor; These and other aspects of the algorithms will be treated in more detail in further vignettes.
 
 ```{r,message=FALSE,cache=TRUE}
 hamm.ngh <- hammingNeighborhood(base = trivial.solution)
@@ -88,7 +88,7 @@ bls <- basic.local.search(evaluate = gcp$evaluate ,
                            selector = greedy.selector)
 ```
 
-The object returned by the algorithm contains information about the run. Among other information (that also will be covered in more detain in further vignettes), we have the otimal solution, its evaluation and the progress of the search. The functions `optima` and `evaluation` can be used to access the first two, and the latter can be visualized using the function `plot.progress`.  
+The object returned by the algorithm contains information about the search. Among other information (that will also be covered in more detain in further vignettes), we have the best solution found by the algorithm, its evaluation and the progress of the search. The functions `optima` and `evaluation` can be used to access the first two, and the latter can be visualized using the function `plot.progress`.  
 
 
 ```{r,message=FALSE,fig.width=10, fig.height=5}

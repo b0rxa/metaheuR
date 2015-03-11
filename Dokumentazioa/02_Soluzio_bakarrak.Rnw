@@ -38,6 +38,7 @@ knit_hooks$set(output = function(x, options) {
   hook_output(x, options)
 })
 knitr::opts_chunk$set(linewidth=100) 
+purl("02_Soluzio_bakarrak.Rnw")
 @
 
 
@@ -416,16 +417,17 @@ swap.greedy.rnd.sol <- basic.local.search(evaluate = eval , initial.solution = r
                                           selector = greedy.selector , verbose = FALSE)
 
 swap.fi.rnd.sol <- basic.local.search(evaluate = eval , initial.solution = rnd.sol ,
-                                      neighborhood = swp.ngh.rnd , 
-                                      selector = first.improvement.selector , verbose = FALSE)
+                                      neighborhood = swp.ngh.rnd , verbose = FALSE ,
+                                      selector = first.improvement.selector)
 
-swap.greedy.greedy.sol <- basic.local.search(evaluate = eval , initial.solution = greedy.sol ,
+swap.greedy.greedy.sol <- basic.local.search(evaluate = eval , verbose = FALSE , 
+                                             initial.solution = greedy.sol ,
                                              neighborhood = swp.ngh.greedy , 
-                                             selector = greedy.selector , verbose = FALSE)
+                                             selector = greedy.selector)
 
 swap.fi.greedy.sol <- basic.local.search(evaluate = eval , initial.solution = greedy.sol ,
-                                         neighborhood = swp.ngh.greedy , 
-                                         selector = first.improvement.selector , verbose = FALSE)
+                                         neighborhood = swp.ngh.greedy , verbose = FALSE , 
+                                         selector = first.improvement.selector )
 @
 
 Azter dezagun zein nolako hobekuntza lortu dugun bilaketa lokalarekin, ausazko soluziotik abitazen garenean.
@@ -446,25 +448,18 @@ Algoritmo eraikitzailearekin lortutako soluzioa ausazko soluziotik abitatutako b
 
 <<Babaria_5, prompt=TRUE,cache=TRUE>>=
 tsp.babaria$evaluate(greedy.sol) - evaluation(swap.greedy.greedy.sol)
-tsp.babaria$evaluate(greedy.sol) - evaluation(swap.greedy.greedy.sol)
 @
 
 Bilaketa greedy hurbilketa erabiliz emaitza hobeak ematen ditu --ausazko soluziotik abitazen garenean, behintzat--, bilaketa espazioa sakonkiago aztertzen delako. Beste era bat bilaketa sakonago egiteko, swap ingurunearen ordez 2-opt ingurunea erabiltzea da, lehen ikusi dugun bezala, azken ingurunea hau swap baino askoz ere handiagoa baita.
 
 <<Babaria_6, prompt=TRUE,cache=TRUE>>=
 ex.ngh.rnd <- exchangeNeighborhood (base = rnd.sol)
-ex.ngh.greedy <- exchangeNeighborhood (base = greedy.sol)
 ex.greedy.rnd.sol <- basic.local.search(evaluate = eval , initial.solution = rnd.sol ,
                                         neighborhood = ex.ngh.rnd , 
                                         selector = greedy.selector , verbose = FALSE)
-ex.fi.rnd.sol <- basic.local.search(evaluate = eval , initial.solution = rnd.sol ,
-                                    neighborhood = ex.ngh.rnd , 
-                                    selector = first.improvement.selector , verbose = FALSE)
 
 tsp.babaria$evaluate(rnd.sol) - evaluation(ex.greedy.rnd.sol)
-tsp.babaria$evaluate(rnd.sol) - evaluation(ex.fi.rnd.sol)
 consumed.evaluations(resources(ex.greedy.rnd.sol))
-consumed.evaluations(resources(ex.fi.rnd.sol))
 @
 
 Ikus daitekeen bezala, hobekuntza handiagoa da baina, inguruneak handiagoak direnez, baita ebaluazio kopurua ere.
@@ -476,7 +471,7 @@ Aurreko atalean ikusi dugun legez, bilaketa lokala soluzioak areagotzeko prozedu
 
 
 \subsection{Hasieraketa anizkoitza}\label{sec:multistart}
-Soluzio bakoitzetik abiatzen garenean optimo lokal batera heltzen gara; soluzio ezberdinetatik abitatzen bagara, optimo lokal ezberdinetara helduko gara. Ideia hau \ref{alg:randomMultistartLS} sasikodean inplementatuta dagoena da. Algoritmoan agertzen diren \textit{random\_solution} eta \textit{local\_search} funtzioetan dago prozeduraren mamia. Batak espazioaren esplorazioa egiten du eta besteak, bere izenak adierazten duen bezala, soluzioen areagotzeaz arduratzen da.
+Soluzio bakoitzetik abiatzen garenean optimo lokal batera heltzen gara; soluzio ezberdinetatik abitatzen bagara, optimo lokal ezberdinetara heldu gaitezke. Ideia hau \ref{alg:randomMultistartLS} sasikodean inplementatuta dagoena da. Algoritmoan agertzen diren \textit{generate\_random\_solution} eta \textit{local\_search} funtzioetan dago prozeduraren mamia. Batak espazioaren esplorazioa egiten du eta besteak, bere izenak adierazten duen bezala, soluzioen areagotzeaz arduratzen da.
 
 
 \begin{ifalgorithm}[t]
@@ -484,7 +479,7 @@ Soluzio bakoitzetik abiatzen garenean optimo lokal batera heltzen gara; soluzio 
 \item \In\ $f$ helburu funtzioa
 \item \In\ \textit{random\_solution}, \textit{stop\_criterion} eta \textit{local\_search} funtzioak
 \item \Out\ $s^*$ soluzioa optimoa
-\item $s$=\textit{random\_solution}
+\item $s$=\textit{generate\_random\_solution}
 \item \While{!\textit{stop\_criterion}}
 \item \T{$s^\prime$ = \textit{random\_solution}}
 \item \T{$s^{\prime\prime}$ = \textit{local\_search}($s^\prime$)}
@@ -493,7 +488,6 @@ Soluzio bakoitzetik abiatzen garenean optimo lokal batera heltzen gara; soluzio 
 \end{ifpseudo}
 \caption{Hasieraketa anizkoitza erabiltzen duen bilaketa lokalaren hedapenaren sasikode orokorra}\label{alg:randomMultistartLS}
 \end{ifalgorithm}
-
 
 Ausazko soluzioak sortzeko hainbat aukera ditugu. Lehendabizikoa uniformeki ausaz sortzea da, hots, pasu bakoitzean probabilitate berdinarekin espazioaren edozein soluzioa aukeratuko dugu, bilaketa lokala hasieratzeko. 
 
@@ -544,6 +538,72 @@ Soluzioak perturbatzeko prozedura aurreratuetan bilaketaren \zkk historia\skk\ e
 \label{fig:ILS}
 \end{figure}
 
+ILS-a \code{iterated.local.search} funtzioan inplementatuta dago. Funtzio honen gainontzeko parametroak \code{basic.local.search} funtzioaren berberak dira, inplmentazioa funtzio horretan oinarritzen baita. Horrez gain, hiru parametro berri izango digutu:
+
+\begin{itemize}
+\item \code{perturb} - Parametro honen bidez soluzioak perturbatzeko erabili behar den funtzioa pasatuko diogu funtzioari. Funtzio honek parametro bakarra izan beharko du, perturbatu behar den soluzioa, eta itzultzen duen emaitza perturbatutako soluzioa izan beharko da.
+\item \code{accept} -  Parametro hau funtzio bat izan behar da, soluzio berriak noiz onartzen ditugun definitzen duena. Gutxienez parametro bat izan beharko du, \code{delta}, soluzio berria eta zaharraren ebaluazioen arteko diferentzia.
+\code{num.restarts} - Bilaketa optimo lokal batean trabatuta gelditzen denean, zenbat alditan berrabiarazi behar dugun bilaketa, perturbatutako soluziotik.
+\end{itemize}
+
+Ikus dezagun adibide bat, TSP problema bat erabiliz. Problema honetan Burma-ko 14 hirien arteko distantziak izango ditugu. Problema ebazteko ausazko soluzio batetik abiatuko dugu bilaketa. Ingurune gisa \textit{2-opt} erabiliko dugu (trukaketa orokorrak, ez bakarrik elkar-ondokoak) eta soluzioak perturbatzeko eragiketa bera erabiliko dugu, hau da, trukaketa; eragiketa hau ausaz egiteko \code{shuffle} funtzioa erabil dezakegu.
+
+<<Burma_1, prompt=TRUE,cache=TRUE>>=
+f <- paste("http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95"
+         ,"/XML-TSPLIB/instances/burma14.xml.zip",sep="")
+burma.mat <- tsplib.parser(f)
+
+n <- ncol(burma.mat)
+burma.tsp <- tsp.problem(burma.mat)
+
+init.sol <- random.permutation(n)
+ngh <- exchangeNeighborhood(init.sol)
+sel <- first.improvement.selector
+th.accpet <- threshold.accept
+th <- 0
+@
+
+Soluzioen perturbazioa kontrolatzeko zenbat trukaketa egiten diren kontrola dezakegu. Kopuru hori aldatu ahal izateko, gure perturbazio funtzioaren parametro bat izan beharko da\footnote{\code{iterated.local.search} funtzioarekin (eta paketearen beste hainbat funtzioekin) arazorik ez izateko pasatutako funtzioak \code{...} argumentua izan behar du, nahiz eta gero barruan ez erabili}.
+
+<<Burma_2, echo=-1 , prompt=TRUE,cache=TRUE , results='hide', fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=14 , fig.height=6 >>=
+set.seed(1)
+perturb.2opt <- function(solution , ratio , ...)
+  shuffle(permutation = solution , ratio = ratio)
+
+r <- 5
+ratio <- 0.01
+ils.1 <- iterated.local.search(evaluate = burma.tsp$evaluate , 
+                               initial.solution = init.sol ,
+                               neighborhood = ngh , selector = sel , 
+                               perturb = perturb.2opt ,  ratio = ratio ,
+                               accept = th.accpet , th = th , 
+                               num.restarts = r)
+ratio <- 0.25
+ils.25 <- iterated.local.search(evaluate = burma.tsp$evaluate , 
+                               initial.solution = init.sol ,
+                               neighborhood = ngh , selector = sel , 
+                               perturb = perturb.2opt ,  ratio = ratio ,
+                               accept = th.accpet , th = th , 
+                               num.restarts = r)
+ratio <- 1
+ils.100 <- iterated.local.search(evaluate = burma.tsp$evaluate , 
+                               initial.solution = init.sol ,
+                               neighborhood = ngh , selector = sel , 
+                               perturb = perturb.2opt ,  ratio = ratio ,
+                               accept = th.accpet , th = th , 
+                               num.restarts = r)
+
+plot.progress(result = list(ILS1 = ils.1 , ILS33 = ils.25 , ILS100 = ils.100)) + 
+  facet_grid(. ~ Group , scales = 'free_x') + labs(y="Evaluation")
+@
+
+\begin{figure}[t]
+\includegraphics[width=\textwidth]{./Irudiak/Burma_2-1}
+\caption{ILS algoritmoaren progresioa 14 hiriko TSP problema batean. Ezkerretik eskuinera, perturbazioaren ratioa 0.01, 0.25 eta 1 da.}\ref{fig:ILS}
+\end{figure}
+
+Hiru bilaketen progresioa \ref{fig:ILS} irudian ikus daitezke. Hirurak soluzio berdinatik hasten dira eta, pausu bakoitzean inguruko soluziorik onena aukeratzen dutenez, lehenengo jaitsiera berdina da hiru grafikoetan. Lehenengo optimo lokala topatzen den momentuan, ordea, diferentziak hasten dira. Ezkerretik eskuinera, lehenengo grafikoan soluzioak posizioen \%1 trukatuz perturbatzen dira; guztira 14 posizioak direnez, trukaketa bakar bat egiten da. Erdiko grafikoan perturbazioa \%25ekoa da, 3 trukaketa, alegia. Azeken grafikoan, berriz, 14 trukaketa egiten dira (posizioen \%100). Perturbazio txiki bat erabiltzen dugunean, lortutako soluzioaren ebaluazioa optimo lokalaren antzerakoa da (agertzen diren ``pikoak'' ez dira oso altuak, alegia); geroz eta perturbazio handiagoa orduan eta diferentzia handiagoa soluzio berria eta optimoaren artean.
+
 
 \subsubsection{GRASP algoritmoa}
 
@@ -563,6 +623,114 @@ Algoritmo hau GRASP algoritmoa inplementatzeko egoki daiteke. Algoritmoaren iter
 \end{ifexample}
 \end{tcolorbox}
 
+Adibidean planteatzen den estrategia ausazko soluzio onak sortzeko procedura bat inplementatu beharko dugu. 
+
+
+<<Knap_GRASP, prompt = TRUE , echo = FALSE>>=
+knap.GRASP <- function (weight , value , limit , cl.size = 0.25){
+  size <- length(weight)
+  ratio <- value / weight
+  solution <- rep(FALSE , size)
+  finished = FALSE
+  while (!finished){
+    non.selected <- which(!solution)
+    cl.n <- round(length(non.selected)*cl.size)
+    cl <- sort(ratio[non.selected] , decreasing=TRUE)[1:cl.n]
+    selected <- sample(cl,1)    
+    aux <- solution
+    aux[ratio == selected] <- TRUE
+    if (sum(weight[aux])<limit){
+      solution <- aux
+    }else{
+      finished <- TRUE
+    }
+  }
+  solution
+}
+@
+
+Funtzioaren pamateroak problemarenak izango dira, gehi kandidatoen zerrendaren luzeera, ratio baten bidez adieraziko duguna. Hasteko, zenbait datu atera eta aldagai batzuk hasieratzen ditugu. Besteak beste, soluzio ``hutsa'' sortzen dugu, elementurik ez duena.
+
+<<Knap_GRASP, eval=FALSE , echo=1:5>>=
+@
+
+Soluzioan elementuak sartzeko begizta bat izango dugu, motxila beteta ez dagoen bitartean errepikatuko dena. Begiztaren lehenengo pausua sarturik gabeko elementuei antzemate diegu eta, uneko iterazioan, gure hautagai zerrenda izan behar duen tamaina kalkulatu egiten dugu (gogoratu tamaina urratsean ditugun aukera kopuruaren araberakoa dela). 
+
+<<Knap_GRASP, eval=FALSE , echo=6:8>>=
+@
+
+Orain ratioak ordenatu ondoren, lehenengo elementuak hartzen ditugu hautagai zerrenda gisa eta, gero, horietatik bat ausaz aukeratzen dugu.
+
+<<Knap_GRASP, eval=FALSE , echo=9:10>>=
+@
+
+Amaitzeko, aukeratutako elementua soluzioan sartzen dugu eta, motxila betetzen ez bada, aurrera jarraitzen dugu. Bestela, soluzioa deusestatzen dugu eta begizta amaitzen dugu.
+
+<<Knap_GRASP, eval=FALSE , echo=-(1:10)>>=
+@
+
+Sortu dugun futnzioa GRASP algoritmoa guztiz ausazkoa den hasieraketa anizkoitzarekin alderatzeko erabil dezakegu, \code{cl.size} parametroarekin jolastuz. Lehenik eta behin, ausazko problema bat sortuko dugu. Kasu honetan 50 item izango ditugu eta hauen balioa bi multzotan banatuko dugu. Elementuen erdirako balioa 0 eta 10 arteko ausazko zenbakiak dira; beste erdirako, ausazko zenbakiak 0 eta 25 tartean. Kasu guztietan pisua balioarekiko proportzionala da, faktorea ausazko zenbakia izanik. Limite gisa ausaz aukeratutako 10 elementuen pisuaren batura erabiliko dugu.
+
+<<GRASP_vs_rndstart_1, echo=-1 , prompt=TRUE , cache=TRUE>>=
+set.seed(5)
+n <- 50
+values  <- c(runif(n/2) * 10,  runif(n/2)*25)
+weights <- values * rnorm(n,1,0.05)
+limit   <- sum(sample(weights , n/5))
+@
+
+GRASP eta hasieraketa anizkoitzan oinarritzen den beste edozein algoritmo erabiltzeko \cite{multistart.local.search} funtzioa daukagu. Orain arte ikusitakoen antzerakoa da funtzio hau, baina hasierako soluzioa argumentu moduan pasatu beharrean, soluzioak sortzeko funtzio bat pasatu behar diogu. Parametro asko direnez, funtzioen argumentuak antolatzeko beste era bat erabiliko dugu. Zerrenda batean sartuko ditugu, izenak erabiliz eta gero R-ren \code{do.call} funtzioa erabiliko dugu.
+
+<<GRASP_vs_rndstart_2, echo=-1 , prompt=TRUE , cache=TRUE>>=
+args <- list()
+knp.problem             <- knapsack.problem(weights , values , limit)
+
+args$evaluate           <- knp.problem$evaluate
+args$valid              <- knp.problem$is.valid
+args$correct            <- knp.problem$correct
+args$non.valid          <- 'discard'
+
+args$neighborhood       <- flipNeighborhood(base = rep(FALSE , n))
+args$selector           <- greedy.selector
+
+args$generate.solution  <- knap.GRASP
+args$num.restarts       <- 25
+args$weight             <- weights
+args$value              <- values
+args$limit              <- limit
+@
+
+Behin (ia) parametro guztiak ezarrita, \code{cl.size} parametroari 3 balio ezberdin esleituko diogu, 1, 0.5 eta 0.1. Lehenengo kasuan hautagai zerrendan aukera guztiak egongo direnez, funtzioak ausazko soluzioak sortuko ditu, hots, ausazko hasieraketa anizkoitza erabiliko du bilaketa lokalak. Beste kasuetan, berriz, aukera guztietatik \%50 eta \%10 erabiltzen dira bakarrik, hurrenez hurren.
+
+<<GRASP_vs_rndstart_3, echo=-1 , prompt=TRUE , cache=TRUE , results='hide'>>=
+args$cl.size <- 1
+rnd.ls <- do.call (multistart.local.search , args)
+
+args$cl.size <- 0.50
+GRASP.50 <- do.call (multistart.local.search , args)
+
+args$cl.size <- 0.1
+GRASP.10 <- do.call (multistart.local.search , args)
+@
+
+
+<<GRASP_vs_rndstart_4, echo=FALSE , prompt=TRUE , cache=TRUE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=8 , fig.height=4>>=
+plot.progress(list(GRASP50 = GRASP.50 , GRASP10 = GRASP.10 , RND = rnd.ls) ) + labs(y="Current solution") + scale_color_discrete("Strategy")
+plot.progress(list(GRASP50 = GRASP.50 , GRASP10 = GRASP.10 , RND = rnd.ls) , y = 'best') + labs(y="Best solution") + scale_color_discrete("Strategy")
+@
+
+\begin{figure}[t]
+\subfigure[Uneko soluzioa]{
+\includegraphics[width=0.45\textwidth]{./Irudiak/GRASP_vs_rndstart_4-1}
+}\qquad
+\subfigure[Soluziorik onena]{
+\includegraphics[width=0.45\textwidth]{./Irudiak/GRASP_vs_rndstart_4-2}
+}\\
+
+\caption{Hasieraketa anizkoitza estrategia ezberdinen konparaketa, motxilaren problema batean. Ezkerreko grafikoan uneko soluzioaren progresioa ikus daiteke. Eskumakoan, berriz, uneko soluziorik onenaren progresioa erakusten da.}\label{fig:GRASP}
+\end{figure}
+
+\ref{fig:GRASP} irudian bilaketaren progresioa ikus daiteke. Ezkerreko grafikoan uneko soluzioaren eboluzioa jasotzen da. Ikus daitekeen bezala, berabiarazte bakoitzean bilaketa soluzio txarragoetatik hasten da (gorago daudenak). GRASP algoritmoan, berriz, hasierako soluzioak hobeak dira, eta baita ere lortzen den emaitza. Hori argi ikusten da eskumako grafikoan, non uneko soluziorik onenaren eboluzioa erakusten den.
 
 \subsection{Inguruneko soluzioen hautaketa}
 

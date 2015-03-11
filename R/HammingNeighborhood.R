@@ -23,7 +23,7 @@ setValidity(
     if (!is.numeric(object@pair.list$Position)) stop ("The column 'Position' in the data frame pair.list has to be numeric")
     n <- length(object@base)
     l <- levels(object@base)
-    aux <- lapply (1:n, FUN=function(i){data.frame(Position=i,Value=subset(l,l!=l[i]))})
+    aux <- lapply (1:n, FUN=function(i){data.frame(Position=i,Value=subset(l,l!=object@base[i]))})
     pair.list <- do.call(rbind,aux)
     index.list <- 1:dim(pair.list)[1]
     if(!all(sort(object@pair.list$Position)==pair.list$Position)) stop ("The provided list of positions is not valid")
@@ -74,7 +74,7 @@ setMethod(
     if(length(solution)!=length(neighborhood@base)) stop ("The new solution is not of the correct size")
     n <- length(solution)
     l <- levels(solution)
-    aux <- lapply (1:n, FUN=function(i){data.frame(Position=i,Value=subset(l,l!=l[i]))})
+    aux <- lapply (1:n, FUN=function(i){data.frame(Position=i,Value=subset(l,l!=solution[i]))})
     pair.list <- do.call(rbind,aux)
     if (neighborhood@random){
       index.list <- random.permutation(dim(pair.list)[1])
@@ -109,7 +109,7 @@ setMethod(
 hammingNeighborhood<-function(base,random = FALSE){
   n <- length(base)
   l <- levels(base)
-  aux <- lapply (1:n, FUN=function(i){data.frame(Position=i,Value=subset(l,l!=l[i]))})
+  aux <- lapply (1:n, FUN=function(i){data.frame(Position=i,Value=subset(l,l!=base[i]))})
   pair.list <- do.call(rbind,aux)
   if (random){
     index.list <- random.permutation(dim(pair.list)[1])

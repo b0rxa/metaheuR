@@ -37,7 +37,7 @@ setMethod(
   f="print", 
   signature = "MHResult", 
   definition = function(x, ...) {
-    consumed <- paste(what.finished(x@resources) , collapse=";")
+    consumed <- what.finished(x@resources)
     consumption.message <- switch (as.character(length(consumed)) , 
                                    "0" =  "None of the resources completely consumed" ,
                                    "1" =  paste(consumed[1] , "completely consumed") , 

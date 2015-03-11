@@ -30,15 +30,6 @@ trivial.solution
 gcp$is.valid(trivial.solution)
 gcp$evaluate(trivial.solution)
 
-## ----,message=FALSE,cache=TRUE-------------------------------------------
-hamm.ngh <- hammingNeighborhood(base = trivial.solution)
-bls <- basic.local.search(evaluate = gcp$evaluate , 
-                           non.valid = 'discard' ,
-                           valid = gcp$is.valid ,
-                           initial.solution = trivial.solution , 
-                           neighborhood = hamm.ngh , 
-                           selector = greedy.selector)
-
 ## ----,message=FALSE,fig.width=10, fig.height=5---------------------------
 evaluation(bls)
 optima(bls)[[1]]

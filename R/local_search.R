@@ -102,7 +102,7 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
                                    do.log = TRUE , verbose = TRUE , non.valid='ignore' , 
                                    valid=function(solution){TRUE} , correct=function(solution){solution}, resources = cresource() , ...){
   ## Perform the initial local search
-  initial.solution <- generate.solution() 
+  initial.solution <- generate.solution(...) 
   search.result <- basic.local.search(evaluate = evaluate , initial.solution = initial.solution , 
                                       neighborhood = neighborhood , selector = selector , 
                                       do.log = do.log , verbose = verbose ,
@@ -121,7 +121,7 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
                            ifelse(is.null(num.restarts),"no limit",num.restarts) , 
                            "; Best solution so far: " , best.evaluation , "\n" , sep = ""))
     if (verbose) cat(paste("## -----------------------------------------------\n\n" , sep = ""))
-    initial.solution <- generate.solution() 
+    initial.solution <- generate.solution(...) 
     search.result <- basic.local.search(evaluate = evaluate , initial.solution = initial.solution , 
                                         neighborhood = neighborhood , selector = selector , 
                                         do.log = do.log , verbose = verbose ,
@@ -199,7 +199,7 @@ iterated.local.search<-function (evaluate , initial.solution , neighborhood, sel
                            ifelse(is.null(num.restarts),"no limit",num.restarts) , 
                            "; Best solution so far: " , current.evaluation , "\n" , sep = ""))
     if (verbose) cat(paste("## -----------------------------------------------\n\n" , sep = ""))
-    initial.solution <- perturb(current.solution) 
+    initial.solution <- perturb(current.solution , ...) 
     search.result <- basic.local.search(evaluate = evaluate , initial.solution = initial.solution , 
                                         neighborhood = neighborhood , selector = selector , 
                                         do.log = do.log , verbose = verbose ,

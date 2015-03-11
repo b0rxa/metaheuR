@@ -37,8 +37,9 @@ knapsack.problem<-function(weight , value , limit){
   correct <- function(solution){
     if (!is.logical(solution) | length(solution) != length(weight)) stop(paste("The solution should be a logical vector of size" , length(weight)))
     while(!is.valid(solution)){
-        max.in <- max(weight[solution])
-        id <- which(weight==max.in & solution)[1]
+        ratio <- weight/value
+        max.in <- max(ratio[solution])
+        id <- which(ratio==max.in & solution)[1]
         solution[id] <- FALSE
     }
     return(solution)
