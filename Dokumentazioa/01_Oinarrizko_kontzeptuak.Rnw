@@ -437,43 +437,50 @@ Ebatz dezagun, algoritmo hau erabiliz, \ref{fig:tsp} irudian dagoen TSParen inst
 %Lehendabiziko herria finkaturik dagoenez, ibilbideko bigarren elementua topatzeko $n-1$ distantzia aztertu behar ditugu. Hirugarren elementua antzemateko $n-2$ distantzia alderatu behar ditugu, $n-3$ laugarrena topatzeko, etab. Sekuentzia hau jarraituz, azken-aurreko herria finkatzeko aukera bakarra dugunez, ez dugu konparaketarik egin behar. Laburbilduz, $(n-2) + (n-3) + \cdots + 2$ alderaketa beharko ditugu, hau da, $(\sum_{i=1}^{n-2} i) - 1 = \frac{(n-2)(n-1)}{2} - 1$; beraz, algoritmoaren konplexutasuna $o(n^2)$ da.
 %\end{ifsolution}
 
-Algoritmo hau \code{metaheuR} paketean inplementaturik dago, diferentzia txiki batekin; lehendabiziko hiria, erabiltzaileak sartu beharrean, algoritmoak aukeratzen du matrizean dagoen baliorik txikienari erreparatuz. Ikus dezagun algoritmoaren inplementazioa. Funtzioak parametro bakar bat jasotzen du, \code{cmatrix}, kostu matrizea dena; hasteko, aukeraezinak diren balioak adierazteko \code{NA}-k txertatuko ditugu matrizean. Kontutan hartuz diagonalean dauden balio guztiak ezin direla aukeratu (ez du zentzurik hiri batetik hiri berberara joatea), aukeraezin gisa finkatzen ditugu eta, gero, matrizean dagoen elementurik txikiena(k) aukeratuko d(it)ugu.
-
-<<TSP_greedy_1 , prompt=TRUE , eval=FALSE , purl=FALSE>>=
-diag(cmatrix) <- NA
-best.pair <- which(cmatrix == min(cmatrix,na.rm=T), arr.ind=TRUE)
+<<TSP_greedy , prompt=TRUE , echo=FALSE>>=
+tsp.constructive <- function (cmatrix){
+  diag(cmatrix) <- NA
+  best.pair <- which(cmatrix == min(cmatrix,na.rm=T), arr.ind=TRUE)
+  solution <- c(best.pair[1,1],best.pair[1,2])
+  cmatrix[best.pair[1,1],]<-NA
+  cmatrix[ , best.pair[1,]]<-NA
+  for (i in 3:nrow(cmatrix)){
+    next.city <- which.min (cmatrix[solution[i-1],])
+    solution <- append(solution , next.city)
+    cmatrix[solution[i-1],] <- NA
+    cmatrix[ , next.city] <- NA
+  }
+  names(solution)<-NULL
+  permutation(vector = solution)
+}
 @
 
-Orain \code{best.pair} matrizearen errenkada bakoitzean elementu baten koordenatuak izango ditugu, lehenengo zutabean bere errenkada eta bigarrenean bere zutabea. Aintzat hartzekoa da elementu bat baino gehiago izan dezakegula (izan ere, matrizea simetrikoa bada beti izango ditugu, gutxienez, bi elementu). Lehenengo elementua bakarrik hautatuko dugu, eta honek markatuko ditu ibilbideko lehendabiziko bi hiriak. Algoritmoarekin jarraitzeko jakin behar dugu sartu dugun lehenengo hiritik (\code{best.pair[1,1]}) ezin garela berriz igaro. Hori dela eta, matrizean dagokion errenkada aukeraezin moduan markatu behar dugu. Era berean, hurrengo urratsetan ezin dugu aukeratu sartu ditugun hirietan amaitzen den elementurik, hots, hiri hauei dagozkien zutabeak ere bideraezin gisa finkatu beharko ditugu.
+Algoritmo hau \code{metaheuR} paketean inplementaturik dago, baina bi diferentzia ditu. Alde batetik, erabiltzaileak lehendabiziko hiria sartu beharrean, algoritmoak aukeratzen du matrizean dagoen baliorik txikienari erreparatuz. Bestetik, funtzioak ez du beti aukerari onena aukeratzen, aukera batzuen artean bat ausaz aukeratzen du. Azken puntu honek gero ikusiko dugun algoritmo batekin (GRASP) zerikusia du. 
 
-<<TSP_greedy_2 , prompt=TRUE , eval=FALSE , purl=FALSE>>=
-solution <- c(best.pair[1,1],best.pair[1,2])
-cmatrix[best.pair[1,1],]<-NA
-cmatrix[ , best.pair[1,]]<-NA
+Hemen funtzio honen betsio sinplifikatu bat inplementatuko dugu, adibide moduan. Funtzio honek parametro bakar bat jasotzen du, \code{cmatrix}, kostu matrizea dena; hasteko, aukeraezinak diren balioak adierazteko \code{NA}-k txertatuko ditugu matrizean. Kontutan hartuz diagonalean dauden balio guztiak ezin direla aukeratu (ez du zentzurik hiri batetik hiri berberara joatea), aukeraezin gisa finkatzen ditugu eta, gero, matrizean dagoen elementurik txikiena(k) aukeratuko d(it)ugu.
+
+<<TSP_greedy , prompt=FALSE , eval=FALSE , echo=1:3 , purl=FALSE>>=
+@
+
+Orain \code{best.pair} aldagaian matrizearen errenkada bakoitzean elementu baten koordenatuak izango ditugu, lehenengo zutabean bere errenkada eta bigarrenean bere zutabea. Aintzat hartzekoa da elementu bat baino gehiago izan dezakegula (izan ere, matrizea simetrikoa bada beti izango ditugu, gutxienez, bi elementu). Lehenengo elementua bakarrik hautatuko dugu, eta honek markatuko ditu ibilbideko lehendabiziko bi hiriak. Algoritmoarekin jarraitzeko jakin behar dugu sartu dugun lehenengo hiritik (\code{best.pair[1,1]}) ezin garela berriz igaro. Hori dela eta, matrizean dagokion errenkada aukeraezin moduan markatu behar dugu. Era berean, hurrengo urratsetan ezin dugu aukeratu sartu ditugun hirietan amaitzen den elementurik, hots, hiri hauei dagozkien zutabeak ere bideraezin gisa finkatu beharko ditugu.
+
+<<TSP_greedy , prompt=FALSE , eval=FALSE , echo=4:6 , purl=FALSE>>=
 @
 
 Gure soluzioak, momentuz, bakarrik bi hiri ditu. Soluzio osoa eraikitzeko, urrats bakoitzean, azken pausuan sartutako hiritik aukeratu gabe dauden hirien artean gertuen dagoena aukeratu beharko dugu. Behin aukeraturik, matrizea eguneratu beharko dugu aukeraezin diren elementuei \code{NA} esleituz.
 
-<<TSP_greedy_3 , prompt=TRUE , eval=FALSE , purl=FALSE>>=
-for (i in 3:dim(cmatrix)[1]){
-  next.city <- which.min (cmatrix[solution[i-1],])
-  solution <- append(solution , next.city)
-  cmatrix[solution[i-1],] <- NA
-  cmatrix[ , next.city] <- NA
-}
+<<TSP_greedy , prompt=FALSE , eval=FALSE , echo=7:12 , purl=FALSE>>=
 @
 
 Une honetan \code{solution} bektoreak eraikitako soluzio bat gordetzen du. Dena dela, soluzioa permutazio baten bidez kodetu nahi dugunez, funtzioaren amaieran ondoko kodea izango dugu.
 
-<<TSP_greedy_4 , prompt=TRUE , eval=FALSE , purl=FALSE>>=
-names(solution)<-NULL
-permutation(vector = solution)
+<<TSP_greedy , prompt=FALSE , eval=FALSE , echo=13:15 , purl=FALSE>>=
 @
 
 Funtzioa grure problemari aplikatzen badiogu, hona hemen emaitza:
 
-<<TSP_greedy_5 , prompt=TRUE>>=
-greedy.solution <- tsp.greedy(cost.matrix)
+<<TSP_greedy_2 , prompt=TRUE>>=
+greedy.solution <- tsp.constructive(cost.matrix)
 tsp.example$evaluate(greedy.solution)
 colnames(cost.matrix)[as.numeric(greedy.solution)]
 @

@@ -14,7 +14,6 @@ knit_hooks$set(output = function(x, options) {
   hook_output(x, options)
 })
 knitr::opts_chunk$set(linewidth=100) 
-purl("02_Soluzio_bakarrak.Rnw")
 
 
 ## ----GC_1 , prompt=TRUE, echo=-1 , message=FALSE-------------------------
@@ -251,96 +250,12 @@ knap.GRASP <- function (weight , value , limit , cl.size = 0.25){
 }
 
 
-## ----Knap_GRASP, eval=FALSE , echo=1:5-----------------------------------
-## knap.GRASP <- function (weight , value , limit , cl.size = 0.25){
-##   size <- length(weight)
-##   ratio <- value / weight
-##   solution <- rep(FALSE , size)
-##   finished = FALSE
-##   while (!finished){
-##     non.selected <- which(!solution)
-##     cl.n <- round(length(non.selected)*cl.size)
-##     cl <- sort(ratio[non.selected] , decreasing=TRUE)[1:cl.n]
-##     selected <- sample(cl,1)
-##     aux <- solution
-##     aux[ratio == selected] <- TRUE
-##     if (sum(weight[aux])<limit){
-##       solution <- aux
-##     }else{
-##       finished <- TRUE
-##     }
-##   }
-##   solution
-## }
 
 
-## ----Knap_GRASP, eval=FALSE , echo=6:8-----------------------------------
-## knap.GRASP <- function (weight , value , limit , cl.size = 0.25){
-##   size <- length(weight)
-##   ratio <- value / weight
-##   solution <- rep(FALSE , size)
-##   finished = FALSE
-##   while (!finished){
-##     non.selected <- which(!solution)
-##     cl.n <- round(length(non.selected)*cl.size)
-##     cl <- sort(ratio[non.selected] , decreasing=TRUE)[1:cl.n]
-##     selected <- sample(cl,1)
-##     aux <- solution
-##     aux[ratio == selected] <- TRUE
-##     if (sum(weight[aux])<limit){
-##       solution <- aux
-##     }else{
-##       finished <- TRUE
-##     }
-##   }
-##   solution
-## }
 
 
-## ----Knap_GRASP, eval=FALSE , echo=9:10----------------------------------
-## knap.GRASP <- function (weight , value , limit , cl.size = 0.25){
-##   size <- length(weight)
-##   ratio <- value / weight
-##   solution <- rep(FALSE , size)
-##   finished = FALSE
-##   while (!finished){
-##     non.selected <- which(!solution)
-##     cl.n <- round(length(non.selected)*cl.size)
-##     cl <- sort(ratio[non.selected] , decreasing=TRUE)[1:cl.n]
-##     selected <- sample(cl,1)
-##     aux <- solution
-##     aux[ratio == selected] <- TRUE
-##     if (sum(weight[aux])<limit){
-##       solution <- aux
-##     }else{
-##       finished <- TRUE
-##     }
-##   }
-##   solution
-## }
 
 
-## ----Knap_GRASP, eval=FALSE , echo=-(1:10)-------------------------------
-## knap.GRASP <- function (weight , value , limit , cl.size = 0.25){
-##   size <- length(weight)
-##   ratio <- value / weight
-##   solution <- rep(FALSE , size)
-##   finished = FALSE
-##   while (!finished){
-##     non.selected <- which(!solution)
-##     cl.n <- round(length(non.selected)*cl.size)
-##     cl <- sort(ratio[non.selected] , decreasing=TRUE)[1:cl.n]
-##     selected <- sample(cl,1)
-##     aux <- solution
-##     aux[ratio == selected] <- TRUE
-##     if (sum(weight[aux])<limit){
-##       solution <- aux
-##     }else{
-##       finished <- TRUE
-##     }
-##   }
-##   solution
-## }
 
 
 ## ----GRASP_vs_rndstart_1, echo=-1 , prompt=TRUE , cache=TRUE-------------

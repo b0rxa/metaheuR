@@ -650,22 +650,22 @@ knap.GRASP <- function (weight , value , limit , cl.size = 0.25){
 
 Funtzioaren pamateroak problemarenak izango dira, gehi kandidatoen zerrendaren luzeera, ratio baten bidez adieraziko duguna. Hasteko, zenbait datu atera eta aldagai batzuk hasieratzen ditugu. Besteak beste, soluzio ``hutsa'' sortzen dugu, elementurik ez duena.
 
-<<Knap_GRASP, eval=FALSE , echo=1:5>>=
+<<Knap_GRASP, eval=FALSE , echo=1:5 , purl=FALSE>>=
 @
 
 Soluzioan elementuak sartzeko begizta bat izango dugu, motxila beteta ez dagoen bitartean errepikatuko dena. Begiztaren lehenengo pausua sarturik gabeko elementuei antzemate diegu eta, uneko iterazioan, gure hautagai zerrenda izan behar duen tamaina kalkulatu egiten dugu (gogoratu tamaina urratsean ditugun aukera kopuruaren araberakoa dela). 
 
-<<Knap_GRASP, eval=FALSE , echo=6:8>>=
+<<Knap_GRASP, eval=FALSE , echo=6:8 , purl=FALSE>>=
 @
 
 Orain ratioak ordenatu ondoren, lehenengo elementuak hartzen ditugu hautagai zerrenda gisa eta, gero, horietatik bat ausaz aukeratzen dugu.
 
-<<Knap_GRASP, eval=FALSE , echo=9:10>>=
+<<Knap_GRASP, eval=FALSE , echo=9:10 , purl=FALSE>>=
 @
 
 Amaitzeko, aukeratutako elementua soluzioan sartzen dugu eta, motxila betetzen ez bada, aurrera jarraitzen dugu. Bestela, soluzioa deusestatzen dugu eta begizta amaitzen dugu.
 
-<<Knap_GRASP, eval=FALSE , echo=-(1:10)>>=
+<<Knap_GRASP, eval=FALSE , echo=-(1:10) , purl=FALSE>>=
 @
 
 Sortu dugun futnzioa GRASP algoritmoa guztiz ausazkoa den hasieraketa anizkoitzarekin alderatzeko erabil dezakegu, \code{cl.size} parametroarekin jolastuz. Lehenik eta behin, ausazko problema bat sortuko dugu. Kasu honetan 50 item izango ditugu eta hauen balioa bi multzotan banatuko dugu. Elementuen erdirako balioa 0 eta 10 arteko ausazko zenbakiak dira; beste erdirako, ausazko zenbakiak 0 eta 25 tartean. Kasu guztietan pisua balioarekiko proportzionala da, faktorea ausazko zenbakia izanik. Limite gisa ausaz aukeratutako 10 elementuen pisuaren batura erabiliko dugu.

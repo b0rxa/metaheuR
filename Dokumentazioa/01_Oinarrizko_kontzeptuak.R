@@ -44,6 +44,22 @@ gcol.problem$is.valid(trivial.sol)
 gcol.problem$plot(trivial.sol , node.size = 15 , label.cex = 1.5)
 
 
+## ----TSP_greedy , prompt=TRUE , echo=FALSE-------------------------------
+tsp.constructive <- function (cmatrix){
+  diag(cmatrix) <- NA
+  best.pair <- which(cmatrix == min(cmatrix,na.rm=T), arr.ind=TRUE)
+  solution <- c(best.pair[1,1],best.pair[1,2])
+  cmatrix[best.pair[1,1],]<-NA
+  cmatrix[ , best.pair[1,]]<-NA
+  for (i in 3:nrow(cmatrix)){
+    next.city <- which.min (cmatrix[solution[i-1],])
+    solution <- append(solution , next.city)
+    cmatrix[solution[i-1],] <- NA
+    cmatrix[ , next.city] <- NA
+  }
+  names(solution)<-NULL
+  permutation(vector = solution)
+}
 
 
 
@@ -52,8 +68,10 @@ gcol.problem$plot(trivial.sol , node.size = 15 , label.cex = 1.5)
 
 
 
-## ----TSP_greedy_5 , prompt=TRUE------------------------------------------
-greedy.solution <- tsp.greedy(cost.matrix)
+
+
+## ----TSP_greedy_2 , prompt=TRUE------------------------------------------
+greedy.solution <- tsp.constructive(cost.matrix)
 tsp.example$evaluate(greedy.solution)
 colnames(cost.matrix)[as.numeric(greedy.solution)]
 
