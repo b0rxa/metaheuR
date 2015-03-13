@@ -8,7 +8,7 @@
 #' @examples
 #' n <- 10
 #' cost.matrix <- matrix(runif(n^2) , ncol = n)
-#' tsp.greedy (cost.matrix)
+#' tsp.greedy (cost.matrix, 2)
 
 
 tsp.greedy <- function (cmatrix, cl.size){

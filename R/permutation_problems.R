@@ -7,8 +7,7 @@
 #' @examples
 #' cmatrix<-matrix(runif(100),ncol=10)
 #' tsp<-tsp.problem(cmatrix)
-#' tsp$evaluate<-random.permutation(10)
-#' eval(sol)
+#' tsp$evaluate(random.permutation(10))
 tsp.problem<-function(cmatrix){
   if (diff(dim(cmatrix))!=0) stop ("The cost matrix should be square")
   evaluate<-function(solution){
@@ -40,13 +39,13 @@ tsp.problem<-function(cmatrix){
 #' @examples
 #' fmatrix<-matrix(runif(100),ncol=10)
 #' dmatrix<-matrix(runif(100),ncol=10)
-#' qap<-qap.problem(cmatrix)
-#' qap$evaluate<-random.permutation(10)
-#' eval(sol)
+#' qap<-qap.problem(fmatrix, dmatrix)
+#' qap$evaluate(random.permutation(10))
+#' 
 qap.problem<-function(fmatrix, dmatrix){
   if (diff(dim(fmatrix))!=0) stop ("The flow matrix should be square")
   if (diff(dim(dmatrix))!=0) stop ("The distance matrix should be square")
-  if (all(dim(fmatrix)==dim(dmatrix))) 
+  if (!all(dim(fmatrix)==dim(dmatrix))) 
     stop ("The flow matrix and the distance matrix should have the same dimension")
   evaluate<-function(solution){
     if (!isClass(solution,"Permutation")) 
