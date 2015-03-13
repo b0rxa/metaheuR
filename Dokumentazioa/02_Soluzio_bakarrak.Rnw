@@ -10,6 +10,7 @@
 \newcommand{\zkk}{\guillemotleft}
 \newcommand{\skk}{\guillemotright}
 \newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\tq}{\textquotesingle}
 
 \begin{document}
 \ikasturtea{2013/2014}
@@ -23,7 +24,7 @@
 \tel{943 01 50 13}
 \mail{borja.calvo@ehu.es}
 
-<<echo=FALSE>>=
+<<echo=FALSE , purl=FALSE>>=
 ## This code is for wrapping long outputs
 library(knitr)
 hook_output = knit_hooks$get('output')
@@ -38,6 +39,7 @@ knit_hooks$set(output = function(x, options) {
   hook_output(x, options)
 })
 knitr::opts_chunk$set(linewidth=100) 
+knit_theme$set("earendel")
 @
 
 
@@ -327,7 +329,7 @@ Bi dira bilaketa lokala hasieratzeko erabiltzen diren estrategia nagusiak:
 \item \textbf{Soluzio onak eraiki} - Lehenengo kapituluan ikusi genuen problemak ebazteko metodo heuristiko espezifikoak diseina daitezkeela. Oro har, metodo hauek pausuz pausu soluzio onak eraikitzen dituzte, urrats bakoitzean aukera guztietatik onena aukeratuz -- ingelesez metodo hauei \textit{constructive greedy} deritze, hau da algoritmo eraikitzaile gutiziatsuak edo jaleak --. Nahiko soluzio onak eman arren, hauek ez daukate zergatik optimoak\footnote{Ez optimo globalak eta ezta lokalak ere} izan behar eta, beraz, lortutako soluzioak bilaketa lokala hasieratzeko erabil daitezke. Estrategia hauek emaitza hobeak lortu ohi dituzte eta bilaketak iterazio gutxiago behar izaten dituzte; desabantaila nagusia, ordea, kostu konputazionala da.
 \end{itemize}
 
-\subsection{Inguruneko soluzioaren aukeraketa}
+\subsection{Inguruneko soluzioaren aukeraketa}\label{sec:LS_selection}
 
 Behin inguruneko soluzioen multzoa definiturik, hurrengo pausua soluzioen aukeraketa irizpidea ezartzea da. Lehen aipatu bezala, bi dira, nagusiki, erabiltzen diren estrategiak: helburu funtzioa hobetzen duen lehenengo soluzioa aukeratzea edo helburua gehien hobetzen duen soluzioa bilatzea. Oro har, inguruneak txikiak direnean bigarren hurbilketa da interesgarriena; hala eta guztiz ere, inguruneak handiak direnean, kostu konputazionala dela eta, bideraezina gerta daiteke.
 
@@ -391,7 +393,7 @@ Inguruneak handiak direnean ordenak oso eragin handia izan dezake eta, hortaz, h
 Metodo heuristikoez gain, tamaina handiko inguruneak era eraginkorrean zehazki aztertzeko algoritmoak ere badaude; hauetako adibide bat \textit{dynasearch}\citep{congram2000} algoritmoa da.
 
 
-\subsection{Bilaketa lokalaren elementuen eragina}
+\subsection{Bilaketa lokalaren elementuen eragina}\label{sec:LS_elements}
 
 Ikusi dugun bezala, bilaketa lokal arrunt bat aplikatzeko hiru aspektu aztertu behar ditugu. Lehenengoa, hasierako soluzioa, bigarrena, erebiliko dugun ingurunea eta, azkena, inguruneko soluzioaren aukeraketa. Atal honetan aspektu hauen eragina aztertuko dugu adibide bat erabiliz. 
 
@@ -601,7 +603,7 @@ plot.progress(result = list(ILS1 = ils.1 , ILS33 = ils.25 , ILS100 = ils.100)) +
 \caption{ILS algoritmoaren progresioa 14 hiriko TSP problema batean. Ezkerretik eskuinera, perturbazioaren ratioa 0.01, 0.25 eta 1 da.}\ref{fig:ILS}
 \end{figure}
 
-Hiru bilaketen progresioa \ref{fig:ILS} irudian ikus daitezke. Hirurak soluzio berdinatik hasten dira eta, pausu bakoitzean inguruko soluziorik onena aukeratzen dutenez, lehenengo jaitsiera berdina da hiru grafikoetan. Lehenengo optimo lokala topatzen den momentuan, ordea, diferentziak hasten dira. Ezkerretik eskuinera, lehenengo grafikoan soluzioak posizioen \%1 trukatuz perturbatzen dira; guztira 14 posizioak direnez, trukaketa bakar bat egiten da. Erdiko grafikoan perturbazioa \%25ekoa da, 3 trukaketa, alegia. Azeken grafikoan, berriz, 14 trukaketa egiten dira (posizioen \%100). Perturbazio txiki bat erabiltzen dugunean, lortutako soluzioaren ebaluazioa optimo lokalaren antzerakoa da (agertzen diren ``pikoak'' ez dira oso altuak, alegia); geroz eta perturbazio handiagoa orduan eta diferentzia handiagoa soluzio berria eta optimoaren artean.
+Hiru bilaketen progresioa \ref{fig:ILS} irudian ikus daitezke. Hirurak soluzio berdinatik hasten dira eta, pausu bakoitzean inguruko soluziorik onena aukeratzen dutenez, lehenengo jaitsiera berdina da hiru grafikoetan. Lehenengo optimo lokala topatzen den momentuan, ordea, diferentziak hasten dira. Ezkerretik eskuinera, lehenengo grafikoan soluzioak posizioen \%1 trukatuz perturbatzen dira; guztira 14 posizioak direnez, trukaketa bakar bat egiten da. Erdiko grafikoan perturbazioa \%25ekoa da, 3 trukaketa, alegia. Azeken grafikoan, berriz, 14 trukaketa egiten dira (posizioen \%100). Perturbazio txiki bat erabiltzen dugunean, lortutako soluzioaren ebaluazioa optimo lokalaren antzerakoa da (agertzen diren \zkk pikoak\skk\  ez dira oso altuak, alegia); geroz eta perturbazio handiagoa orduan eta diferentzia handiagoa soluzio berria eta optimoaren artean.
 
 
 \subsubsection{GRASP algoritmoa}
@@ -633,7 +635,7 @@ knap.GRASP <- function (weight , value , limit , cl.size = 0.25){
   finished = FALSE
   while (!finished){
     non.selected <- which(!solution)
-    cl.n <- round(length(non.selected)*cl.size)
+    cl.n <- max(1, round(length(non.selected)*cl.size))
     cl <- sort(ratio[non.selected] , decreasing=TRUE)[1:cl.n]
     selected <- sample(cl,1)    
     aux <- solution
@@ -648,7 +650,7 @@ knap.GRASP <- function (weight , value , limit , cl.size = 0.25){
 }
 @
 
-Funtzioaren pamateroak problemarenak izango dira, gehi kandidatoen zerrendaren luzeera, ratio baten bidez adieraziko duguna. Hasteko, zenbait datu atera eta aldagai batzuk hasieratzen ditugu. Besteak beste, soluzio ``hutsa'' sortzen dugu, elementurik ez duena.
+Funtzioaren pamateroak problemarenak izango dira, gehi kandidatoen zerrendaren luzeera, ratio baten bidez adieraziko duguna. Hasteko, zenbait datu atera eta aldagai batzuk hasieratzen ditugu. Besteak beste, soluzio \zkk hutsa\skk sortzen dugu, elementurik ez duena.
 
 <<Knap_GRASP, eval=FALSE , echo=1:5 , purl=FALSE>>=
 @
@@ -718,6 +720,7 @@ plot.progress(list(GRASP50 = GRASP.50 , GRASP10 = GRASP.10 , RND = rnd.ls) ) + l
 plot.progress(list(GRASP50 = GRASP.50 , GRASP10 = GRASP.10 , RND = rnd.ls) , y = 'best') + labs(y="Best solution") + scale_color_discrete("Strategy")
 @
 
+
 \begin{figure}[t]
 \subfigure[Uneko soluzioa]{
 \includegraphics[width=0.45\textwidth]{./Irudiak/GRASP_vs_rndstart_4-1}
@@ -733,11 +736,11 @@ plot.progress(list(GRASP50 = GRASP.50 , GRASP10 = GRASP.10 , RND = rnd.ls) , y =
 
 \subsection{Inguruneko soluzioen hautaketa}
 
-Definizioz, optimo lokalak diren soluzioen inguruko soluzio guztiak bera baino txarragoak dira; hortaz, ez dugu soluzio hoberik aukeratzerik eta, ondorioz, bilaketa lokala trabatuta gelditzen da. Bilaketa prozesuari amaiera ez emateko, soluzio hoberik egon ezean, helburu funtzioa hobetzen ez duten soluzioak onar ditzakegu. Estrategia honi esker, txarragoak diren soluzio batzuetatik pasatuz gero bilaketa espazioaren eskualde hobeetara ailega gintezke.
+Definizioz, optimo lokal baten inguruan dauden soluzio guztiak optimoa bera baino txarragoa dira; hortaz, ez dugu soluzio hoberik aukeratzerik eta trabatuta gelditzen da. Bilaketa prozesuari amaiera ez emateko, soluzio hoberik egon ezean, helburu funtzioa hobetzen ez duten soluzioak onar ditzakegu. Estrategia honi esker, txarragoak diren soluzio batzuetatik pasatuz gero bilaketa espazioaren eskualde hobeetara ailega gintezke.
 
 Soluzio \zkk txarrak\skk\ aukeratzeko bi estrategia daude. Lehendabizikoan helburua hobetzen ez duen soluzio bat aukeratzean sortutako \zkk galera\skk\ kontutan hartzen da, era probabilistikoan zein deterministan. Algoritmorik ezagunena \textit{suberaketa estokastikoa} --\textit{simulated snnealing}~\cite{kirkpatrick1983,cerny1985} ingelesez-- izenekoa da, zeinek probabilitate-banaketa parametriko bat erabiltzen duen aukeraketa egiteko. Algoritmo honetan inspiratutako beste hainbat algoritmoak proposatu dira, \textit{demon algoritm}~\cite{pepper2000} eta \textit{threshold accepting}~\cite{dueck1990,moscato1990} algoritmoak, besteak beste.
 
-Estrategia honen beste interpretazioa Gloverrek 1986an proposaturiko \textit{tabu bilaketa}~\cite{glover1986} --\textit{tabu search} ingelesez-- algoritmoarena da. Kasu honetan helburu funtzioa hobetzen ez duten soluzioak aukeratzen dira baldin eta soilik baldin ingurune osoan helburua hobetzen duen soluziorik ez badago. Estrategia honen arriskua dagoeneko bisitatu ditugun soluzioak bisitatzea den legez, \zkk memoria\skk erabili beharra dago zikloak saihesteko.
+Soluzio txarragoak aukeratzen dituen estrategiren beste interpretazioa Gloverrek 1986an proposaturiko \textit{tabu bilaketa}~\cite{glover1986} --\textit{tabu search} ingelesez-- algoritmoarena da. Kasu honetan helburu funtzioa hobetzen ez duten soluzioak aukeratzen dira, baina bakarrik ingurune osoan helburua hobetzen duen soluziorik ez badago. Estrategia honen arriskua dagoeneko bisitatu ditugun soluzioak bisitatzea den legez, \zkk memoria\skk\ erabili beharra dago zikloak saihesteko.
 
 \subsubsection{Suberaketa Simulatua}
 
@@ -779,13 +782,13 @@ Aintzat hartzekoa da $\Delta E<0$ denean funtzioaren balioa 1 baino handiagoa de
 \item \TT{\Else}
 \item \TTT{$e^{-\frac{\Delta E}{T}}$ probabilitatearekin $s=s^\prime$}
 \item \T{\Done}
-\item \T{T=\textit{update\_temperature(T)}}
+\item \T{\textit{T = update\_temperature(T)}}
 \item \Done
 \end{ifpseudo}
 \caption{Suberaketa Simulatuaren sasikodea}\label{alg:SA}
 \end{ifalgorithm}
 
-Suberaketaren gakoa hozte-abiadura da eta, era berean, suberaketa simulatuaren zati garrantzitsuena izango da. Izan ere, hasieran $T$ balio handiak erabiliko ditugu, ia edozein soluzio onartzeko, eta gero, astiro, $T$ txikiagotuko dugu, optimo lokal batean trabatuta gelditu arte. \ref{alg:SA} algoritmoan suberaketa simulatuaren sasikodea ikus daiteke.
+Suberaketaren gakoa hozte-abiadura da eta, era berean, suberaketa simulatuaren tenperaturaren eguneraketa izango da zatirik garrantzitsuena. Izan ere, hasieran $T$ balio handiak erabiliko ditugu, ia edozein soluzio onartzeko, eta gero, astiro, $T$ txikiagotuko dugu, gelditzeko baldintza bete arte. \ref{alg:SA} algoritmoan suberaketa simulatuaren sasikodea ikus daiteke.
 
 \begin{figure}[t]
 \centering
@@ -815,22 +818,147 @@ Beraz, hasierako tenperatura 185 balioan finkatzen badugu, badakigu hasierako it
 \end{ifexample}
 \end{tcolorbox}
 
+Algoritmoaren erabilera erakusteko \ref{sec:LS_selection} ataleko adibidea erabiliko dugu (Bavariako hiriena).
+
+<<TSP_SA_1, echo=FALSE, results='hide'>>=
+url <- system.file("bays29.xml.zip" , package = "metaheuR")
+cost.matrix <- tsplib.parser(url)
+@
+
+Goiko adibidean egin dugun bezala, helburu funtzioaren maximoa eta minimoa kalkulatuko ditugu eta beraien arteko diferentzia hasierako tenperatura definitzeko erabiliko dugu. Horretarako, elementu minimoak eta maximoak bilatu beharko ditugu kostu matrizearen goiko triangeluan. Adibidean ez bezala, kasu honetan, hozketa prozesua gehiegi ez luzatzeko hasierko tenperatura kalkulatzeko diferentzia maximoaren probabilitatea 0.5-en finkatuko dugu.
+
+<<TSP_SA_2, prompt=TRUE , cache=TRUE>>=
+n <- ncol(cost.matrix)
+distances <- cost.matrix[upper.tri(cost.matrix)]
+ebal.max <- sum(sort(distances , decreasing = TRUE)[1:n])
+ebal.min <- sum(sort(distances , decreasing = FALSE)[1:n])
+probability <- 0.5
+
+init.t <- -1*(ebal.max - ebal.min) / log(probability)
+init.t
+@
+
 \item \textbf{Oreka lortzeko iterazio kopurua} - Tenperatura balio bakoitzeko zenbait iterazio egin behar dira -- hau da, zenbait inguruneko soluzio aztertu behar da -- \zkk oreka\skk\ lortu arte. Behin oreka lorturik, tenperatura eguneratu behar da, berriro oreka bilatzeko. Lehenengo pausua, beraz, oreka lortzeko behar dugun iterazio kopurua ezartzea da. Ohikoena inguruneko tamainaren araberako iterazio kopurua finkatzea da. Beste era batean esanda, aurretik $\rho$ ratioa finkatuko dugu; gero, tenperatura bakoitzeko $\rho|N(s)|$ soluzio ebaluatuko ditugu, non $|N(s)|$ uneko soluzioaren ingurunearen tamaina den. 
 
 Estrategia honetan iterazio kopurua finkatuta dago, baina badaude beste estrategiak non kopurua tenperatura bakoitzeko aldakorra den. Adibide gisa, tenperatura soluzio berri bat onartzen dugun bakoitzean alda dezakegu; batzuetan ebaluatzen dugun lehendabiziko soluzioa onartuko dugu eta, bestetan, hainbat soluzio probatu beharko ditugu, bat onartu arte. Kasu honetan, beraz, iterazio kopurua aldakorra da. Ingurunean soluzio on asko badaude, iterazio gutxi beharko ditugu; kontrako kasuan, inguruneko soluzio gehienak txarrak badira, iterazio gehiago beharko ditugu uneko soluzio aldatzeko.
 
 \item \textbf{Tenperatura jaitsieraren abiadura} - Hau da, ziurrenik, algoritmoaren osagairik nagusiena. Hainbat formula erabil daitezke tenperatura eguneratzeko. Hona hemen batzuk:
   \begin{itemize}
-  \item \textit{Lineala}: $T_i=T_0 - i\beta$, non $T_i$ $i$ iterazioko tenperatura den. Eguneraketa honetan tenperatura beti positiboa izan behar dela kontrolatu behar dugu, ekuazioak tenperatura negatiboak itzuli baitaitezke.
+  \item \textit{Lineala}: $T_i=T_0 - i\beta$, non $T_i$ $i$ iterazioko tenperatura den. Eguneraketa honetan tenperatura beti positiboa izan behar dela kontrolatu behar dugu, ekuazioak tenperatura negatiboak itzuli baititzake.
   \item \textit{Geometrikoa}: $T_i = \alpha T_{i-1}$. $\alpha \in (0,1)$ abiadura kontrolatzen duen parametroa da eta, ohikoena, 0.5 eta 0.99 tartean egotea da.
   \item \textit{Logaritmikoa}: $T_i=\frac{T_0}{log(i)}$. Abiadura hau oso motela da baina, nahiz eta praktikan oso erabilgarria ez izan, algoritmoaren konbergentzia demostratuta dago ekuazio hau erabiltzen denean.
 \end{itemize}
 Funtzio guzti hauek monotonoak dira, hau da, iterazio bakoitzean tenperatura beti jaisten da. Edonola ere, problema batzuetan funtzio ez-monotonoek hobeto funtziona dezakete\footnote{Tenperatura igotzen denean dibertsifikazioan gailentzen da; tenperatura jaistean, berriz, areagotze prozesua indartzen da. Hau kontutan hartuz, funtzio ez-monotonoak dibertsifikazio/areagotze prozesuen arteko oreka kontrolatzeko erabil daitezke}.
 
-\item \textbf{Algoritmoa gelditzeko irizpidea} - Aurreko puntuan ikusi dugu legez, iterazioak aurrera egin ahala tenperatura zero baliora hurbiltzen da baina, kasu gehienetan, ez da inoiz heltzen. Honek esan nahi du beti optimo lokaletatik ateratzeko aukera izango dugula, probabilitatea oso txikiarekin bada ere. Hori dela eta, algoritmoa gelditzeko baldintzaren bat beharko dugu. Irizpide hedatuena tenperatura minimo bat finkatzea da; bestela, denbora edota ebaluazio kopuru maximoak ere finka ditzakegu.
+\item \textbf{Algoritmoa gelditzeko irizpidea} - Aurreko puntuan ikusi dugun legez, iterazioak aurrera egin ahala tenperatura zero baliora hurbiltzen da baina, kasu gehienetan, ez da inoiz heltzen. Honek esan nahi du beti optimo lokaletatik ateratzeko aukera izango dugula, probabilitatea oso txikiarekin bada ere. Hori dela eta, algoritmoa gelditzeko baldintzaren bat beharko dugu. Irizpide hedatuena tenperatura minimo bat finkatzea da; bestela, denbora edota ebaluazio kopuru maximoak ere finka ditzakegu.
 \end{itemize}
 
-Ikusitako algoritmoetan soluzioen onarpena probabilistikoa da; alabaina, suberaketa simulatuaren kontzeptua era deterministan ere inplementa daiteke. Honen adibidea da Deabru Algoritmoa~\cite{pepper2000} -- \textit{Deamon Algorithm}, ingelesez --. Hasiera batean Creutz-ek algoritmoa simulazio molekularrak egiteko proposatu zuen, baina optimizazio problemak ebazteko ere egoki daiteke. Algoritmoan soluzioak onartuko direnetz erabakitzeko tenperatura erabili beharrean \zkk deabru\skk\ bat erabiltzen da; deabru honek uneoro $E_D$ energia du. Soluzio bakoitza aztertzerakoan, subaeraketa simulatuan legez, $\Delta E$ kalkulatzen da eta, une horretan $\Delta E>E_D$ bada, soluzioa onartzen da -- suberaketa simulatuan bezala, $\Delta E<0$ denean soluzioa onartzen da --. Algoritmoaren gakoa deabruaren energia eguneratzean datza; soluzio bat onartzen den bakoitzean deabruaren energia $E_D + \Delta E$ izatera pasatzen da, hau da, \zkk sistemaren\skk\ energia aldaketa deabruak jasotzen du. Onartutako soluzioa hobea denean, deabruak energia irabazten du eta, txarragoa denean, berriz, energia galtzen du -- energia nahiko baldin badu, betiere --. Algoritmo honen abantaila sinpletasuna da, Boltzmann distribuzioa ebaluatzeko beharrik ez baitugu.
+Suberaketa simulatuaren erabilera erakusteko Bavierako TSP adibidearekin jarraituko dugu. Algoritmoa \code{simulated.annealing} funtzioak inplementatzen du. Funtzio honek, ohiko argumentuez gain, beste zenbait parametro berezi ditu:
+
+\begin{itemize}
+\item \code{cooling.scheme} - Argumentu honen bidez tenperaturak eguneratzeko funtzio bat pasatu behar da. Funtzioak uneko tenperatura jasoko du argumentu gisa eta hurrengo tenperatura itzuliko du.
+\item \code{initial.temperature} - Hasierako tenperatura.
+\item \code{initial.temperature} - Amaierako tenperatura. Hau algoritmoa gelditzeko irizpidea definitzeko erabiltzen da.
+\item \code{eq.criterion} - String bat da, oreka baldintza zeren araberazkoa den adierazten duena. Bi balio posible daude, \code{\tq evaluations\tq} eta \code{\tq acceptaces\tq}. Lehenengoa erabiltzen bada, oreka baldintza ebaluazio kopuru jakinda batera ailegatzen denean beteko da. Bigarrenaren kasuan, ostera, helburu funztioa hobetzen ez duten soluzio kopuru konkretu onartzen denean beteko da.
+\item \code{eq.value} - Goiko irizpidean erabiliko den balioa.
+\end{itemize}
+
+Hasierako tenperatura kalkulatuta dugu, baina ez amaierako tenperatura. Ebaluazioen arteko diferentziarako behe-muga bilatzea ez da hain erraza. Alternatiba bat, muga bat kalkulatu beharrean, ausazko soluzioak sortuko ditugu eta, gero, beraien arteko diferentzien arabera behe muga bat finka dezakegu. 
+
+Estrategia hau gauzatzeko 500 ausazko soluzio sortuko eta ebaluatuko ditugu. Gero, edozein bi soluzioen arteko diferentzia balio absolutuan konputatuko dugu. Azkenik, 0 ez diren diferentzien artean txikiena hartuko dugu minimo gisa.
+
+<<TSP_SA_3, prompt=TRUE , cache=TRUE>>=
+rep <- 500
+rnd.eval <- sapply (1:rep , FUN = function(x) tsp.babaria$evaluate(random.permutation(n)))
+pairs <- do.call(rbind , lapply(2:rep , FUN = function(i) cbind(i-1 , i:rep)))
+diffs <- apply(pairs , MARGIN = 1 , FUN = function(p) abs(rnd.eval[p[1]] - rnd.eval[p[2]]))
+min.delta <- min(subset(diffs , diffs != 0))
+min.delta
+@
+
+Ebaluazio funtzio diferentzia horri probabilitate txiki bat esleituz, tenperatura minimoa kalkula dezakegu.
+
+<<TSP_SA_4, prompt=TRUE , cache=TRUE>>=
+probability <- 0.1
+final.t <- -min.delta / log(probability) 
+final.t
+@
+
+Gauza berdina egin dezakegu tenperatura maximoa kalkulatzeko, lehen kalkulatutako goi-mugarekin alderatu ahal izateko.
+
+<<TSP_SA_5, prompt=TRUE , cache=TRUE>>=
+init.t
+max.delta <- max(diffs)
+probability <- 0.5
+init.t <- -max.delta / log(probability) 
+init.t
+@
+
+Ikus daitekeen bezala, kalkulatutako diferentzietan oinarritzen bagara hasierako tenperatura askoz ere txikiagoa da, teorikoki kalkulatutako goi-muga laginketan izan ditugun diferentziak baino handiagoa delako.
+
+Informazio guztiarekin funtzioaren argumentuak pausuz pausu munta ditzakegu. Ingurunea definitzeko, elkar-ondoko trukaketak erabiliko ditugu eta bilaketa ausazko soluzio batetik abiatuko dugu.
+
+<<TSP_SA_6_1, echo=-2 , prompt=TRUE , cache=TRUE , results='hide' >>=
+set.seed(90)
+args <- list()
+
+args$evaluate             <- tsp.babaria$evaluate
+args$initial.solution     <- random.permutation(n)
+args$neighborhood         <- swapNeighborhood(args$initial.solution)
+@
+
+Hozeketa funtzioa sortzeko \code{geometric.cooling} funtzioa erabiliko dugu --hozketa geometrikoa inplementatzen duena--. Funtzio honi hasierako eta amaierako tenperaturak eman behar dizkiogu; horrez gain, hasierako tenperaturatik amaierakora zenbat eguneraketa behar diren ere adierazi beharko diogu.
+
+<<TSP_SA_6_2 , prompt=TRUE , cache=TRUE , results='hide' >>=
+steps <- 20
+args$cooling.scheme       <- geometric.cooling(init.t , final.t , steps)
+args$initial.temperature  <- init.t
+args$final.temperature    <- final.t
+@
+
+Funtzioak tenperatura bat emanik, hurrengo tenperatura emango digu
+
+<<TSP_SA_6_4 , prompt=TRUE , cache=TRUE , results='hide' >>=
+init.t
+next.t <- args$cooling.scheme(init.t)
+next.t
+next.t <- args$cooling.scheme(next.t)
+next.t
+@
+
+Oreka baldintza ebaluazioen arabera egingo dugu. Erabiliko dugun ingurunearen tamaina hiri kopurua da, eta horren arabera finkatuko dugu oreka baldintza. Zehazki, 10 bider ingurunearen tamaina erabiliko dugu.
+
+<<TSP_SA_6_4, echo=-1 , prompt=TRUE , cache=TRUE , results='hide' >>=
+args$eq.value             <- 10*n
+args$log.frequency        <- 10
+args$eq.criterion         <- 'evaluations'
+@
+
+Amaitzeko, algoritmoa exekutatzen dugu.
+
+<<TSP_SA_6_5, echo=-1 , prompt=TRUE , cache=TRUE , results='hide' >>=
+sa <- do.call(simulated.annealing , args)
+@
+
+<<TSP_SA_7, echo=FALSE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=8 , fig.height=4>>=
+plot.progress(sa) + labs(y="Evaluation") + geom_line(aes(y=Best_sol) , col="red" , linetype=2 , size=1.1) + geom_vline(xintercept = seq(10*n, steps*10*n , 10*n) , col="darkgray" , linetype=2) 
+@
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.75\linewidth]{./Irudiak/TSP_SA_7-1}
+\caption{Simulated annealing algoritmoaren progresioa TSP problema batean. Marra jarraikiak uneko soluzioaren progresioa adierazten du eta etenak, berriz, arkitutako soluziorik onena. Marra bertikalek teneraturaren aldaketak erakusten dituzte.}
+\label{fig:SA}
+\end{figure}
+
+
+Bilaketaren eboluzioa \ref{fig:SA} irudian jasota dago. Irudiak uneko soluzioaren zein soluziorik onenaren progresioa erakusten du (beltzez eta gorriz, hurrenez hurren).Bilaketan zehar egindako tenperatura aldaketak marra bertikalen bidez adierazita daude. Uneko soluzioaren eboluzioa ikus daiteke uneko soluzioaren ebaluazioa, hasieran, oso aldakorra dela. Hau tenperaturaren ergainari esker da, tenperatura altuak soluzio txarrak aukeratzeko probabilitate handitze baitu. Hozketa prozesuaren zehar, tenperatura jaisten den heinean, probabilitatea txikitu egiten da eta, ondorioz, soluzioen arteko aldakortasuna murriztu egiten da. Amaieran, tenperatura oso txiki denean ia ezinezkoa da soluzio txarragoak onartzea eta, hortaz, uneko soluzioa ez da ia aldatzen.
+
+Grafikan ere ikus daiteke algoritmoak arinegi konbergitzen duela. Hori ez gertatzeko, egin daitekeena azken tenperatura handiagoa jartzea da.
+
+Ikusitako algoritmoetan soluzioen onarpena probabilistikoa da; alabaina, suberaketa simulatuaren kontzeptua era deterministan ere inplementa daiteke. Honen adibidea da Deabru Algoritmoa~\cite{pepper2000} -- \textit{Demon Algorithm}, ingelesez --. Hasiera batean Creutz-ek algoritmoa simulazio molekularrak egiteko proposatu zuen, baina optimizazio problemak ebazteko ere egoki daiteke. 
+
+Algoritmoan soluzioak onartuko direnetz erabakitzeko tenperatura erabili beharrean \zkk deabru\skk\ bat erabiltzen da; deabru honek uneoro $E_D$ energia du. Soluzio bakoitza aztertzerakoan, subaeraketa simulatuan legez, $\Delta E$ kalkulatzen da eta, une horretan $\Delta E>E_D$ bada, soluzioa onartzen da -- suberaketa simulatuan bezala, $\Delta E<0$ denean soluzioa onartzen da --. Algoritmoaren gakoa deabruaren energia eguneratzean datza; soluzio bat onartzen den bakoitzean deabruaren energia $E_D + \Delta E$ izatera pasatzen da, hau da, \zkk sistemaren\skk\ energia aldaketa deabruak jasotzen du. Onartutako soluzioa hobea denean, deabruak energia irabazten du eta, txarragoa denean, berriz, energia galtzen du -- energia nahiko baldin badu, betiere --. Algoritmo honen abantaila sinpletasuna da, Boltzmann distribuzioa ebaluatzeko beharrik ez baitugu.
 
 \subsubsection{Tabu bilaketa}
 
