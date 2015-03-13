@@ -26,3 +26,37 @@ tsp.problem<-function(cmatrix){
   }
   list(evaluate = evaluate)
 }
+
+
+
+
+#' QAP problem evaluator
+#' 
+#' This function generates an evaluation function associated
+#' with a QAP problem
+#' @param fmatrix Flow matrix for the QAP problem
+#' @param dmatrix Distance matrix for the QAP problem
+#' @return A function that can be used to evaluate solutions for a QAP problem
+#' @examples
+#' fmatrix<-matrix(runif(100),ncol=10)
+#' dmatrix<-matrix(runif(100),ncol=10)
+#' qap<-qap.problem(cmatrix)
+#' qap$evaluate<-random.permutation(10)
+#' eval(sol)
+qap.problem<-function(fmatrix, dmatrix){
+  if (diff(dim(fmatrix))!=0) stop ("The flow matrix should be square")
+  if (diff(dim(dmatrix))!=0) stop ("The distance matrix should be square")
+  if (all(dim(fmatrix)==dim(dmatrix))) 
+    stop ("The flow matrix and the distance matrix should have the same dimension")
+  evaluate<-function(solution){
+    if (!isClass(solution,"Permutation")) 
+      stop("This function only evaluates objects of class permutation")
+    if (length(solution)!=dim(fmatrix)[1]) 
+      stop("The solution is not of the correct length. It should have ",
+           dim(dmatrix)[1]," positions")
+    ## Calculate the objective function
+    cost<-sum(fmatrix*dmatrix[as.numeric(solution),as.numeric(solution)])
+    return(cost)
+  }
+  list(evaluate = evaluate)
+}
