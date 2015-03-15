@@ -33,4 +33,7 @@ misp$plot (solution)
 solution <- mis.greedy (rnd.graph , cl.size = 5)
 misp$plot (solution)
 }
+\seealso{
+Other Constructive algorithms: \code{\link{tsp.greedy}}
+}
 

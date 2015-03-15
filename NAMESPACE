@@ -65,5 +65,9 @@ export(
   exchangeNeighborhood,
   hammingNeighborhood,
   tsplib.parser,
-  insertNeighborhood
+  insertNeighborhood,
+  basic.genetic.algorithm,
+  tournament.selection,
+  binary.mutation,
+  k.point.crossover
 )

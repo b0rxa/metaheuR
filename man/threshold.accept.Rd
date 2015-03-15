@@ -2,20 +2,20 @@
 % Please edit documentation in R/acceptance_functions.R
 \name{threshold.accept}
 \alias{threshold.accept}
-\title{Acceptance based on a threshold}
+\title{Acceptance based on a threshold.}
 \usage{
 threshold.accept(delta, th = 0, ...)
 }
 \arguments{
-\item{delta}{Increment in the evaluation function computed as the evaluation of the new solution minus the evaluation of the existing solution}
+\item{delta}{Increment in the evaluation function computed as the evaluation of the new solution minus the evaluation of the existing solution.}
 
-\item{th}{Threshold for the acceptance. By default, the threshold is 0, meaning that the solution is accepted if it improves the evaluation function}
+\item{th}{Threshold for the acceptance. By default, the threshold is 0, meaning that the solution is accepted if it improves the evaluation function.}
 }
 \value{
-\code{TRUE} when the increment is bellow the threshold
+\code{TRUE} when the increment is bellow the threshold.
 }
 \description{
-This function only accepts solutions (returns \code{TRUE}) when the increment in the objective function value is below a given threhold
+This function only accepts solutions (returns \code{TRUE}) when the increment in the objective function value is below a given threhold.
 }
 \examples{
 threshold.accept (delta = -1 , th = -2)
@@ -23,9 +23,7 @@ threshold.accept (delta = -3 , th = -2)
 threshold.accept (delta = -1 , th = 0)
 }
 \seealso{
-\code{\link{always.accept}}, \code{\link{boltzmann.accept}}
-
-Other Acceptance functions: \code{\link{always.accept}};
+Other Acceptance functions.: \code{\link{always.accept}};
   \code{\link{boltzmann.accept}}
 }
 

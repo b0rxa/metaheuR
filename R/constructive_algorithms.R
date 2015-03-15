@@ -1,17 +1,18 @@
 #' Constructive greedy algorithm for the TSP problem
 #' 
-#' This function implements a simple constructive greedy algorithm for the TSP problem.
+#' @description This function implements a simple constructive greedy algorithm for the TSP problem.
 #' @param cmatrix Cost matrix associated to the TSP instance
 #' @param cl.size Size of candidate list. 
 #' @return A permutation containing a solution for the problem
 #' @details The algorithm builds the solution iteratively, selecting, at each step, the closest city to the one added in the previous step.
+#' @family Constructive algorithms
 #' @examples
 #' n <- 10
 #' cost.matrix <- matrix(runif(n^2) , ncol = n)
 #' tsp.greedy (cost.matrix, 2)
 
 
-tsp.greedy <- function (cmatrix, cl.size){
+tsp.greedy <- function (cmatrix, cl.size = 1){
   diag(cmatrix) <- NA
   # If the TSP problem is symmetric, we double the number of candidates to consider both possibilities
   if (cl.size==1){
@@ -68,11 +69,12 @@ tsp.greedy <- function (cmatrix, cl.size){
 
 #' Constructive greedy algorithm for the Maximum Independet Set (MIS) problem
 #' 
-#' This function implements a simple constructive greedy algorithm for the MIS problem
+#' @description This function implements a simple constructive greedy algorithm for the MIS problem
 #' @param graph Graph where the MIS has to be found
 #' @param cl.size Number of nodes to consider at each step of the algorithm.
 #' @return A logical vector indicating which nodes are in the independent set
 #' @details The algorithm builds the solution iteratively selecting, uniformly at random, one of the nodes in the candidate list; this list contains the available nodes with the lowest degree. By default the candidate list is 1, which means that, in absence of ties, the algorithm returns always the same solution. The candidate list can be longer, in which case the algorithm generates random greedy solutions that can be used in GRASP-like algorithms.
+#' @family Constructive algorithms
 #' @examples
 #' library(igraph)
 #' rnd.graph <- random.graph.game (20 , 0.2)

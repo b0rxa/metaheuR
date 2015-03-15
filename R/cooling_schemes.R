@@ -1,6 +1,7 @@
 #' Linear decreasing of the temperature
 #' 
-#' This function updates the temperature decreasing it linearly
+#' @export
+#' @description This function updates the temperature decreasing it linearly
 #' @family Cooling schemes
 #' @param initial.temperature Starting temperature
 #' @param final.temperature Final expected temperature
@@ -22,7 +23,8 @@ linear.cooling <- function (initial.temperature, final.temperature, steps){
 
 #' Geometric decreasing of the temperature
 #' 
-#' This function updates the temperature decreasing it geometrically
+#' @export
+#' @description This function updates the temperature decreasing it geometrically
 #' @family Cooling schemes
 #' @param initial.temperature Starting temperature
 #' @param final.temperature Final expected temperature

@@ -30,4 +30,8 @@ Collate: Neighborhood.R
   cooling_schemes.R
   ls_acceptance.R
   parsers.R
+  evolutionary.R
+  selection.R
+  crossover.R
+  mutation.R
   
