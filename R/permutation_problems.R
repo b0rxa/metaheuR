@@ -59,3 +59,31 @@ qap.problem<-function(fmatrix, dmatrix){
   }
   list(evaluate = evaluate)
 }
+
+
+#' LOP problem evaluator
+#' 
+#' This function generates an evaluation function associated
+#' with a LOP problem
+#' @param matrix matrix for the LOP problem
+#' @return A function that can be used to evaluate solutions for a LOP problem
+#' @examples
+#' matrix<-matrix(runif(100),ncol=10)
+#' lop<-lop.problem(matrix)
+#' lop$evaluate(random.permutation(10))
+lop.problem<-function(matrix){
+  if (diff(dim(matrix))!=0) stop ("The matrix should be square")
+  evaluate<-function(solution){
+    if (!isClass(solution,"Permutation")) 
+      stop("This function only evaluates objects of class permutation")
+    if (length(solution)!=dim(matrix)[1]) 
+      stop("The solution is not of the correct length. It should have ",
+           dim(matrix)[1]," positions")
+    ## Order the matrix by using the solution 
+    matrix <- matrix[as.numeric(solution), as.numeric(solution)]
+    ## Sum the values in the lower triangle (without the diagonal)
+    cost<-sum(matrix[lower.tri(matrix,diag=FALSE)])
+    return(cost)
+  }
+  list(evaluate = evaluate)
+}
