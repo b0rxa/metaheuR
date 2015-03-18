@@ -48,16 +48,27 @@ simulated.annealing<-function (evaluate, initial.solution, neighborhood, cooling
   ## Main loop of the search, get each neighbor and evaluate it
   t0 <- Sys.time()
   while(!is.finished(resources) & temperature > final.temperature){
+    t0 <- Sys.time()
     iteration <- iteration + 1
-    if (verbose) cat("Running iteration " , iteration , " at temperature = " , temperature, ". Best solution:" , current.evaluation , "\n")
+    if (verbose) cat("Running iteration " , iteration , " at temperature = " , temperature, ". Current solution:" , current.evaluation , "\n")
     evaluations <- 0
     acceptances <- 0
-    while (!eq.function(evaluations , accpetances) & !is.finished(resources)){
+    ## Equlibrium loop
+    while (!eq.function(evaluations , acceptances) & !is.finished(resources)){
       if (!has.more.neighbors(neighborhood))
         reset.neighborhood(neighborhood = neighborhood , solution = current.solution)
       rnd.solution <- next.neighbor(neighborhood)
-      rnd.evaluation <- evaluate(rnd.solution)
       evaluations <- evaluations + 1
+      if (!valid(rnd.solution) && non.valid!='ignore'){
+        if (non.valid=='discard'){
+          next
+        }else if(non.valid=='correct'){
+          rnd.solution<-correct(rnd.solution)
+        }else{
+          stop ("Unknown solution for the 'non.valid' parameter. Valid options are 'ignore' , 'discard' or 'correct'")
+        }
+      }
+      rnd.evaluation <- evaluate(rnd.solution)
       accept.solution <- boltzmann.accept(delta = rnd.evaluation - current.evaluation , temperature = temperature)
       if (accept.solution){
         current.solution <- rnd.solution
@@ -72,12 +83,11 @@ simulated.annealing<-function (evaluate, initial.solution, neighborhood, cooling
                               t = as.numeric(Sys.time() - t0) , ev = 1)
       if (do.log & evaluations %% log.frequency == 0){
         log <- rbind(log , data.frame(Iterations = iteration ,
-                                      Evaluations = tail(log$Evaluations , n = 1) + evaluations ,
-                                      Time = tail(log$Time , n = 1) + Sys.time() - t0 , 
+                                      Evaluations = consumed.evaluations(resources) ,
+                                      Time = consumed.time(resources), 
                                       Current_sol = current.evaluation ,
                                       Current_sd = NA , 
                                       Best_sol = best.evaluation))
-        t0 <- Sys.time()
       }
     }
     resources<-add.consumed(resources , it = 1)

@@ -19,7 +19,6 @@ with a TSP problem
 \examples{
 cmatrix<-matrix(runif(100),ncol=10)
 tsp<-tsp.problem(cmatrix)
-tsp$evaluate<-random.permutation(10)
-eval(sol)
+tsp$evaluate(random.permutation(10))
 }
 

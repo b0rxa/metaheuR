@@ -4,13 +4,15 @@
 \alias{tsp.greedy}
 \title{Constructive greedy algorithm for the TSP problem}
 \usage{
-tsp.greedy(cmatrix)
+tsp.greedy(cmatrix, cl.size = 1)
 }
 \arguments{
 \item{cmatrix}{Cost matrix associated to the TSP instance}
+
+\item{cl.size}{Size of candidate list.}
 }
 \value{
-A permutation contining a solution for the problem
+A permutation containing a solution for the problem
 }
 \description{
 This function implements a simple constructive greedy algorithm for the TSP problem.
@@ -21,6 +23,9 @@ The algorithm builds the solution iteratively, selecting, at each step, the clos
 \examples{
 n <- 10
 cost.matrix <- matrix(runif(n^2) , ncol = n)
-tsp.greedy (cost.matrix)
+tsp.greedy (cost.matrix, 2)
+}
+\seealso{
+Other Constructive algorithms: \code{\link{mis.greedy}}
 }
 
