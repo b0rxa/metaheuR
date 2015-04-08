@@ -1088,7 +1088,7 @@ Iterazioz iterazioa leuntze-maila geroz eta txikiago eginez, azkenengo iterazioa
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.75\linewidth]{./Irudiak/smoothing}
+\includegraphics[width=\linewidth]{./Irudiak/smoothing}
 \caption{\textit{Smoothing} algoritmoaren funtzionamendua. Iterazio bakoitzean hasierako helburu funtzioa maila bateraino leuntzen da eta bilaketa lokala aplikatzen da.}
 \label{fig:smoothing}
 \end{figure}
