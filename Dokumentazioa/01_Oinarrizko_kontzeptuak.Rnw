@@ -33,31 +33,31 @@ knit_theme$set("earendel")
 \maketitle
 
 \begin{abstract}
-Lehenengo kapitulu honetan optimizazioaren ikuspen globala aurkeztuko dugu, oinarrizko kontzeptuak azalduz. Kapitulua bi zatitan dago banatuta; lehenengoan optimizazio problemak izango dira aztergai eta, bereziki, hauen konplexutasuna, hau baita metodo heuristikoak erabiltzeko motibaziorik garrantzitsuena. Heuristikoak dira, bigarren zatiaren protagonistak. Zehazki, heuristikoak diseinatzeko eta erabiltzeko kontuan eduki beharreko kontzeptuak aztertuko ditugu. 
+Lehenengo kapitulu honetan optimizazioaren ikuspen globala aurkeztuko dugu, oinarrizko kontzeptuak azalduz. Kapitulua bi zatitan dago banatuta; lehenengoan optimizazio problemak izango dira aztergai eta, bereziki, hauen konplexutasuna, hau baita metodo heuristikoak erabiltzeko motibaziorik garrantzitsuena. Bigarren zatian, metodo heuristikoak aurkeztuko ditugu, hauek diseinatzeko eta erabiltzeko kontuan izan beharreko kontzeptuei erreparatuz.
 \end{abstract}
 
 \section{Sarrera}
 
-Optimizazioa oso kontzeptu hedatua da, askotan baitarabilgu --konturatu barik bada ere--. Problema baten aurrean \textit{soluzio ezberdinak} daudenean, soluzio horien \textit{kalitatea} neurtzeko eraren bat izanez gero, \textit{soluziorik onena} bilatzea izango da optimizazioaren helburua. Definizio orokor honetan problema mota asko sartzen dira. Alabaina, liburu honetan \textit{optimizazio konbinatorioa} deritzon problematan zentratuko gara, gehien bat. Optimizazio problemak aspalditik aztertuak izan arren, matematika aplikatuan berriki bereizi den arloa da optimizazioa.
+Optimizazioa oso kontzeptu hedatua da, askotan baitarabilgu --konturatu barik bada ere--. Problema baten aurrean \textit{soluzio desberdinak} daudenean, soluzio horien \textit{kalitatea} neurtzeko eraren bat izanez gero, \textit{soluziorik onena} bilatzea izango da optimizazioaren helburua. Definizio orokor honen barruan problema mota asko sartzen dira arren, liburu honetan, \textit{optimizazio konbinatorio}-ko problemetan zentratuko gara batez ere. Optimizazio problemak aspalditik aztertuak izan arren, matematika aplikatuan duela ez gehiegi bereizi den ikerkuntza arloa da optimizazioa.
  
 
 \subsection{Hastapen historikoa}
-I Munduko Gerra amaitu zenean garaileek Alemaniari oso baldintza gogorrak inposatu zizkioten Versalles-eko itunean; besteak beste, Alemaniak armada izatea zeharo debekatuta zeukan. Are gehiago, itun honek jasotzen zituen baldintza ekonomikoak zirela eta hogeigarren hamarkadan Alemaniako egoera nahiko larria zen; hala ere, krisi momentu horretan, pertsona batek promes egin zuen herrialdea larrialdi horretatik aterako zuela... Pertsona hori Hitler zen eta 1933an hauteskundeak irabaziz boterea lortu zuen; orduan, II Munduko Gerran amaituko zuen gertakizun sekuentzia hasi zen.
+Lehen Mundu Gerra amaitu zenean garaileek Alemaniari oso baldintza gogorrak inposatu zizkioten Versalles-eko itunean; besteak beste, Alemaniak armada izatea zeharo debekatuta zeukan. Are gehiago, itun honek jasotzen zituen baldintza ekonomikoen ondorioz hogeigarren hamarkadan Alemaniako egoera nahiko larria zen; hala ere, krisi momentu horretan, pertsona batek promes egin zuen herrialdea larrialdi horretatik aterako zuela... Pertsona hori Hitler zen eta 1933an hauteskundeak irabaziz boterea lortu zuen; orduan, Bigarren Mundu Gerran amaituko zuen gertakizun sekuentzia hasi zen.
 
-1934. urtean Hitler-ek Alemaniako berrarmatze prozesua agindu zuen, eta 1935eko udaberrirako bere aireko armada --Luftwaffea-- Britainiakoaren parekoa zela aldarrikatzen hasi zen. Nazien hegazkin bonbaketarien mehatxua arazo larri bihurtu zen Britaniko Gobernuarentzat eta, hortaz, aire defentsa antolatzeari ekin zion. Aireko estatu-idazkariak \zkk Imperial College of Science and Technology\skk -ko errektoreari aireko defentsaren arazoa aztertuko zuen batzordea sortzea eskatu zion; batzorde honen lanaren ondorioz, 1935eko udan radarra asmatu zuen Robert Watson-Watt-ek. Tresna oso erabilgarria izan arren, zuen ahalmen guztia ateratzeko, defentsa sisteman --behatokiak, ehiza-hegazkinak, antiaereoko artilleria, ...--  integratu beharra zegoen: alabaina, laster hau erraza ez zela izango konturatu ziren arduradunak. Izan ere, defentsa operazioen antolakuntza, bere osotasunean, oso arazo konplexua zen. Hori dela eta, problema hau ikuspegi matematikotik ikertzen hasi ziren; Ikerkuntza Operatiboa sortu zuten.
+1934. urtean Hitler-ek Alemaniako berrarmatze prozesua agindu zuen, eta 1935eko udaberrirako bere aireko armada --Luftwaffea-- Britainiakoaren parekoa zela aldarrikatzen hasi zen. Nazien hegazkin bonbaketarien mehatxua arazo larri bihurtu zen Britaniko Gobernuarentzat eta, hortaz, aire defentsa antolatzeari ekin zion. Aireko estatu-idazkariak \zkk Imperial College of Science and Technology\skk -ko errektoreari aireko defentsaren arazoa aztertuko zuen batzordea sortzeko eskatu zion; batzorde honen lanaren ondorioz, 1935eko udan, Robert Watson-Watt-ek radarra asmatu zuen. Tresna oso erabilgarria izan arren, zuen ahalmen guztia ateratzeko, defentsa sisteman --behatokiak, ehiza-hegazkinak, antiaereoko artilleria, ...--  integratu beharra zegoen, eta arduradunak laster konturatu ziren ez zela lan erreza izango. Izan ere, defentsa operazioen antolakuntza, bere osotasunean, oso arazo konplexua zen. Hori dela eta, problema hau ikuspegi matematikotik ikertzen hasi ziren; eta hortik, gaur egun ezaguna den Ikerkuntza Operatiboa sortu zuten.
 
-II Munduko Gerran zehar operazioen antolakuntza \zkk matematikoa\skk k arrakasta handia izan zuen Britaniko armadan eta, hortik, Estatu Batuetako armadara hedatu zen. 1945ean gerra amaitu zenerako, mila pertsonatik gora zeuden Ikerkuntza Operatiboan lanean Britaniko armadan.
+Bigarren Mundu Gerran zehar operazioen antolakuntza \zkk matematikoa\skk k arrakasta handia izan zuen Britaniko armadan eta, hortik, Estatu Batuetako armadara hedatu zen. 1945ean, gerra amaitu zenerako, mila pertsonatik gora zeuden Ikerkuntza Operatiboan lanean Britaniko armadan.
 
 Gerra amaitu ostean, Europako herrialdeen egoera oso larria zen: herrialdeak suntsituta, baliabideak gerran xahututa, ... Hurrengo urteetan, herrialdeak berreraikitzeko erronkari aurre egiteko, gerra bitartean operazio militarrak antolatzeko garatutako metodologia matematikoak bereziki egokiak zirela konturatu ziren agintariak. Adibide gisa, Dantzigek --gerran US armadan ziharduena-- 1947an Ikerkuntza Operatiboko algoritmorik ezagunena, Simplex algoritmoa, proposatu zuen. 
 
-Arlo berri honek ikertzaileen arreta erakarri zuen eta asko hedatu zen gerraosteko garaian. Hasierako urteetan planteatzen ziren algoritmoek soluzio zehatzak lortzea zuten helburu baina teknika hauek problema mota konkretuak ebazteko bakarrik erabili zitezkeen --problema linealak, adibidez--. Hirurogeita hamarreko hamarkadan zientzialariek problemen konplexutasuna aztertzeari ekin zioten. Bestalde, konputagailu pertsonalak agertu ziren merkatuan. Problema batzuentzat konplexutasun + tamaina konbinaketa zela eta soluzio zehatza lortzea ezinezkoa zen. Gauzak horrela, merkatuan algoritmo heuristikoak agertzen hasi ziren zeinek, soluzio zehatza ez bermatu arren, soluzio onak ematen zituzten denbora laburrean.
+Arlo berri honek ikertzaileen arreta erakarri zuen, gerraosteko garaian hedapen nabarmena edukiz. Hasierako urteetan planteatzen ziren algoritmoek soluzio zehatzak lortzea zuten helburu baina teknika hauek problema mota konkretu batzuk ebazteko erabili zitezkeen bakarrik--problema linealak, adibidez--. Hirurogeita hamarreko hamarkadan zientzialariek problemen konplexutasuna aztertzeari ekin zioten. Bestalde, konputagailu pertsonalak agertu ziren merkatuan. Problema batzuetan \textit{konplexutasun} - \textit{tamaina}-ren konbinaketaren ondorioz, soluzio zehatza lortzea ezinezkoa zen. Hori dela eta, merkatuan algoritmo heuristikoak agertzen hasi ziren zeinek, soluzio onena ez bermatu arren, soluzio onak ematen zituzten denbora laburrean.
 
-Metodo heuristikoak oso interesgarriak ziren, baina desegokiak problema berrietan berrerabiltzeko. Hori dela eta, 1975etik aurrera beste hurbilketa batzuk, bilaketa heurisktikoak edo metaheuristikak deritzenak, garatzen hasi ziren. Hona hemen adibide eta data batzuk:
+Metodo heuristikoak oso interesgarriak izan arren, desegokiak ziren problema berrietan berrerabiltzeko. Hori dela eta, 1975etik aurrera, bilaketa heuristikoak edo metaheuristikak deritzen hurbilketak hasi ziren garatzen zientzialariak. Hona hemen adibide eta data batzuk:
 
 \begin{itemize}
 \item 1975 - John Hollandek algoritmo genetikoak proposatu zituen
 \item 1977 - Fred Gloverrek \textit{scatter search} algoritmoa proposatu zuen
-\item 1983 - Kirkpatrick eta lankideak \textit{simulated annealing} algoritmoa proposatu zituzten
+\item 1983 - Kirkpatrick eta lankideek \textit{simulated annealing} edo suberaketa simulatua proposatu zuten
 \item 1986 - Fred Gloverrek tabu bilaketa algoritmoa proposatu zuen
 \item 1986 - Gerardo Beniek eta Jing Wangek \textit{swarm intelligence} kontzeptua proposatu zuten
 \item 1992 - Marco Dorigoek \textit{Ant Colony Optimization} (ACO) algoritmoa proposatu zuen
@@ -66,22 +66,22 @@ Metodo heuristikoak oso interesgarriak ziren, baina desegokiak problema berrieta
 
 \section{Optimizazio problemak}\label{sec:opt_problemak}
 
-Egunero erabakiak hartzen dira; enpresatan, zientzian, industrian, administrazioan, ... Erabaki-hartzea nonahi dago eta, geroz eta konpetitiboagoa den gure munduan, prozesu hori arrazionalki hurbiltzeko beharra daukagu. 
+Egunero erabakiak hartzen dira nonahi; enpresatan, zientzian, industrian, administrazioan... Geroz eta konpetitiboagoa den mundu honetan, erabakiak hartzeko prozesu hori arrazionalki hurbiltzeko beharra daukagu.
 
-Erabaki-hartzea hainbat pausutan bana daiteke. Lehendabizi, problema formalizatu behar da, gero matematikoki modelatu ahal izateko. Behin problema modelaturik, soluzio onak topatu behar ditugu problemarako --erabaki optimoa, alegia--. 
+Erabaki-hartzea hainbat pausutan bana daiteke. Lehendabizi, problema formalizatu behar da, gero matematikoki modelatu ahal izateko. Behin problema modelaturik, soluzio onak topatu behar ditugu problemarentzako --soluzio optimoa zein den erabaki, alegia--. 
 
-Problema erreal batean dihardugunean, hartutako erabakia optimoak praktikan jarri beharko genituzke, egiaztatzeko ea funtzionatzen dutenetz; arazoren bat egonez gero, atzera jo beharko genuke problemaren formulazioa berrikusteko.
+Problema erreal batean dihardugunean, hartutako erabaki optimoak praktikan jarri beharko genituzke, egiaztatzeko ea funtzionatzen dutenetz; arazoren bat egonez gero, atzera joz problemaren formulazioa berrikusteko.
 
 \begin{tcolorbox}
 \begin{ifexample}
-Demagun plastikozko piezak ekoizten dituen enpresa bateko logistika sailean lana egiten dugula. Lantegian zenbait makina, biltegi bat lehengaiak eta ekoiztutako piezak biltzeko, etab daude. Igandero, asteko eskaera aztertuz, asteko plangintza egin behar dugu; zein piezak ekoiztu lehenago, zein makinatan, noiz bidali bezeroei, ... Plangintza era eraginkorrean eginez gero, eskaera gehiago asetzeko gai izango gara eta, hortaz, diru gehiago irabaziko du enpresak.
+Demagun plastikozko piezak ekoizten dituen enpresa bateko logistika sailean lana egiten dugula. Lantegian zenbait makina, biltegi bat lehengaiak eta ekoiztutako piezak biltzeko, eta abar daude. Igandero, asteko eskaera aztertuz, plangintza egin behar dugu; zein piezak ekoiztu lehenago, zein makinatan, noiz bidali bezeroei,... Plangintza era eraginkorrean eginez gero, eskaera gehiago asetzeko gai izango gara eta, hortaz, diru gehiago irabaziko du enpresak.
 
-Plangintza optimoa bilatzeko lantegiak dituen ezaugarriak --biltegiaren tamaina, makinen berezitasunak, denborak, ...-- aztertu behar ditugu eta problema formalizatu behar dugu,  matematikoki nola hurbildu eta ebatzi ahal den erabakitzeko ezinbestekoa baita.
+Plangintza optimoa bilatzeko, lantegiak dituen ezaugarriak --biltegiaren tamaina, makinen berezitasunak, denborak,...-- aztertu eta problema formalizatu egin behar dugu, matematikoki nola hurbildu eta ebatzi daitekeen erabakitzeko ezinbestekoa baita.
 
 \end{ifexample}
 \end{tcolorbox}
 
-Optimizazio problemak formalizatzean bi elementuri antzeman behar diegu. Lehenik eta behin, problemaren soluzio guztien multzoari, hau da, \textit{soluzio bideragarrien espazioa} edo \textit{bilaketa espazioa} deiturikoari. Soluzio optimoa topatzeko optimotasuna definitu beharko dugu \textit{helburu funtzioa(k)} erabiliz. Soluzio bideragarrien multzoa $S$ sinboloa erabiliz adieraziko dugu eta helburu funtzioa berriz, $f$ erabiliz:
+Optimizazio problemak formalizatzean bi elementuri atzeman beharko diegu. Lehenik eta behin, problemaren soluzio guztien multzoari, \textit{soluzio bideragarrien espazioa} edo \textit{bilaketa espazioa} deiturikoari. Eta bigarren, soluzio optimoa topatzeko optimotasuna definitzen duen \textit{helburu funtzioari}. Soluzio bideragarrien multzoa $S$ sinboloa erabiliz adieraziko dugu eta helburu funtzioa berriz, $f$ erabiliz:
 
 \begin{align*}
 f: S \rightarrow \mathbb{R}
@@ -106,8 +106,7 @@ Problemak ebazteko behar den denborari erreparatuz --baliabide garrantzitsuena i
 Problemaren konplexutasuna edozein izanda ere, beti tamaina batetik aurrera ezinezkoa izango da metodo zehatzen bidez ebaztea. Aurrerago ikusiko dugun bezala, kasu hauetan metodo heuristikoetara jotzea beharrezkoa izango da.
 
 \subsection{Problemen konplexutasuna}
-
-Algoritmoak problemak pausuz-pausu ebazteko erabiltzen diren prozedurak dira. Problema mota bakoitzetik \textit{instantzia} ezberdinak izan ditzakegu, eta instantzia hauek \textit{tamaina} bat izango dute. Konplexutasunak problemaren tamaina handitzen den heinean, ebazteko behar den denbora edota memoria nola handitzen den neurtzen du; hau da, behar diren baliabideen hazkundearen abiadura tamainarekiko.
+Problema baten konplexutasuna, hau ebazteko existitzen den algoritmo eraginkorrenaren konplexutasuna da. Algoritmoak problemak pausuz-pausu ebazteko erabiltzen diren prozedurak dira. Problema mota bakoitzetik \textit{instantzia} ezberdinak izan ditzakegu, eta instantzia hauek \textit{tamaina} bat izango dute. Konplexutasunak problemaren tamaina handitzen den heinean, ebazteko behar den denbora edota memoria nola handitzen den neurtzen du; hau da, behar diren baliabideen hazkundearen abiadura tamainarekiko.
 
 \begin{tcolorbox}
 \begin{ifexample}
@@ -131,15 +130,16 @@ Esan dugun legez, balio zehatza ez da garrantzitsuena. Esate baterako, ez du gar
 {\bf O notazioa}. Algoritmo batek $f(n)=O(g(n))$ konplexutasuna dauka $n_0$ eta $c$ konstante positiboak existitzen badira zeinentzat $\forall n>n_0, f(n)\leq c\cdot g(n)$ betetzen den.
 \end{ifdefinition}
 
-Beraz, aurreko adibiderako $g(n)=n^2$ izatea nahikoa da definizioa betetzeko; izan ere, $2n^2>2n(n-1)$ eta, ondorioz, $c=2$ bada ekuazioa beteko da, $n>0$ bada betiere. Hau kontutan hartuz, beraz, distantzia matrizea kalkulatzeko algoritmoaren konplexutasuna $O(n^2)$ dela esango dugu. 
+Beraz, aurreko adibiderako $g(n)=n^2$ izatea nahikoa da definizioa betetzeko; izan ere, $2n^2>2n(n-1)$ eta, ondorioz, $c=2$ bada ekuazioa beteko da, $n>0$ bada betiere. Hau kontutan hartuz, beraz, distantzien matrizea kalkulatzeko algoritmoaren konplexutasuna $O(n^2)$ dela esango dugu. 
 
 Konplexutasun maila ezberdinak defini daitezke; \ref{tab:konplexutasun_mailak}. taulak maila ohikoenak biltzen ditu. Oinarrizko operazioa milisegundoa hartuz, taulan $n$ tamaina ezberdinetarako exekuzio denborak daude kalkulatuta.
 
 \begin{table}[t]
+\centering
 \caption{Konplexutasun mailak gehi exekuzio denbora tamainaren arabera. Adibide gisa, erreferentzia operazioaren iraupena milisegundo bat da.}
 \label{tab:konplexutasun_mailak}
 \begin{tabular}{llllll}
-Maila & Notazioa & $n=1$ & $n=5$ & $n=10$ & $n=20$\\
+Maila & Notazioa & $n=1$ & $n=5$ & $n=10$ & $n=20$\\\hline
 Lineala & $O(n)$ & 0.001 seg & 0.005 seg & 0.01 seg & 0.020 seg\\
 Koadratikoa & $O(n^2)$ & 0.001 seg & 0.025 seg & 0.100 seg & 0.4 seg\\
 Kubikoa & $O(n^3)$ & 0.001 seg & 0.125 seg & 1 seg & 8 seg \\
@@ -162,21 +162,22 @@ $n=7$ bada algoritmoen kostuak hauexek izango dira: $P=7^{10}; E=5^7; H=7^7$. Ha
 \end{ifexample}
 \end{tcolorbox}
 
-\ref{fig:complexity_orders} irudiak konplexutasun ordena batzuen funtzioak erakusten ditu. Y ardatzak denbora segundotan adierazten du eta eskala logaritmikoan dago. Grafikoan ikus daitekeen legez, funtzio linealak, koadratikoak eta kubikoak ordu mugatik behera mantentzen dira eta, hazkunde abiadura ikusita, hor mantenduko dira $n$ tamaina handietarako ere. Halere, berretzaile handiagoa denean denbora oso azkar handitzen da, hasieran batez ere. Izan ere, adibidean ikusi daitekeen bezala, tamaina txikia denean --15 baino txikiagoa, zehazki--, $O(n^{15})$ da, hain zuzen, \zkk garestiena\skk\ . Dena dela, esan dugun moduan, konplexutasuna aztertzean abiadura da interesatzen zaiguna; hau da, grafikoan agertzen diren kurben deribatua edo malda. Grafikoan argi ikusten da $n\rightarrow \infty$ funtzio hiper-esponentzialaren hazkunde abiadura handiena dela, gero esponentzialarena eta gero polinomikoena.
+\ref{fig:complexity_orders} irudiak konplexutasun ordena batzuen funtzioak erakusten ditu. Y ardatzak denbora segundotan adierazten du eta eskala logaritmikoan dago. Grafikoan ikus ditzakegun bezala, funtzio linealak, koadratikoak eta kubikoak ordu mugatik behera mantentzen dira eta, beraien hazkunde abiadura ikusita, hor mantenduko dira problema tamaina ($n$) handietarako ere. Halere, konplexutasun polinomikoaren kasuan, berretzailea handitzen den heinean, denboraren kurba  geroz eta azkarrago hazten da, batez ere, problemaren tamaina txikia denean. Adibide gisa, problemaren tamaina txikia denean --n, 15 baino txikiagoa denean, zehazki--, $O(n^{15})$ da konplexutasunik \zkk garestiena\skk\, hiper-esponentzialaren gainetik. Dena dela, esan dugun moduan, konplexutasuna aztertzean abiadura da interesatzen zaiguna; hau da, grafikoan agertzen diren kurben deribatua edo malda. Grafikoan argi ikusten da, $n\rightarrow \infty$ denean, funtzio hiper-esponentzialaren hazkunde abiadura dela handiena, gero esponentzialarena eta polinomikoena.
 
-Orain arte algoritmoen konplexutasunari buruz aritu gara baina atal honetan interesatzen zaiguna problemen konplexutasuna da. Problema baten konplexutasuna problema hori ebazteko ezagutzen den algoritmorik eraginkorrenaren konplexutasuna da. Adibidez, bektore bat ordenatzeko ezagutzen den metodorik eraginkorrena --kasurik txarrenean-- $O(n\log n)$ ordenakoa da eta, ondorioz, bektoreen ordenazioa $O(n\log n)$ mailakoa dela esaten da.
+Hasieran esan dugun legez, problema baten konplexutasuna problema hori ebazteko ezagutzen den algoritmorik eraginkorrenaren konplexutasuna da. Adibidez, bektore bat ordenatzeko ezagutzen den metodorik eraginkorrena --kasurik txarrenean-- $O(n\log n)$ ordenakoa da eta, ondorioz, bektoreen ordenazioa $O(n\log n)$ mailakoa dela esaten da.
 
 Problema konputazionalak bi klasetan banatzen dira, konplexutasunaren arabera; P, problema polinomikoak eta NP, problema ez-polinomikoak.
 
 \begin{itemize}
 \item \textbf{P klasea} - Klase honetan dauden problementzat badago algoritmo determinista bat problemaren edozein instantzia denbora polinomikoan ebazten duena.
-\item \textbf{NP klasea} - Klase honetan dauden problementzat ez da existitzen algoritmo deterministarik problema denbora polinomikoan ebazten duena.\footnote{Problema hauek polinomikoak diren algoritmo \textit{estokastikoak} erabiliz ebatz daitezke; beste era batean esanda, soluzioak denbora polinomikoan ebalua daitezke}.
+\item \textbf{NP klasea} - Klase honetan dauden problementzat ez da existitzen algoritmo deterministarik problema denbora polinomikoan ebazten duena\footnote{Problema hauek polinomikoak diren algoritmo \textit{estokastikoak} erabiliz ebatz daitezke; beste era batean esanda, soluzioak denbora polinomikoan ebalua daitezke}.
 \end{itemize}
 
-NP klasean badago azpi-klase bat, NP-osoa deritzona (\textit{NP-complete}, ingelesez). Problema bat NP-osoa dela esango dugu baldin eta \textit{edozein} NP problema, denbora polinomikoan, problema hori bihurtu baldin badaiteke.
+NP klasean, NP-osoa deritzon azpi-klase bat definitzen da (\textit{NP-complete}, ingelesez). Problema bat NP-osoa dela esango dugu baldin eta \textit{edozein} NP problema, denbora polinomikoan, problema hori bihurtu baldin badaiteke.
 
-Sailkapen hau erabaki-problemena izan arren, optimizazio problementzat ere erabiltze da; hau da, optimizazio problema bat P izango da (era berean, NP) dagokion erabaki-problema P bada (edo NP)\footnote{NP-osoa terminoa erabaki-problementzat erabiltzen da; optimizazio problematan, ordez, NP-zaila terminoa --NP-hard, ingelesez-- erabiltzen da}.
+Sailkapen hau erabaki-problemei zuzendua egon arren, optimizazio problementzat ere erabiltze da; hau da, optimizazio problema bat P izango da (era berean, NP) dagokion erabaki-problema P bada (edo NP). Era berean, NP-osoa terminoa erabaki-problementzat erabiltzen denean; optimizazio problematan, aldiz, NP-zaila terminoa (\textit{NP-hard}, ingelesez) erabiltzen da.
 
+Intuizio gisa, problema bat NP-zaila dela esaten denean, hau ebazteko zailtasuna nabarmena dela adierazi nahi da. Jarraian, adibide gisa aipatuko ditugun problema guztiak, azpi-klase honen parte dira.
 
 \begin{figure}[t]
 \centering
@@ -187,17 +188,17 @@ Sailkapen hau erabaki-problemena izan arren, optimizazio problementzat ere erabi
 
 \subsection{Problema klasikoak}
 
-Errealitatean ebatzi behar izaten diren optimizazio problema guztiak ezberdinak dira, kasu bakoitzak bere murrizketa edota baldintza bereziak baititu. Diferentziak diferentzia, problema askoren mamia bertsua da; hala nola, garraio-problemak, esleipen-problemak, antolakuntza-problemak, etab. Hori dela eta, optimizazioaren arloan askotan problema teorikoak aztertzea izaten da ohikoena, errealitatean topa ditzakegun problemen abstrakzioak edota sinplifikazioak direlarik. Atal honetan optimizazio problema teoriko klasiko batzuk aztertuko ditugu. % --XXX eranskinean problema gehiago topa ditzakezu--.
+Errealitatean ebatzi behar izaten diren optimizazio problema guztiak ezberdinak dira, kasu bakoitzak bere murrizketa edota baldintza bereziak baititu. Diferentziak diferentzia, problema askoren mamia beretsua da; hala nola, garraio-problemak, esleipen-problemak, antolakuntza-problemak, etab. Hori dela eta, optimizazioan , askotan, problema teorikoak aztertzea izaten da ohikoena, errealitatean topa ditzakegun problemen abstrakzioak edota sinplifikazioak direlarik. Atal honetan optimizazio problema teoriko klasiko batzuk aztertuko ditugu. % --XXX eranskinean problema gehiago topa ditzakezu--.
 
 \subsubsection{Garraio-problemak}\label{sec:tsp}
 
-Merkantziak edota pertsonen garraioarekin zerikusia duten optimizazio problemak Ikerkuntza Operatiboan aztertu izan diren problemetatik lehenetarikoak dira. Oinarrizko garraio-probleman iturburu-puntuak eta helburu-puntuak ditugu; halaber, iturburu-puntu bakoitzetik helburu-puntu bakoitzera elementuen garraio kostua dugu, kostu matrizean jasota. Iturburu-puntu bakoitzaren eskaintza eta helburu-puntu bakoitzaren eskaera ezagunak dira. Problemaren helburua eskaera guztiak asetzeko kostu minimoko garraio-eskema topatzea da, iturburu-puntuek dituen mugak (eskaintzak) gainditu barik. 
+Merkantziak edota pertsonen garraioarekin zerikusia duten optimizazio problemak Ikerkuntza Operatiboan aztertu izan diren lehenetarikoak dira. Oinarrizko garraio-probleman, iturburu-puntuak eta helburu-puntuak ditugu; halaber, iturburu-puntu bakoitzetik helburu-puntu bakoitzera merkantzia garraiatzeko kostua ezaguna da, eta kostu matrizean jasotzen da. Iturburu-puntu bakoitzaren eskaintza eta helburu-puntu bakoitzaren eskaera ezagunak dira. Problemaren helburua eskaera guztiak asetzeko kostu minimoko garraio-eskema topatzea da, iturburu-puntuek dituen mugak (eskaintzak) gainditu barik. 
 
-Problema sinple hau eredu linealen bidez modela daiteke eta, hortaz, badaude algoritmo eraginkorrak ebazteko. Alabaina, badaude garraioari buruzko beste hainbat problema klasiko NP direnak. Ezagunena, \textit{Travelling Salesman Problem}-a~\cite{goldberg1985} da --hau da, Saltzaile Bidaiariaren Problema--. 
+Problema sinple hau eredu linealen bidez modela daiteke eta, hortaz, badaude algoritmo eraginkorrak ebazteko. Alabaina, badaude garraioari buruzko beste hainbat problema klasiko NP-zailak direnak. Ezagunena, \textit{Travelling Salesman Problem}-a~\cite{goldberg1985} da --hau da, Saltzaile Bidaiariaren Problema--. 
 
 \begin{tcolorbox}
 \begin{ifexample}{\bf Saltzaile Bidaiariaren Problema (Travelling Salesman Problem, TSP)}
-Demagun saltzaile bidaiariak garela eta egunero hainbat bezero bisitatu behar ditugula. Bezero bakoitza herri batean bizi da eta, edozein bi herrien arteko distantzia ezaguna izanda, gure helburua herri guztietatik pasatzen den ibilbiderik motzena topatzea da.
+Demagun saltzaile bidaiariak garela eta egunero hainbat bezero bisitatu behar ditugula. Bezero bakoitza herri batean bizi da eta, edozein bi herrien arteko distantzia ezaguna izanda, gure helburua herri guztietatik, behin eta bakarrik behin, pasatzen den ibilbiderik motzena topatzea da.
 \end{ifexample}
 \end{tcolorbox}
 
@@ -211,9 +212,9 @@ Demagun saltzaile bidaiariak garela eta egunero hainbat bezero bisitatu behar di
 \label{fig:tsp}
 \end{figure}
 
-Problema honen hastapenak Irlandan daude, Hamilton matematikariaren lanetan. Problema formalizatzeko grafo oso bat eraiki dezakegu non erpinak herriak diren eta edozein bi erpinen artean ertz pisudun bat daukagun; ertzen pisua, lotzen dituen bi herrien arteko distantzia da (ikusi \ref{fig:tsp} irudiak). Horrela ikusita, herri bakoitzetik bakarrik behin igaro nahi badugu, problemaren soluzioak ziklo Hamiltoniarrak izango dira --hots, zikloak zeinentzat nodo guztiak behin eta bakarrik behin agertzen diren--. Ziklo Hamiltoniar guztien artean pisu totala minimoa duena bilatu nahi dugu. 
+Problema honen hastapenak Irlandan daude, Hamilton matematikariaren lanetan. Problema formalizatzeko grafo oso bat eraiki dezakegu non erpinak herriak diren eta edozein bi erpinen artean pisu konkretu bateko ertz bat definitzen delarik; ertzen pisua, lotzen dituen bi herrien arteko distantzia da (ikusi \ref{fig:tsp} irudia). Horrela ikusita, herri bakoitzetik bakarrik behin igaro nahi badugu, problemaren soluzioak ziklo Hamiltoniarrak izango dira --hots, nodo guztiak behin eta bakarrik behin agertzen diren zikloak--. Ziklo Hamiltoniar guztien artean pisu total minimoa duena bilatu nahi dugu. 
 
-Arrasate, Zarautz, Tolosa, Azpeitia, Donostia ibilbidea, irudian agertzen den problemarako soluzio bat; soluzio honen ebaluazioa ondorengoa izango da:
+Arrasate, Zarautz, Tolosa, Azpeitia, Donostia ibilbidea, irudian agertzen den problemarentzako soluzio posible bat da; eta bere ebaluazioa ondorengoa izango da:
 
 \begin{itemize}
 \item Arrasate - Zarautz: 54.0
@@ -223,7 +224,7 @@ Arrasate, Zarautz, Tolosa, Azpeitia, Donostia ibilbidea, irudian agertzen den pr
 \item Donostia - Arrasate: 70.7
 \end{itemize}
 
-Hortaz, helburu funtzioa --ibilbidearen distantzia totala, alegia-- 225.8 da. Ikus dezagun adibidea R-n. Lehenik eta behin, \code{metaheuR} paketea kargatu eta problemaren helburu funtzioa sortuko dugu:
+Hortaz, ibilbidearen distantzia totala 225.8 da. Ikus dezagun adibidea R-n. Lehenik eta behin, \code{metaheuR} paketea kargatu eta problemaren helburu funtzioa sortuko dugu:
 
 <<TSP_1 , prompt=TRUE , message=FALSE>>=
 library("metaheuR")
@@ -260,7 +261,7 @@ Inplementa ezazu funtzio bat \code{n} tamainako TSP problema bat eta bere ebalua
 Ikus dezagun nola formaliza daitekeen TSP problema matematikoki:
 
 \begin{ifdefinition}{\bf TSP problema} -
-Izan bedi $H={h_1, \ldots, h_n}$ kokapen zerrenda eta $A\in\mathbb{R}^{n\times n}$ distantzia matrizea non $a_{ij}$, $h_i$ eta $h_j$ kokapenen artean dagoen distantzia den. TSP problema ibilbide optimoa topatzean datza, hau da, kokapen guztietatik behin eta bakarrik behin igarotzen diren ibilbideetatik motzena.
+Izan bedi $H={h_1, \ldots, h_n}$ kokapen zerrenda eta $C\in\mathbb{R}^{n\times n}$ distantzia matrizea non $c_{ij}$, $h_i$ eta $h_j$ kokapenen artean dagoen distantzia den. TSP problema ibilbide optimoa topatzean datza, hau da, kokapen guztietatik behin eta bakarrik behin igarotzen diren ibilbideetatik motzena.
 \end{ifdefinition}
 
 TSP-aren definizioan kostu matrizea simetrikoa dela suposatzen da. Hala ere, kasu errealetan, posible da norabide batean istripu bat egotea edo bidea noranzko batean eta bestean ezberdinak izatea. Egoera hauetan bideen kostuak simetrikoak direla suposatzea ez da problema modelatzeko aukerarik logikoena. Hortaz, bi TSP problema mota defini daitezke: simetrikoa eta asimetrikoa. 
@@ -275,7 +276,7 @@ Demagun $n$ agente ditugula, $m$ ataza burutzeko. Agente bakoitzak kostu konkret
 
 Problema honen kasu nabariena Esleipen Problema Lineala da --\textit{Linear Assignment Problem}, ingelesez--, non agente eta ataza kopurua berdina den, eta esleipen kostu totala eta agente bakoitzaren kostuen batura totala ere berdinak diren. 1955ean Harold Kuhn-ek Algoritmo Hungariarra proposatu zuen, zeinek Esleipen Problema Lienala denbora polinomialean ($O(n^4)$) ebazten duena, $n$ agente kopurua izanik. Badago ordea, esleipen problema mota bat, NP-zaila dena eta liburuan adibide gisa erabiliko duguna: Esleipen Problema Koadratikoa --\textit{Quadratic Assignment Problem}, QAP,~\cite{burkard1998} ingelesez--.
 
-\begin{ifdefinition} {\bf QAP Problema} Izan bitez $n$ instalazio, $n$ kokapen posible, $H\in\mathbb{R}^{n\times n}$ instalazioen arteko fluxu matrizea, eta $D\in\mathbb{R}^{n\times n}$ kokapenen arteko distantzia matrizea. QAP problemaren helburua, instalazio bakoitza kokapen batean finkatzean datza, kostu totala minimizatuz
+\begin{ifdefinition} {\bf QAP Problema} Izan bitez $n$ lantegi, $n$ kokapen posible, $H\in\mathbb{R}^{n\times n}$ lantegien arteko fluxuen matrizea, eta $D\in\mathbb{R}^{n\times n}$ kokapenen arteko distantzien matrizea. QAP problemaren helburua, lantegi bakoitza kokapen batean finkatzean datza, kostu totala minimizatuz
 \end{ifdefinition}
 
 
@@ -283,13 +284,13 @@ Problema honen kasu nabariena Esleipen Problema Lineala da --\textit{Linear Assi
 
 Prozesu, lan edota ataza desberdinen antolakuntza eta zerbitzatzearekin zerikusia duten optimizazio problemak dira. Antolakuntza-problemen helburua kudeatzaileak jasotzen dituen lan eskariak, modurik eraginkorrenean zerbitzatzea da. Eraginkortasunaren neurria, problemaren araberakoa da; hala ere, eskariak ahalik eta denbora/kostu txikienean asetzea da irizpide ohikoena.
 
-Hasiera batean, antolakuntza-problema gehientsuenak industriarekin zerikusia zuten domeinuetan proposatu ziren. Produktuaren ekoizpenerako makineria erabiltzen zen enpresetan, etekina maximizatzea zen helburua, makineriaren eta baliabideen erabilera, mantentze-kostuak, etab. optimizatuz. Aldi berean, langileen ordutegien planifikazioan antzerako ezaugarriak zituen problemak ere proposatu ziren.
+Hasiera batean, antolakuntza-problema gehientsuenak industriarekin zerikusia zuten domeinuetan proposatu ziren. Produktuaren ekoizpenerako makineria erabiltzen zen enpresetan, etekina maximizatzea zen helburua, makineriaren eta baliabideen erabilera, mantentze-kostuak, eta abar optimizatuz. Aldi berean, langileen ordutegien planifikazioan antzerako ezaugarriak zituen problemak ere proposatu ziren.
 
 Gaur egun ordea, problema hauek edozein arlotara daude hedatuta. Esate baterako, konputazioan, konputagailuen Prozesurako Unitate Zentralak (PUZ), \textit{scheduler} eta \textit{dispatcher} izeneko tresnak erabiltzen ditu, jasotzen dituen prozesuak erarik eraginkorrenean zerbitzatzeko, denbora eta memoriaren erabilera minimizatuz.
 
 Adibide gisa, jarraian, antolakuntza problemetan oso ezaguna den Muntaketa-kateko Plangintza-Problema --\textit{Permutation Flowshop Scheduling Problem}, PFSP ~\cite{gupta2006} ingelesez-- aztertuko dugu:
 
-\begin{ifdefinition} {\bf PFSP problema}. Izan bitez, $n$ lan, $m$ makina eta $P\in\mathbb{R}^{n\times m}$ prozesamendu denboren matrizea, non $p_{ij}$ elementuan $i$ eta $j$ lanaren eta makinaren identifikadoreak diren, hurrenez hurren. Lan bakoitza burutzeko, $m$ prozesu desberdin aplikatu behar dira, bakoitza makina batean, hau da, $j$-garren operazioa, $j$-garren makinan egingo da. Behin $i$ lana $j$ makinan sartzen denean prozesatzeko, eten barik prozesatuko da, eta denbora konkretu bat emango du bertan, $p_{ij}$. $i$ lana $j$ makinatik irten denean, $j+1$ makinara pasako da hurrengo prozesua burutzera, baldin eta makina hau libre badago. PFSPa lanak prozesatzeko denbora totala minimizatzen duen $n$ lanen sekuentzia optimoa aurkitzean datza.
+\begin{ifdefinition} {\bf PFSP problema}. Izan bitez, $n$ lan, $m$ makina eta $P\in\mathbb{R}^{n\times m}$ prozesamendu denboren matrizea, non $p_{ij}$ $i$ lanak $j$ makinan prozesatzeko behar duen denbora adierazten duen. Lan bakoitza burutzeko, $m$ prozesu desberdin aplikatu behar dira, bakoitza makina batean, hau da, $j$-garren operazioa, $j$-garren makinan egingo da. Behin $i$ lana $j$ makinan sartzen denean prozesatzeko, eten barik prozesatuko da, eta denbora konkretu bat emango du bertan, $p_{ij}$. $i$ lana $j$ makinatik irten denean, $j+1$ makinara pasako da hurrengo prozesua burutzera, baldin eta makina hau libre badago. PFSPa lanak prozesatzeko denbora totala minimizatzen duen $n$ lanen sekuentzia optimoa aurkitzean datza.
 \end{ifdefinition}
 
 \begin{figure}[t]
@@ -299,7 +300,7 @@ Adibide gisa, jarraian, antolakuntza problemetan oso ezaguna den Muntaketa-katek
 \label{fig:pfsp}
 \end{figure}
 
-\ref{fig:pfsp} irudian problemaren instantzia bat ikus daiteke. Adibide honetan 3 lan egin behar dira, 4 makina ezberdinetan prozesatuz. Irudiaren goiko partean lan bakoitzak makina bakoitzean igaro behar duen denbora adierazten da, lauki zuzenen bidez. Irudiaren beheko partean soluzio bat proposatzen da; soluzio honetan, lanak 3,1,2 ordenean prozesatuko dira. Honek esan nahi du 3. lana 1. makinan sartuko dela. Behar duen denbora pasatzen denean, 2. makinan sartuko da eta 1. makinan 1. lana sartuko da. Prozesu guztiaren eskema irudian ikus daiteke. Problemaren helburua denbora totala minimizatzea bada, soluzio honen helburu funtzioaren balioa 3.1 lana hasten denetik 2.4 lana amaitzen den arte igarotzen den denbora izango da.
+\ref{fig:pfsp} irudian problemaren instantzia bat ikus daiteke. Adibide honetan 3 lan burutu behar dira, 4 makina ezberdinetan. Irudiaren goiko partean lan bakoitzak makina bakoitzean igaro behar duen denbora adierazten da, lauki zuzenen bidez. Irudiaren beheko partean soluzio bat proposatzen da; soluzio honetan, lanak 3,1,2 ordenean prozesatuko dira. Honek esan nahi du 3. lana 1. makinan sartuko dela. Behar duen denbora pasatzen denean, 2. makinan sartuko da, eta 1. makinan 1. lana sartuko da. Prozesu guztiaren eskema irudian ikus daiteke. Problemaren helburua denbora totala minimizatzea bada, soluzio honen helburu funtzioaren balioa 3.1 lana hasten denetik 2.4 lana amaitzen den arte igarotzen den denbora izango da.
 
 
 PFSP, antolakuntza problemen murriztapenik gabeko problema teorikoa da. Problema errealetan, lan kopurua ez da finitua, etengabekoa baizik; kasu horietan, makinen okupazio maila altua izatea, denbora murriztea bezain garrantzitsua izaten da. Zentzu honetan, antzeko problemen aukera oso zabala da~\cite{taillard1993}.
@@ -308,7 +309,7 @@ PFSP, antolakuntza problemen murriztapenik gabeko problema teorikoa da. Problema
 
 Demagun objektu multzo bat dugula, eta multzo honetatik, objektu batzuk aukeratu behar ditugula. Aukeraketa, ez da ausaz egingo, baizik eta irizpide eta murriztapen batzuei jarraituz. Azpimultzo-problematan, helburua aukeraketak ematen dizkigun onurak maximizatzean datza, definitutako murriztapenak betetzen direlarik.
 
-Azpimultzo-problemen hedapena oso zabala da, logistikako alorretan, gehien bat: kargarako garraiobideen betetzea, aurrekontuaren kontrola, finantzen kudeaketa, industriako materialen ebaketa, etab.
+Azpimultzo-problemen hedapena oso zabala da, logistikako alorretan, gehien bat: kargarako garraiobideen betetzea, aurrekontuaren kontrola, finantzen kudeaketa, industriako materialen ebaketa, besteak beste.
 
 Azpimultzo-problemen artean adibide erakusgarriena -- eta bidenabar sinplifikagarriena -- ingelesez \textit{0-1 Knapsack problem} deritzon 0-1 Motxilaren problema~\cite{kellerer2004} da. Jarraian zehazki azalduko dugu problema hau:
 
@@ -317,14 +318,14 @@ Azpimultzo-problemen artean adibide erakusgarriena -- eta bidenabar sinplifikaga
 
 
 \subsubsection{Grafoei buruzko problemak}
-Grafoak, matematika eta informatikan funtsezko egiturak dira. Orokorrean grafoak objektuen arteko erlazioak adierazteko erabiltzen dira eta, beraz, beraien erabilera edozein domeinutan da aplikagarria. Hori dela eta, grafoei loturiko problemen multzoa oso zabala da. Esaterako, berriki ikusi ditugun TSP eta QAP-ak grafo problema gisa formaliza ditzakegu. Garraiobide eta esleipen problemez gain, sareko informazio trukaketa edota grafoen teoriako problema ugari (deskonposizio-problemak, azpimultzo-problemak, estaldura-problemak, etc.) ebazteko erabili ohi dira.
+Grafoak, matematika eta informatikan funtsezko egiturak dira. Orokorrean grafoak objektuen arteko erlazioak adierazteko erabiltzen dira eta, beraz, beraien erabilera edozein domeinutan da aplikagarria. Hori dela eta, grafoei loturiko problemen multzoa oso zabala da. Esaterako, berriki ikusi ditugun TSP eta QAP-ak grafo problema gisa formaliza ditzakegu. Garraiobide eta esleipen-problemez gain, sareko informazio trukaketa edota grafoen teoriako problema ugari (deskonposizio-problemak, azpimultzo-problemak, estaldura-problemak, etc.) ebazteko erabili ohi dira.
 
 Atal honetan, ingelesez \textit{Graph Coloring} deritzon Grafoen Koloreztatze-Problema izango dugu aztergai.
 
 \begin{ifdefinition} {\bf Grafoen Koloreztatze-Problema}. Izan bedi $G=(V,E)$ grafoa non $V$ eta $E$ bektoreak grafoaren erpin- eta ertz-multzoak diren, hurrenez hurren; $e_{ij}\in E$ existitzen bada $v_i$ eta $v_j$ erpinen artean ertza dago. Erpin bakoitzari kolore bat esleitu behar diogu, kontuan hartuz $e_{ij}\in E$ existitzen bada, $v_i$ eta $v_j$ nodoek ezin dutela kolore bera izan; hau da, ertz baten bidez lotutako erpinak kolore ezberdinekin koloreztatu behar dira. Problemaren helburua kolore kopuru minimoa erabiltzen duen koloreztatzea topatzean datza.
 \end{ifdefinition}
 
-Ikus dezagun adibide pare bat, ausaz sortutako grafo bat erabiliz. Jarraian dagoen kodean 15 erpin dituen ausazko grafo bat sortu ondoren, koloreztatze-problema bat sortuko dugu, \code{metaheuR} paketean dagoen funtzioak erabiliz.
+Ikus dezagun adibide pare bat, ausaz sortutako grafo bat erabiliz. Jarraian dagoen \code{R} kodean 15 erpin dituen ausazko grafo bat sortu ondoren, koloreztatze-problema bat sortuko dugu, \code{metaheuR} paketean dagoen funtzioak erabiliz.
 
 <<Graph_coloring_1 , prompt=TRUE>>=
 library("igraph")
@@ -383,7 +384,7 @@ Izan bedi $\Sigma$ alfabetoan definitutako $n$ tamainako sekuentzia $S=(s_1,\ldo
 
 Hau da, azpisekuentzia batean jatorrizko sekuentzian dauden elementuen azpimultzo bat izango dugu, \textit{jatorrizko sekuentzian agertzen diren ordena berdinarekin}. Sekuentzia bat emanda, bere zenbait elementu ezabatuz lor ditzakegu azpisekuentziak.
 
-Bi sekuentzia besterik ez badugu --$m$ eta $n$ tamainakoak-- LCSP-a programazio dinamikoa erabiliz\footnote{Problema hau sekuentziak lerrokatzean agertzen da; kasu honetan, nahiz eta algoritmo polinomikoa izan, sekuentziak milioika elementu izan dezaketenez, programazio dinamikoaz gain metodo heuristikoak erabiltzen dira; metodorik ezagunena BLAST\citep{altschul1990} izenekoa da} $O(mn)$ denboran ebatz daiteke; sekuentzia kopurua finkaturik gabe badago, ordea, problema NP-zaila da.
+Bi sekuentzia besterik ez badugu --$m$ eta $n$ tamainakoak-- LCSP-a programazio dinamikoa erabiliz\footnote{Problema hau sekuentziak lerrokatzean agertzen da; kasu honetan, nahiz eta algoritmo polinomikoa izan, sekuentziak milioika elementu izan dezaketenez, programazio dinamikoaz gain metodo heuristikoak erabiltzen dira; metodorik ezagunena BLAST\citep{altschul1990} izenekoa da} $O(mn)$ konplexutasunarekin ebatz daiteke; sekuentzia kopurua finkaturik gabe badago, ordea, problema NP-zaila da.
 
 \begin{ifdefinition}{\bf Longest Common Subsequence Problema (LCSP)}
 Izan bitez $\Sigma$ alfabetoan definitutako tamaina ezberdineko $k$ sekuentzia $S_1,\ldots,S_k$. Izan bedi $k$ sekuentzien azpisekuentzia diren sekuentzia multzoa $\cal C$. LCSP-aren helburua $C^*\in{\cal C}$ sekuentzia topatzea da, non $\forall C_i\in{\cal C}\ |C_i|>|C^*|$.
@@ -401,11 +402,9 @@ Ikerkuntza Operatiboaren hasierako urteetan hainbat problemen soluzio zehatzak t
 
 Hurbilketa hau --algoritmo zehatzak erabiltzea, alegia-- problema sinpleentzat egokia izan arren, problemaren konplexutasuna edota tamaina handitzen denean bideraezin bihur daiteke. Konplexutasunak algoritmoa aplikatzeko behar dugun denboraren hazkunde abiadura adierazten du; ordena handiagoa edo txikiagoa izan daiteke, baina abiadura beti positiboa da, hau da, zenbat eta problema handiagoa orduan eta denbora gehiago beharko dugu problema ebazteko. Hau kontutan hartuz, denbora maximoa finkatzen badugu, beti problema tamaina maximo bat izango dugu; problema handiagoa bada, finkatutako denboran ebazterik ez da egongo.
 
-
 Demagun \ref{fig:complexity_orders} irudiak problema baten soluzio zehatza lortzeko zenbait algoritmok behar duten denbora adierazten duela; era berean, demagun soluzioa lortzeko ordu bat besterik ez dugula. Grafikoan agerian dago algoritmo hiper-esponentzialarekin $n>7$ tamainako problemak, ordu batean, ebaztezinak direla; algoritmo esponentzialarekin, ostera, hogei tamainako problemak ebazteko gai izango ginateke. Algoritmoak polinomikoak izateak ez du esan nahi algoritmoak edozein tamainako problema ebatz ditzatekeenik. Hau argi eta garbi ikusten da $O(n^{15})$ kasuan, non ordu bateko mugarekin tamaina maximoa $n=2$ den. Beste algoritmo polinomikoentzat ere denbora kurbek, nahiz eta oso motel, gora egiten dute eta, beraz, nonbait ordu bateko muga gurutzatuko dute.
 
 Kasu hauetan teknika klasikoak baliogabeak direnez, beste aukeraren bat bilatu beharko dugu; soluzio zehatza lortzerik ez badago, daukagun baliabideekin eta denborarekin \textit{albait soluziorik onena} topatzeko algoritmoak diseinatu behar ditugu. Xede hau burutzeko algoritmo \textit{heuristikoak}, \zkk intuizioan\skk\ oinarritutako metodoak, erabiltzea da ohikoena. Algoritmo hauekin optimo globala topatzea bermatuta ez egon arren, oro har soluzio onak topa ditzakegu.
-
 
 \begin{ifalgorithm}[t]
 \begin{ifpseudo}{TSP problemarako heuristikoa}
@@ -413,21 +412,20 @@ Kasu hauetan teknika klasikoak baliogabeak direnez, beste aukeraren bat bilatu b
 \item \In\ $i_1$, ibilbideko lehendabiziko herria
 \item \Out\ $I=(i_1, \ldots, i_n)$ ibilbidea
 \item Sartu $H$ multzoan herri guztiak, $i_1$ izan ezik
-\item $k:=2$
+\item $k=2$
 \item \WhileDo{$H \neq \emptyset$}
-\item \T {$i_k = argmin_j \{c_{i_{k-1},j}\ |\ j \in H\}$}
+\item \T {$i_k = \arg\min_j \{c_{i_{k-1},j}\ |\ j \in H\}$}
 \item \T {Kendu $i_k$ $H$ multzotik}
 \item \Done
 \end{ifpseudo}
 \caption{TSPrako soluzio onak eraikitzeko metodo heuristikoa}\label{alg:tsp_heuristik}
 \end{ifalgorithm}
 
-
 Literaturan proposaturiko lehendabiziko metodoak problemaren intuizioan oinarritzen ziren. Ikus dezagun adibide bat, \ref{sec:tsp} atalean deskribaturiko TSP problema ebazteko. 
 
 Demagun badakigula abiapuntuko herria zein den, hau da, zein den ibilbideko lehendabiziko herria; soluzioa pausuz-pausu eraikiko dugu, urrats bakoitzean aurreko urratsean aukeratu dugun herritik gertuen dagoen herria aukeratuz. Metodoaren sasikodea \ref{alg:tsp_heuristik} algoritmoan ikus daiteke.
 
-Ebatz dezagun, algoritmo hau erabiliz, \ref{fig:tsp} irudian dagoen TSParen instantzia, Arrasatetik abiatuz. Arrasatetik gertuen dagoen herria Azpeitia den legez, hauxe izango da gure ibilbideko bigarren herria. Ondoren, Azpeititik Tolosara joango gara, hau baita gertuen dagoena eta  bertatik Donostiara. Bisitatu barik dauden herrietatik Zarautz da Donostiatik gertuen dagoena --eta, berez, bakarra--; Ibilbidea ixteko Zarautzetik Arrasatera itzuli beharko gara. Laburbilduz, heuristiko sinple hau erabiliz ondoko soluzioa daukagu: Arrasate, Azpeitia, Tolosa, Donostia, Zarautz, Arrasate; soluzio honen helburu funtzioa 41,4 + 23,5 + 28,4 + 20,4 + 54,0 = 167,7 da. Ez dugu inongo bermerik soluzio hau optimoa denik, baina soluzio ona da eta, batez ere, denbora koadratikoan lortu dugu.
+Ebatz dezagun, algoritmo hau erabiliz, \ref{fig:tsp} irudian dagoen TSParen instantzia, Arrasatetik abiatuz. Arrasatetik gertuen dagoen herria Azpeitia den legez, hauxe izango da gure ibilbideko bigarren herria. Ondoren, Azpeititik Tolosara joango gara, hau baita gertuen dagoena eta  bertatik Donostiara. Bisitatu barik dauden herrietatik Zarautz da Donostiatik gertuen dagoena --eta, berez, bakarra--. Ibilbidea ixteko Zarautzetik Arrasatera itzuli beharko gara. Laburbilduz, heuristiko sinple hau erabiliz ondoko soluzioa daukagu: Arrasate, Azpeitia, Tolosa, Donostia, Zarautz, Arrasate; soluzio honen helburu funtzioa 41,4 + 23,5 + 28,4 + 20,4 + 54,0 = 167,7 da. Ez dugu inongo bermerik soluzio hau optimoa denik, baina soluzio ona da eta, batez ere, denbora koadratikoan lortu dugu.
 %
 %\begin{ifproblem}
 %Demostra ezazu \ref{alg:tsp_heuristik} irudian dagoen algoritmoaren konplexutasuna koadratikoa dela.
@@ -443,21 +441,21 @@ tsp.constructive <- function (cmatrix){
   best.pair <- which(cmatrix == min(cmatrix,na.rm=T), arr.ind=TRUE)
   solution <- c(best.pair[1,1],best.pair[1,2])
   cmatrix[best.pair[1,1],]<-NA
-  cmatrix[ , best.pair[1,]]<-NA
+  cmatrix[ ,best.pair[1,]]<-NA
   for (i in 3:nrow(cmatrix)){
     next.city <- which.min (cmatrix[solution[i-1],])
     solution <- append(solution , next.city)
     cmatrix[solution[i-1],] <- NA
-    cmatrix[ , next.city] <- NA
+    cmatrix[ ,next.city] <- NA
   }
   names(solution)<-NULL
   permutation(vector = solution)
 }
 @
 
-Algoritmo hau \code{metaheuR} paketean inplementaturik dago, baina bi diferentzia ditu. Alde batetik, erabiltzaileak lehendabiziko hiria sartu beharrean, algoritmoak aukeratzen du matrizean dagoen baliorik txikienari erreparatuz. Bestetik, funtzioak ez du beti aukerari onena aukeratzen, aukera batzuen artean bat ausaz aukeratzen du. Azken puntu honek gero ikusiko dugun algoritmo batekin (GRASP) zerikusia du. 
+Algoritmo hau \code{metaheuR} paketean inplementaturik dago, baina bi diferentzia ditu. Alde batetik, erabiltzaileak lehendabiziko hiria sartu beharrean, algoritmoak aukeratzen du matrizean dagoen distantziarik txikienari erreparatuz. Bestetik, funtzioak ez du beti aukerari onena aukeratzen, aukera batzuen artean bat ausaz aukeratzen du. Azken puntu honek gero ikusiko dugun algoritmo batekin (GRASP) zerikusia du. 
 
-Hemen funtzio honen betsio sinplifikatu bat inplementatuko dugu, adibide moduan. Funtzio honek parametro bakar bat jasotzen du, \code{cmatrix}, kostu matrizea dena; hasteko, aukeraezinak diren balioak adierazteko \code{NA}-k txertatuko ditugu matrizean. Kontutan hartuz diagonalean dauden balio guztiak ezin direla aukeratu (ez du zentzurik hiri batetik hiri berberara joatea), aukeraezin gisa finkatzen ditugu eta, gero, matrizean dagoen elementurik txikiena(k) aukeratuko d(it)ugu.
+Hemen funtzio honen bertsio sinplifikatu bat inplementatuko dugu, adibide gisa. Funtzio honek parametro bakar bat jasotzen du, \code{cmatrix}, kostu matrizea dena; hasteko, aukeraezinak diren balioak adierazteko \code{NA}-k (\textit{not available}) txertatuko ditugu matrizean. Kontutan hartuz diagonalean dauden balio guztiak ezin direla aukeratu (ez du zentzurik hiri batetik hiri berberara joatea), aukeraezin gisa finkatzen ditugu eta, gero, matrizean dagoen elementurik txikiena(k) aukeratuko d(it)ugu.
 
 <<TSP_greedy , prompt=FALSE , eval=FALSE , echo=1:3 , purl=FALSE>>=
 @
@@ -472,12 +470,12 @@ Gure soluzioak, momentuz, bakarrik bi hiri ditu. Soluzio osoa eraikitzeko, urrat
 <<TSP_greedy , prompt=FALSE , eval=FALSE , echo=7:12 , purl=FALSE>>=
 @
 
-Une honetan \code{solution} bektoreak eraikitako soluzio bat gordetzen du. Dena dela, soluzioa permutazio baten bidez kodetu nahi dugunez, funtzioaren amaieran ondoko kodea izango dugu.
+Une honetan \code{solution} bektoreak eraikitako soluzio bat gordetzen du. Dena dela, soluzioa hirien permutazio baten bidez kodetu nahi dugunez, funtzioaren amaieran ondoko kodea izango dugu.
 
 <<TSP_greedy , prompt=FALSE , eval=FALSE , echo=13:15 , purl=FALSE>>=
 @
 
-Funtzioa grure problemari aplikatzen badiogu, hona hemen emaitza:
+Inplementatutako funtzioa gure problemari aplikatzen badiogu, hona hemen emaitza:
 
 <<TSP_greedy_2 , prompt=TRUE>>=
 greedy.solution <- tsp.constructive(cost.matrix)
@@ -485,23 +483,22 @@ tsp.example$evaluate(greedy.solution)
 colnames(cost.matrix)[as.numeric(greedy.solution)]
 @
 
-Lortzen dugun soluzioa ezberdina da, baina bere kostua, ordea, berdina. Izan ere, nahiz eta soluzioa ezberdina izan, definitzen duen zikloa berdina da, beste noranzkoan izanda ere. Beste era batean esanda, goiko kodean dugun soluzioa atzetik aurrera irakurtzen badugu, lehen bilatutako soluzio berbera dugu!.
+Aurreko adibidearekin alderatuta, lortzen dugun soluzioa ezberdina da, baina bere kostua, ordea, berdina. Izan ere, nahiz eta soluzioa ezberdina izan, definitzen duen zikloa berdina da, beste noranzkoan izanda ere. Beste era batean esanda, goiko kodean dugun soluzioa atzetik aurrera irakurtzen badugu, lehen bilatutako soluzio berbera dugu!.
 
-Metodo heuristikoak oso interesgarriak dira, baina zailak \zkk birziklatzeko\skk\ --pentsa ezazu nola egoki daitekeen goiko algoritmoa grafoen koloreztatze-problema ebazteko, adibidez--. Arazo hau saihesteko, \textit{bilaketa heuristikoak} edo \textit{metaheuristikoak} proposatu ziren. Metodo hauek ere intuizioan oinarritzen dira, baina ez problemaren intuizioan, optimizazio prozeduraren intuizioan baizik;  hori dela eta, metodo hauek edozein problema ebazteko egoki daitezke. Hainbat metaheuristika daude, hala nola, bilaketa lokala, algoritmo genetikoak, inurri-kolonia algoritmoak, etab.; hauek hurrengo kapituluen aztergaiak izango dira.
+Metodo heuristikoak oso interesgarriak dira, baina zailak \zkk birziklatzeko\skk\ --pentsa ezazu nola egoki daitekeen goiko algoritmoa grafoen koloreztatze-problema ebazteko, adibidez--. Eragozpen honi aurre egiteko, \textit{bilaketa heuristikoak} edo \textit{metaheuristikoak} proposatu ziren. Metodo hauek ere intuizioan oinarritzen dira, baina ez problemaren intuizioan, optimizazio prozeduraren intuizioan baizik;  hori dela eta, metodo hauek edozein problema ebazteko egoki daitezke. Hainbat metaheuristika existitzen dira, hala nola, bilaketa lokala, algoritmo genetikoak edo inurri-kolonia algoritmoak esaterako. Hauek guztiak hurrengo kapituluen izango ditugu aztergai.
 
 Optimizazio problema bati aurrez aurre gaudenean, kontuan izan beharreko hainbat gauza daude: alde batetik, problemaren formalizazio beran agertzen diren elementuak --helburu funtzioa eta soluzioen espazioa, alegia-- eta,  bestaldetik, problema ebazteko erabil daitezkeen algoritmoak. Hurrengo ataletan aspektu guzti hauek banan-banan komentatuko ditugu.
 
-
 \subsection{Helburu funtzioa}
 
-Aurreko atalean ikusi dugu optimizazio problema bat definitzeko bi elementu behar ditugula, horietako bat helburu funtzioa delarik. Helburu funtzioa soluzioak ebaluatzeko erabiliko dugu eta, hortaz, funtzio honek optimo globala zein den zehaztuko du.
+Aurreko atalean ikusi dugu optimizazio problema bat definitzeko bi elementu behar ditugula, horietako bat helburu funtzioa delarik. Helburu funtzioa soluzioen optimotasuna ebaluatzeko erabiliko dugu eta, hortaz, funtzio honek optimo globala zein den zehaztuko du.
 
 Optimizazio problema bat formalizatu behar dugunean argi izan behar dugu soluzioak nola ebaluatuko diren. TSPan, adibidez, distantzia edo kostua nahi dugu minimizatu; hori dela eta, ibilbide bat emanda helburu funtzioak honen distantzia edo kostu totala neurtuko du. Adibide honetan darabilgun funtzioa tribiala da eta zuzenean aplika daiteke; hau ordea, ez da beti horrela izaten. Zenbait kasutan soluzioen ebaluazioa konplexua izan daiteke; hona hemen adibide batzuk:
 
 \begin{itemize}
 \item \textbf{Helburu funtzioa simulazio prozesu bat denean}. Adibidez, ekuazio diferentzial-sistema bat daukagunean eta euren parametroak optimizatu nahi ditugunean, parametro sorta bakoitza ebaluatzeak sistema ebaztea inplikatzen du
 \item \textbf{Optimizazio interaktiboan}\citep{takagi2001}. Problema batzuetan ezin da formula matematiko bat sortu, eta soluzioak ebaluatzeko erabiltzailearen elkarrekintza behar da -- erakargarritasuna, zaporea eta horrelakorik aztertu behar denean, besteak beste --.
-\item \textbf{Soluzio ebaluatzeko algoritmo bat aplikatu behar denean}. Eredu grafiko probabilistikoetan, esate baterako, grafo bat eraikitzeko, aldagaiak ordenatuta badaude, algoritmo deterministak erabil daitezke. Kasu hauetan optimizazio problema aldagaien ordena optimoa topatzean datza; alabaina, ordenarekin bakarrik ezin dugu soluzioa ebaluatu, grafo osoa behar baitugu. Hortaz, soluzioak ebaluatu ahal izateko, algoritmo deterministaren bat aplikatu beharko dugu ordena ezagututa grafoa sortzeko.
+\item \textbf{Soluzioa ebaluatzeko algoritmo bat aplikatu behar denean}. Eredu grafiko probabilistikoetan, esate baterako, grafo bat eraikitzeko, aldagaiak ordenatuta badaude, algoritmo deterministak erabil daitezke. Kasu hauetan optimizazio problema aldagaien ordena optimoa topatzean datza; alabaina, ordenarekin bakarrik ezin dugu soluzioa ebaluatu, grafo osoa behar baitugu. Hortaz, soluzioak ebaluatu ahal izateko, algoritmo deterministaren bat aplikatu beharko dugu ordena ezagututa grafoa sortzeko.
 \item \textbf{Programazio genetikoan}. Programazio genetikoan soluzioak atazaren bat burutzeko programa diseinuak dira. Hori dela eta, soluzioak ebaluatzeko hauek \textit{exekutatu} egin behar dira, ea espero dena egiten duen egiaztatzeko.
 \end{itemize}
 
@@ -509,15 +506,15 @@ Optimizazio problema bat formalizatu behar dugunean argi izan behar dugu soluzio
 
 Problemak formalizatzeko soluzioak nola kodetuko\index{Soluzioen kodetzea} ditugun erabakitzea ezinbestekoa da; izan ere, helburu funtzioa ezin da zehaztu pausu hau burutu arte.
 
-Kodetze on bat diseinatzeko zenbait aspektu aztertu behar ditugu. Lehendabizikoa \textit{osotasuna} da, hau da, edozein soluzio adierazteko gaitasuna. Edozein bi soluzio hartuta, batetik bestera joateko bidea badagoela ziurtatzea ere garrantzitsua da, \textit{konexutasuna} izan ezean bilaketa espazioko eremu batzuk helezinak gerta daitezkeelako\footnote{Gaitasun hau bermatzeko soluzioen kodetzea ez ezik, soluzioak maneiatzeko darabiltzagun operadoreak eta murrizketak kudeatzeko estrategiak ere aintzat hartu behar ditugu}. Amaitzeko, bilaketa prozesuan soluzioak manipulatzeko hainbat funtzio edo operadore erabiliko ditugu; beraz, darabilgun soluzioen kodeketak \textit{operadoreekiko eraginkorra} izan behar du.
+Kodeketa on bat diseinatzeko zenbait aspektu aztertu behar ditugu. Lehendabizikoa \textit{osotasuna} da, hau da, edozein soluzio adierazteko gaitasuna. Edozein bi soluzio hartuta, batetik bestera joateko bidea badagoela ziurtatzea ere garrantzitsua da, \textit{konexutasuna} izan ezean bilaketa espazioko eremu batzuk helezinak gerta daitezkeelako\footnote{Gaitasun hau bermatzeko soluzioen kodetzea ez ezik, soluzioak maneiatzeko darabiltzagun operadoreak eta murrizketak kudeatzeko estrategiak ere aintzat hartu behar ditugu.}. Amaitzeko, bilaketa prozesuan soluzioak manipulatzeko hainbat funtzio edo operadore erabiliko ditugu; beraz, darabilgun soluzioen kodeketak \textit{operadoreekiko eraginkorra} izan behar du.
 
 Literaturan hainbat kodeketa \textit{estandar} topa ditzakegu. Ikus ditzagun hauetako batzuk, \ref{sec:opt_problemak}. atalean deskribatutako problemen soluzioak adierazteko erabil daitezkeenak.
 
-TSP problemarako soluzioak herrien zikloak dira; hau da, herri bakoitza behin eta bakarrik behin agertzen diren zerrendak. Elkar-esklusibotasun hori dela eta, \textit{permutazioak} TSParen soluzioak kodetzeko adierazpide oso egokiak dira. Soluzio guztiak kode daitezke permutazioen bidez eta permutazio guztiek soluzio bideragarriak kodetzen dituzte\footnote{Berez arazotxo bat badago. Ibilbide bat emanda, norabide batean edo bestean egiteak ez du inongo eraginik helburu funtzioan --problema simetrikoa bada betiere-- eta, hortaz, ziklo bakoitzeko bi permutazio izango ditugu zeinentzat helburu funtzioa berdina den}. Adierazpide berdina beste hainbat problematan erabil daiteke, hala nola, \textit{scheduling} problematan, beste \textit{routing} problematan, ordenazio problematan, ... 
+TSP problemarako soluzioak herrien zikloak dira; hau da, herri bakoitza behin eta bakarrik behin agertzen diren zerrendak. Elkar-esklusibotasun hori dela eta, \textit{permutazioak} TSParen soluzioak kodetzeko adierazpide oso egokiak dira. Soluzio guztiak kodetu daitezke permutazioen bidez eta permutazio guztiek soluzio bideragarriak kodetzen dituzte\footnote{Berez arazotxo bat badago. Ibilbide bat emanda, norabide batean edo bestean egiteak ez du inongo eraginik helburu funtzioan --problema simetrikoa bada betiere-- eta, hortaz, ziklo bakoitzeko bi permutazio izango ditugu zeinentzat helburu funtzioa berdina den.}. Adierazpide berdina beste hainbat problematan erabil daiteke, hala nola, \textit{scheduling} problematan, beste \textit{routing} problematan, ordenazio problematan, ... 
 
-Azpi-multzo problematan (ikus. \ref{sec:subset_problems} atala), baldintza edo murrizketa batzuk betetzen dituen azpimultzo optimoa topatzea da helburua. Multzoekin dihardugunean \textit{bektore bitarrak} aukera egokiak dira oso. Motxilaren probleman, esate baterako, $n$ elementu baldin baditugu edozein soluzio $n$ tamainako bektore bitar baten bidez adieraz dezakegu, non $i$. posizioak $i$ elementua motxilan dagoenetz adieraziko duen. Edozein soluzio $n$ tamainako bektore bitar baten bidez kode daiteke; alderantzizkoa, ostera, ez da beti beteko, bektore bitarrek motxilaren kapazitatea gainditzen duten soluzioak adierazi ahal baitituzte.
+Azpi-multzo problematan (ikus. \ref{sec:subset_problems} atala), baldintza edo murrizketa batzuk betetzen dituen azpimultzo optimoa topatzea da helburua. Multzoekin dihardugunean \textit{bektore bitarrak} aukera egokiak dira oso. Motxilaren probleman, esate baterako, $n$ elementu baldin baditugu edozein soluzio $n$ tamainako bektore bitar baten bidez adieraz dezakegu, non $i$. posizioak $i$ elementua motxilan dagoenetz adieraziko duen. Edozein soluzio $n$ tamainako bektore bitar baten bidez kodetu daiteke; alderantzizkoa, ostera, ez da beti beteko, bektore bitarrek motxilaren kapazitatea gainditzen duten soluzioak adierazi ahal baitituzte.
 
-Bektore bitarren kontzeptua aldagai kategorikoetara heda daiteke; hau da, soluzioak \textit{bektore kategoriko} baten bidez adieraz ditzakegu. Kodetze hau Esleipen Problema-Orokorrean --\textit{Generalized Assignment Problem}, GAP~\cite{shmoys1993}, ingelesez-- erabili ohi da.
+Bektore bitarren kontzeptua aldagai kategorikoetara heda daiteke; hau da, soluzioak \textit{bektore kategoriko} baten bidez adieraz ditzakegu. Kodeketa hau Esleipen Problema-Orokorrean --\textit{Generalized Assignment Problem}, GAP~\cite{shmoys1993}, ingelesez-- erabili ohi da.
 
 \begin{tcolorbox}
 \begin{ifdefinition}{\bf GAP problema}
@@ -527,29 +524,29 @@ Izan bitez $n$ ataza, $m$ agente, $C\in \mathbb{R}^{m\times n}$ kostu matrizea e
 
 GAP problemarako soluzioak adierazteko $n$ tamainako bektore kategorikoak erabil daitezke; posizio bakoitzean dauden balioak $\{1,\ldots,m\}$ tartean egongo dira. Bektorearen $i$. posizioak $i$. ataza zein agenteak egingo duen adieraziko du eta; kodeketa honen bidez soluzio-kode erlazioa bijektiboa da, hau da, soluzio bakoitzeko kode bakarra dago eta kode bakoitzak soluzio bakarra kodetzen du.
 
-Bektoreetan oinarritutako kodetzeekin amaitzeko, ideia zenbaki errealetara ere heda daiteke; hau da, zenbait problematan soluzioak bektore errealen bidez kode daitezke. Simulazio edo bestelako prozesuen parametroen optimizazioa soluzio kodeketa honen bitartez egin daiteke, parametroak jarraituak badira betiere.
+Bektoreetan oinarritutako kodeketarekin amaitzeko, ideia zenbaki errealetara ere hedatu daiteke; hau da, zenbait problematan soluzioak bektore errealen bidez kodetu daitezke. Simulazio edo bestelako prozesuen parametroen optimizazioa soluzio kodeketa honen bitartez egin daiteke, parametroak jarraituak badira betiere.
 
-Orain arte ikusi ditugun adierazpideak \textit{linealak} deritzonak dira, soluzioak bektore baten bidez kodetzen baitira. Adierazpide hauek maneiatzeko errazak izan arren, ez dira hainbat soluzio mota kodetzeko gai: adibidez programazio genetikoko soluzioak. Kasu horietan, oso hedatuta dauden adierazpideak erabiltzen dira: grafoak eta, bereziki, zuhaitzak. Kodetze mota ezberdinak nahastea edota konbinatzea asko erabiltzen den beste estrategia bat da; lehen aipaturiko parametro optimizazioan, esate baterako, parametro jarraituak eta diskretuak ditugunean balio errealak eta diskretuak dituzten bektoreak erabili genitzake. Edozein modutan ere, kodeketa bat diseinatzean atalaren hasieran aipaturiko ezaugarriak aintzat hartu beharko ditugu.
+Orain arte ikusi ditugun adierazpideak \textit{linealak} deritzonak dira, soluzioak bektore baten bidez kodetzen baitira. Adierazpide hauek maneiatzeko errazak izan arren, ez dira hainbat soluzio mota kodetzeko gai: adibidez programazio genetikoko soluzioak. Kasu horietan, oso hedatuta dauden adierazpideak erabiltzen dira: grafoak eta, bereziki, zuhaitzak. Kodetze mota ezberdinen konbinaketa ere asko erabiltzen den beste estrategia bat da; lehen aipaturiko parametro optimizazioan, esate baterako, parametro jarraituak eta diskretuak ditugunean balio errealak eta diskretuak dituzten bektoreak erabili genitzake. Edonola ere, kodeketa bat diseinatzean atalaren hasieran aipaturiko ezaugarriak aintzat hartu beharko ditugu.
 
 Adierazpideen eta soluzioen artean dagoen erlazioari erreparatuz, hiru aukera ditugu:
 
 \begin{itemize}
 \item \textbf{Kode bat soluzio bakoitzeko}. Aukerarik ohikoena da, soluzio bakoitzeko kode bat daukagu eta kode bakoitzak soluzio bakarra adierazten du.
 \item \textbf{Kode anitz soluzio bakoitzeko}. Kasu honetan \zkk erredundantzia\skk\ daukagu, eta honek bilaketaren eraginkortasuna kaltetu dezake. Hau gutxi balitz, bilaketa espazioa behar baino handiagoa da.
-\item \textbf{Soluzio anitz kode berdinarekin}. Kodetze honekin bereizmen murriztua daukagu --soluzioen xehetasuna gal dezakegu, alegia--. Bestalde, bilaketa espazioa txikiagoa da eta horrek bilaketari lagun diezaioke. Adierazpide mota honetan deskodeketa prozesu bat egon ohi denez, zehar-kodetzea deritzogu.
+\item \textbf{Soluzio anitz kode berdinarekin}. Kodeketa honekin bereizmen murriztua daukagu --soluzioen xehetasuna gal dezakegu, alegia--. Bestalde, bilaketa espazioa txikiagoa da eta horrek bilaketari lagun diezaioke. Adierazpide mota honetan deskodeketa prozesu bat egon ohi denez, zehar-kodetzea deritzogu.
 \end{itemize}
 
 \subsection{Bilaketa espazioa: murrizketak}
 
-Askotan, bideragarritasunaren definizioak hainbat murrizketa dakar eta, hortaz, murrizketak nola kudeatu erabaki beharko dugu; hori lortzeko hainbat aukera ditugu:
+Askotan, bideragarritasunaren definizioak hainbat murrizketa dakarzki eta, hortaz, murrizketak nola kudeatu erabaki beharko dugu; hori lortzeko hainbat aukera ditugu:
 
 \begin{ifalgorithm}[t]
-\begin{ifpseudo}{Motxilaren problemarako konpontze-algoritmoa}
+\begin{ifpseudo}{Motxilaren problemarako konponketa algoritmoa}
 \item \In\ bideraezina den $s$ soluzioa
 \item \In\ $s^\prime$ soluzio bideragarria
 \item $s^\prime = s$
 \item \WhileDo{$s^\prime$ bideraezina den}
-\item \T {Kendu motxilatik erabilgarritasuna zati pisua ratioa ($\frac{u_i}{w_i}$) minimizatzen duen $e_i$ soluzioa}
+\item \T {Kendu motxilatik erabilgarritasuna zati pisua ratioa ($\frac{u_i}{w_i}$) minimizatzen duen $e_i$ elementua}
 \item \T {$s^\prime = s \setminus e_i$}
 \item \Done
 \end{ifpseudo}
@@ -557,9 +554,9 @@ Askotan, bideragarritasunaren definizioak hainbat murrizketa dakar eta, hortaz, 
 \end{ifalgorithm}
 
 \begin{itemize}
-\item \textbf{Soluzioen kodeketaren edota operadoreen bidez bideragarritasuna mantendu} - Problema ebazteko soluzioen kodeketa diseinatu beharko dugu. Posible denean, kodeketa honek murrizketak integratuko ditu, alegia, sor daitezkeen kode guztiek soluzio bideragarriak adieraziko dituzte. Soluzioen kodeketa ez ezik, soluzioak maneiatzeko darabilzkigun funtzio matematikoak ere bideragarritasuna mantentzeko lerabiltzake. Estrategia hau zenbait problematan --TSPan, besteak beste-- murrizketak beteko direla ziurtatzeko bide zuzena da.
+\item \textbf{Soluzioen kodeketaren edota operadoreen bidez bideragarritasuna mantendu} - Problema ebazteko soluzioen kodeketa diseinatu beharko dugu. Posible denean, kodeketa honek murrizketak integratuko ditu, alegia, sor daitezkeen kode guztiek soluzio bideragarriak adieraziko dituzte. Soluzioen kodeketa ez ezik, soluzioak maneiatzeko darabilzkigun funtzio matematikoak ere bideragarritasuna mantentzeko erabili daitezke. Estrategia hau zenbait problematan --TSPan, besteak beste-- murrizketak beteko direla ziurtatzeko bide zuzena da.
 
-\item \textbf{Soluzio bideraezinak baztertzea} - Estrategiarik sinpleena da; soluzio bat bideragarria izan ezean, bilaketa prozesuan baztertzen da. Sinplea izan arren, eragin handia izan dezake bilaketa prozesuan, espazioko zenbait eskualde \zkk isolaturik\skk\ gerta baitaiteke.
+\item \textbf{Soluzio bideraezinak baztertzea} - Estrategiarik sinpleena da; soluzio bat bideragarria izan ezean, bilaketa prozesuan baztertu egiten da. Sinplea izan arren, eragin handia izan dezake bilaketa prozesuan, espazioko zenbait eskualde \zkk isolaturik\skk\ gera baitaitezke.
 
 \item \textbf{Soluzio bideraezinak zigortu} - Gerta daiteke soluzio bideragarrien espazioa etena izatea; hau da, soluzio bideragarri batetik bestera joateko soluzio bideraezinetatik pasatzea ezinbestekoa izatea. Gauzak horrela, soluzio bideraezinak baztertzeak edo konpontzeak ez du oso irtenbide egokia ematen. Soluzio bideraezinak bilaketa prozesuan erabil daitezke, helburu funtzioan zigortze termino bat sartuz. 
 
@@ -621,11 +618,11 @@ is.valid(solution = corrected.solution , weight = W , limit = c_m)
 
 \subsection{Algoritmoak}
 
-Ikerkuntza Operatiboaren lehenengo urteetan ikertzaileek problema mota partikularrentzat soluzio zehatza lortzeko algoritmoak garatzen ziharduten. Problema hauek \zkk programazio matematikoa\skk\ deritzon alorrean sartzen dira\footnote {Programazio lineala eta programazio osoa, hauen adibideak dira.} eta ebazteko hainbat algoritmo zehatz planteatu dira; hala nola, Simplex algoritmoa, barne-puntu metodoa, adarkatze- eta bornatze-algoritmoak, etab. 
+Ikerkuntza Operatiboaren lehenengo urteetan ikertzaileek problema mota partikularrentzat soluzio optimoa lortzeko algoritmoak garatzen ziharduten. Problema hauek \zkk programazio matematikoa\skk\ deritzon alorrean sartzen dira\footnote {Programazio lineala eta programazio osoa, hauen adibideak dira.} eta ebazteko hainbat algoritmo zehatz planteatu dira; hala nola, dagoeneko aipatu dugun Simplex algoritmoa, edota barne-puntu metodoa, adarkatze- eta bornatze-algoritmoak, eta abar. 
 
 Metodo hauek problema mota konkretuak ebazteko diseinaturik daude, eta hortaz, ezin dira edozein optimizazio problema ebazteko erabili. Hori gutxi balitz, nahiz eta problemen konplexutasun maila handia ez izan, problemaren tamaina handiegia bada ere, algoritmoa hauek erabiltezinak gerta daitezke. 
 
-Gauzak horrela, hainbat egoeratan problemaren optimo globala topatzerik ez dago. Kasu honetan, zer egin dezakegu?. Eskuragarri ditugun baliabideekin soluzio zehatza topatzea ezinezkoa bada, ahalik eta soluziorik onena topatzen saiatuko gara; alegia, optimo globaletatik albait gertuen dagoen soluzio bat topatzen saiatuko gara. 
+Gauzak horrela, hainbat egoeratan problemaren optimo globala topatzerik ez dago. Kasu honetan, zer egin dezakegu? Eskuragarri ditugun baliabideekin soluzio onena topatzea ezinezkoa bada, ahalik eta soluziorik onena topatzen saiatuko gara; alegia, optimo globaletatik albait gertuen dagoen soluzio bat topatzen saiatuko gara. 
 
 Soluzio hurbilduak lortzeko bi aukera ditugu: metodo hurbilduak, zeinek hurbilketa maila bermatzen duten, eta metodo heuristikoak, ezer bermatzen ez dutenak. 
 
@@ -640,8 +637,8 @@ Atal honen hasieran TSP problemak ebazteko horrelako algoritmo bat ikusi dugu. M
 Meta-heuristiko mota asko daude, bakoitza bere intuizioan oinarritutakoa. Metodoak sailkatzeko era asko egon arren, partiketa hedatuenak bi multzotan banatzen ditu:
 
 \begin{itemize}
-\item \textbf{Soluzio bakarrean oinarritutako metaheuristikoak} - Metodo hauetan uneoro soluzio bakar bat mantentzen dugu, eta soluzio horretatik abiatuta beste batera mugitzen saiatuko gara; mugimenduak nola egiten direnean dautza algoritmoen arteko diferentziak. Bilaketa lokala da metodo hauen arteko ezagunena; alabaina, metodo honek arazo larri bat du: optimo lokaletan trabaturik gelditzen da. Arazo hau saihesteko zenbait hedapen proposatu dira; hala nola, tabu bilaketa~\cite{glover1986}, GRASP algoritmoa~\cite{feo1989}, Suberaketa Simulatua~\cite{kirkpatrick1983,cerny1985}, etab.
-\item \textbf{Populazioetan oinarritutako meta-heuristikoak} - Algoritmo hauetan soluzio bakar bat izan beharrean soluzio \zkk populazio\skk\ bat --multzo bat, alegia-- mantentzen dugu; iterazioz iterazio populazioak \zkk eboluzionatuko\skk\ du, geroz eta soluzio hobeagoak lortuz. Atal honetan dauden algoritmo askok naturan bilatzen dute inspirazioa; era horretan, adibidez, algoritmo genetikoak~\cite{holland1975} ditugu, eboluzioan oinarritutakoak edo inurri-kolonia algoritmoa~\cite{dorigo1992}, inurrien talde-portaeran oinarritzen dena.
+\item \textbf{Soluzio bakarrean oinarritutako metaheuristikoak} - Metodo hauetan uneoro soluzio bakar bat mantentzen dugu, eta soluzio horretatik abiatuta beste batera mugitzen saiatuko gara; mugimenduak nola egiten diren desberdintzen ditu algoritmoak. Bilaketa lokala da metodo hauen arteko ezagunena; alabaina, metodo honek arazo larri bat du: optimo lokaletan trabaturik gelditzen da. Arazo hau saihesteko zenbait hedapen proposatu dira; hala nola, tabu bilaketa~\cite{glover1986}, GRASP algoritmoa~\cite{feo1989}, Suberaketa Simulatua~\cite{kirkpatrick1983,cerny1985}, etab.
+\item \textbf{Populazioetan oinarritutako meta-heuristikoak} - Algoritmo hauetan, soluzio bakar bat izan beharrean soluzio \zkk populazio\skk\ bat --multzo bat, alegia-- mantentzen dugu; iterazioz iterazio populazioari aldaketak egingo zaizkio honen \zkk eboluzioa\skk\ ahalbidetuz, eta geroz eta soluzio hobeagoak lortuz. Atal honetan dauden algoritmo askok naturan bilatzen dute inspirazioa; era horretan, adibidez, algoritmo genetikoak~\cite{holland1975} ditugu, eboluzioan oinarritutakoak, edo inurri-kolonia algoritmoa~\cite{dorigo1992}, inurrien talde-portaeran oinarritzen dena.
 \end{itemize}
 
 \begin{figure}[t]
@@ -651,9 +648,8 @@ Meta-heuristiko mota asko daude, bakoitza bere intuizioan oinarritutakoa. Metodo
 \label{fig:heur_sailkap}
 \end{figure}
 
-\ref{fig:heur_sailkap} irudian optimizaziorako heuristikoen eskematxo bat ikus daiteke. Meta-heuristiko asko daude baina denak gauza berdina egiteko diseinatuta daude: bilaketa espazioa miatzeko. Miaketa prozesuan bi estrategia ezberdin erabil --eta, batez ere, konbina-- daitezke: \textit{dibertsifikazioa} eta \textit{areagotzea}. Dibertsifikatzean espazioko eremu handiak aztertzen ditugu, baina xehetasun handirik gabe; helburua bilaketa espazioko eremu interesgarriei antzematea da --espazioa esploratzea, alegia--. Areagotzeak, berriz, topatu ditugun eremu interesgarri horiek sakonki arakatzea dauka helburutzat; batzuetan esaten den legez, soluzio onak esplotatzea. Oro har, bilaketa lokala motako algoritmoetan areagotzeari garrantzi handiagoa ematen zaio; populazioetan oinarritutako algoritmoetan, berriz, dibertsifikazioa da helburu nagusia\footnote{Izan ere, azken kapituluan ikusiko dugun bezala, teknikak nahas daitezke, bilaketa lokalean oinarritutako areagotze pausuak populazioetan oinarritutako metodoei gehituz}.
+\ref{fig:heur_sailkap} irudian optimizaziorako heuristikoen eskema orokor bat ikus daiteke. Meta-heuristiko asko daude baina denak gauza berdina egiteko diseinatuta daude: bilaketa espazioa miatzeko. Miaketa prozesuan bi estrategia ezberdin erabil --eta, batez ere, konbina-- daitezke: \textit{dibertsifikazioa} eta \textit{areagotzea}. Dibertsifikatzean espazioko eremu handiak aztertzen ditugu, baina xehetasun handirik gabe; helburua bilaketa espazioko eremu interesgarriei atzematea da --espazioa esploratzea, alegia--. Areagotzeak, berriz, topatu ditugun eremu interesgarri horiek sakonki arakatzea dauka helburutzat; batzuetan esaten den legez, eremu onak esplotatzea. Oro har, bilaketa lokala motako algoritmoetan areagotzeari garrantzi handiagoa ematen zaio; populazioetan oinarritutako algoritmoetan, berriz, dibertsifikazioa da helburu nagusia\footnote{Izan ere, azken kapituluan ikusiko dugun bezala, teknikak nahas daitezke, bilaketa lokalean oinarritutako areagotze pausuak populazioetan oinarritutako metodoei gehituz}.
 
-Txantiloiak edo eskemak definitzeko behar den abstrakzio maila lortzeko \textit{operadoreak} --soluzioak maneiatzeko erabiltzen diren funtzio matematikoak-- erabiltzen dira. Adibide gisa, bilaketa lokalean, \textit{ingurune operadoreak} erabiltzen dira; hau da, soluzio bat emanda, soluzio horren \zkk antzerakoak\skk\ diren soluzioak itzultzen dituen operadore edo funtzioa. Datorren kapituluan ikusiko dugun bezala, algoritmoa definitzeko ez zaigu axola, problema konkretu batean, zein ingurune funtzioa erabiltzen den, bakarrik jakin behar dugu soluzio bat dugunean bere ingurunean dauden soluzioak emango dizkigun operadorea izango dugula.
 
 %\subsection{Parametroen egokitzapena}
 
