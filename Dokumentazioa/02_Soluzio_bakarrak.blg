@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
+The top-level auxiliary file: 02_Soluzio_bakarrak.aux
+The style file: plain.bst
+Database file #1: references.bib
+Warning--entry type for "congram2000" isn't style-file defined
+--line 309 of file references.bib
+You've used 11 entries,
+            2118 wiz_defined-function locations,
+            571 strings with 5787 characters,
+and the built_in function-call counts, 3468 in all, are:
+= -- 347
+> -- 141
+< -- 1
++ -- 57
+- -- 44
+* -- 236
+:= -- 585
+add.period$ -- 32
+call.type$ -- 11
+change.case$ -- 55
+chr.to.int$ -- 0
+cite$ -- 11
+duplicate$ -- 128
+empty$ -- 286
+format.name$ -- 44
+if$ -- 726
+int.to.chr$ -- 0
+int.to.str$ -- 11
+missing$ -- 9
+newline$ -- 57
+num.names$ -- 23
+pop$ -- 48
+preamble$ -- 1
+purify$ -- 44
+quote$ -- 0
+skip$ -- 92
+stack$ -- 0
+substring$ -- 248
+swap$ -- 19
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 42
+warning$ -- 0
+while$ -- 35
+width$ -- 13
+write$ -- 121
+(There was 1 warning)
