@@ -119,7 +119,7 @@ N_{h}(s;k) = \{s^\prime\in {\cal S}\ |\ d_h(s,s^\prime) \leq k\}
 
 Ikus dezagun adibide bat, \code{metaheuR} paketea erabiliz. Motxilaren problema erabiliko dugu eta, horretarako, lehenengo, ausazko problema bat eta soluzio bat sortuko ditugu. Pisua eta balioa korrelaturik egoteko, elementu bakoitzaren pisua lortzeko, haren balioari ausazko kopuru bat gehituko diogu. Gero, motxilaren kapazitatea definitzeko ausaz aukeratutako $\frac{n}{2}$ elementuen pisuak batuko ditugu. Azkenik, elementu bakoitza aukeratzeko probabilitatea heren batean ezarriz, ausazko soluzio bat sortuko dugu.
 
-<<GC_1 , prompt=TRUE, echo=-1 , message=FALSE>>=
+<<GC_1 , prompt=TRUE, echo=-1 , message=FALSE , warning=FALSE>>=
 set.seed(1)
 library(metaheuR)
 n <- 10
@@ -472,7 +472,7 @@ Aurreko atalean ikusi dugun legez, bilaketa lokala soluzioak areagotzeko prozedu
 
 
 \subsection{Hasieraketa anizkoitza}\label{sec:multistart}
-Bilaketa lokala aplikatzean, soluzio bakoitzetik abiatuz optimo lokal batera heltzen gara; soluzio ezberdinetatik abiatzen bagara, optimo lokal ezberdinetara heldu gaitezke. \textcolor{red}{Ideia hau da, hain zuzen ere, hasieraketa-anizkoitzeko bilaketa lokalak -- {\it Multistart Local Search}, inglesez-- inplementatzen duen (\ref{alg:randomMultistartLS} sasikodean ikusi daiteke). Algoritmoan agertzen diren \textit{generate\_random\_solution} eta \textit{local\_search} funtzioetan dago prozeduraren mamia, beraiek karakterizatuko baitute algoritmoaren performantzia. Lehenengoak, bilaketa espazioaren esplorazioa burutzen du. Bigarrena, aldiz, bere izenak adierazten duen bezala, soluzioen areagotzeaz arduratzen da.
+Bilaketa lokala aplikatzean, soluzio bakoitzetik abiatuz optimo lokal batera heltzen gara; soluzio ezberdinetatik abiatzen bagara, optimo lokal ezberdinetara heldu gaitezke. Ideia hau da, hain zuzen ere, hasieraketa-anizkoitzeko bilaketa lokalak -- {\it Multistart Local Search}, inglesez-- inplementatzen duen (\ref{alg:randomMultistartLS} sasikodean ikusi daiteke). Algoritmoan agertzen diren \textit{generate\_random\_solution} eta \textit{local\_search} funtzioetan dago prozeduraren mamia, beraiek karakterizatuko baitute algoritmoaren performantzia. Lehenengoak, bilaketa espazioaren esplorazioa burutzen du. Bigarrena, aldiz, bere izenak adierazten duen bezala, soluzioen areagotzeaz arduratzen da.
 
 \begin{ifalgorithm}[t]
 \begin{ifpseudo}{Hasieraketa-anizkoitzeko bilaketa lokal orokorra}
