@@ -7,13 +7,14 @@ Author: Borja Calvo and Usue Mori
 Maintainer: Borja Calvo <borja.calvo@ehu.eus>
 Description: This pacakge includes classical algorithms such as local search, iterated local search, simulated anneling or genetic algorithms. It also includes problems such as TSP, QAP, Graph Coloring, etc. The main goal of the package is to used to teach metaheuristics.
 License: GPL-2
-Suggests: testthat
-Depends: ggplot2, XML, igraph, colorspace, knitr
+Suggests: testthat , ggplot2, XML, igraph, colorspace, knitr
 VignetteBuilder: knitr 
 Collate: Neighborhood.R
   Permutation.R
   CResource.R
   MHResult.R
+  UnivariateMarginals.R
+  MallowsModel.R
   permutation_problems.R
   subset_problems.R
   graph_problems.R

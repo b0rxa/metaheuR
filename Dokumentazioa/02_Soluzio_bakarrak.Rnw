@@ -13,6 +13,7 @@
 \newcommand{\tq}{\textquotesingle}
 
 \begin{document}
+%\SweaveOpts{concordance=TRUE}
 \ikasturtea{2013/2014}
 \irakasgaia{Bilaketa Heuristikoak}
 \title{BHLN: Soluzio bakarrean oinarritutako algoritmoak}
@@ -47,23 +48,23 @@ knit_theme$set("earendel")
 \maketitle
 
 \begin{abstract}
-Kapitulu honetan soluzio bakarrean oinarritzen diren algoritmoak aztertuko ditugu. Algoritmo eraikitzaileak mota honetakoak izan arren, teknikoki ez dira bilaketa heuristikoak -- ez baitago bilaketa prozesurik -- eta, hortaz, ez ditugu kapitulu honetan azalduko. Horren ordez, bilaketa lokalari erreparatuz, lehenengo atalean bere inguruan agertzen diren kontzeptuak azalduko ditugu. Bilaketa lokalaren arazorik handiena optimo lokaletan trabatuta geratzea denez, kapituluaren bigarren zatian arazo hau saihesteko zenbait estrategia aztertuko ditugu.
+Kapitulu honetan soluzio bakarrean oinarritzen diren algoritmoak aztertuko ditugu. Algoritmo eraikitzaileak mota honetakoak izan arren, teknikoki ez dira bilaketa heuristikoak -- ez baitago bilaketa prozesurik -- eta, hortaz, ez ditugu kapitulu honetan azalduko. Horren ordez, lehenengo atalean, bilaketa lokala eta haren inguruan agertzen diren kontzeptu batzuk azalduko ditugu, hau baita soluzio bakarrean oinarritutako algoritmo ezagunena. Bilaketa lokalaren arazorik handiena optimo lokaletan trabatuta geratzea denez, kapituluaren bigarren zatian arazo hau saihesteko zenbait estrategia aztertuko ditugu.
 \end{abstract}
 
 \section{Kontzeptu orokorrak}
-Bilaketa lokalaren atzean dagoen intuizioa oso sinplea da: soluzio bat emanda, bere \zkk inguruan\skk\ dauden soluzioen artean soluzio hobeak bilatzea. Ideia hau bilaketa prozesu bihurtzeko, uneoro problemarako soluzio (bakar) bat mantenduko dugu eta, bilaketaren pausu bakoitzean, uneko soluzio horren ingurunean dagoen beste soluzio batekin ordezkatuko dugu. 
+Bilaketa lokalaren atzean dagoen intuizioa oso sinplea da: soluzio bat emanda, bere \zkk inguruan\skk\ dauden soluzioen artean soluzio hobeak bilatzea. Ideia hau bilaketa prozesu bihurtzeko, uneoro problemarako soluzio (bakar) bat mantenduko dugu eta, pausu bakoitzean, uneko soluzio horren ingurunean dagoen beste soluzio batekin ordezkatuko dugu. 
 
-Ideia honetan hainbat algoritmo oinarritzen dira, bakoitzak bere berezitasunekin. Diferentziak diferentzia, zenbait elementu komunak dira algoritmo guztietan; atal honetan kontzeptu hauek aztertzeari ekingo diogu.
+Hainbat algoritmo oinarritzen dira ideia honetan, bakoitza bere berezitasunekin. Diferentziak diferentzia, zenbait elementu komunak dira algoritmo guztietan; atal honetan kontzeptu hauek aztertzeari ekingo diogu.
 
 \subsection{Soluzioen inguruneak}
 
-Bilaketa lokalean dagoen kontzepturik nagusiena inguruarena da -- \textit{neighborhood}, ingelesez -- eta, hortaz, problema bat ebazterakoan arreta handiz diseinatu beharreko osagaia da. Ingurune funtzioak edo operadoreak\footnote{Programazio testuinguruetan -- sasikodetan, adibidez -- \zkk soluzioak maneiatzeko erabiltzen diren funtzioei operadore\skk\ deritze eta, hortaz, \zkk funztio\skk\ eta \zkk terminoa\skk\ terminoak erabiliko ditugu baliokideak gisa.}, soluzio bakoitzeko, bilaketa espazioaren azpimultzo bat definitzen du.
+Bilaketa lokalean dagoen kontzepturik garrantzitsuena ingurunearena da -- \textit{neighborhood}, ingelesez -- eta, hortaz, problema bat ebazterakoan arreta handiz diseinatu beharreko osagaia da. Ingurune funtzioak edo operadoreak\footnote{Programazio testuinguruetan -- sasikodetan, adibidez -- \zkk soluzioak maneiatzeko erabiltzen diren funtzioei operadore\skk\ deritze eta, hortaz, \zkk funztio\skk\ eta \zkk terminoa\skk\ terminoak erabiliko ditugu baliokideak gisa.}, soluzio bakoitzeko, bilaketa espazioaren azpimultzo bat definitzen du.
 
 \begin{ifdefinition}
-Izan bedi $\cal S$ bilaketa espazioa; $N:{\cal S} \rightarrow 2^{\cal S}$ funtzioari, $s\in {\cal S}$ soluzioa emanda $N(s)\subset {\cal S}$ bilaketa espazioaren azpimultzo itzultzen duenari, ingurune funtzioa deritzo
+Izan bedi $\cal S$ bilaketa espazioa; orduan, $N:{\cal S} \rightarrow 2^{\cal S}$ funtzioari, zeinak $s\in {\cal S}$ soluzioa emanda $N(s)\subset {\cal S}$ bilaketa espazioaren azpimultzo bat itzultzen duen, ingurune funtzioa deritzo
 \end{ifdefinition}
 
-Soluzio baten ingurunean dauden soluzioak antzerakoak izatea espero dugu; alabaina, ingurune operadoreek soluzioen kodeketarekin dihardute eta, hortaz, antzekotasuna ez dago beti bermatuta. 
+Nahiz eta ingurune funtzioaren definizioa oso orokorra izan, errealitatean, soluzio baten ingurunean dauden soluzioak antzerakoak izatea interesatzen zaigu; alabaina, orokorrean, inguruneak kodetutako soluzioei aplikatutako ingurure operadore batzuen baitan definitzen dira eta, hortaz, antzekotasuna ez dago halabeharrez bermatuta. 
 
 Beraz, bilaketa lokal bat diseinatzean ondo aukeratu behar da kodeketa/ingurune bikotea, ingurunean dauden soluzioak antzerakoak izan daitezen. Ezaugarri honi lokaltasuna --\textit{locality} ingelesez-- esaten zaio, eta emaitza onak lortzeko funtsezkoa da.
 
@@ -71,27 +72,27 @@ Beraz, bilaketa lokal bat diseinatzean ondo aukeratu behar da kodeketa/ingurune 
 \begin{ifexample}{\bf Lokaltasuna FSS probleman}
 Datu meatzaritzan, gainbegiratutako datu base bat daukagunean, sailkatzaile funtzioak eraikitzea edo ikastea ataza ohikoa da oso. Funtzio hauek, beraien izenak adierazten duen moduan, datu berriak sailkatzeko erabiltzen dira. 
 
-Oro har, datuetan dauden aldagaiek iragarpenak egiteko gaitasun ezberdinak dituzte; are gehiago, aldagai batzuk eragin negatiboa izan dezakete sailkatzailearen funtzionamenduan. Hori dela eta, aldagaien azpi-multzo bat aukeratzea oso pausu ohikoa da; prozesu hau, ingelesez {\em feature subset selection, FSS} deitzen dena, optimizazio problema bat da. FSS problemarako soluzioak bektore bitarren bidez kode daitezke, bit bakoitzak dagokion aldagaia azpi-multzoan dagoenetz adierazten duelarik. 
+Oro har, datuetan agertzen diren aldagaiek iragarpenak egiteko gaitasun ezberdinak dituzte; are gehiago, aldagai batzuk eragin negatiboa izan dezakete sailkatzailearen funtzionamenduan. Hori dela eta, aldagaien azpi-multzo bat aukeratzea oso pausu ohikoa da; prozesu hau, ingelesez {\em feature subset selection, FSS} deitzen dena, optimizazio problema bat da. FSS problemarako soluzioak bektore bitarren bidez kode daitezke, bit bakoitzak dagokion aldagaia azpi-multzoan dagoenetz adierazten duelarik. 
 
-Bektore bitarrek zenbaki osoak moduan interpreta daitezke eta, hortaz, antzerako soluzioak zenbaki horiei balio txikiak gehituz/kenduz sor ditzakegu. Adibidez, $(01001)$ soluzioa badugu $9$ zenbakia moduan interpreta dezakegu eta, hortaz, antzerako soluzioak lor ditzakegu 1 gehituz -- $(01010)$, hau da, $10$ zenbakia -- edo kenduz -- $(01000)$, $8$ zenbakia --. Adibide honetan lortutako soluzioak nahiko antzerakoak dira; lehendabiziko kasuan azken aldagaia azken-aurrekoarekin ordezkatu dugu eta bigarren kasuan azken aldagaia kendu dugu. Edonola ere, beste kasu batzuetan lokaltasuna ez da mantentzen; $(1000000)$ soluzioari 1 kentzen badiogu, $(0111111)$ lortuko dugu, hau da, aukeratuta zegoen aldagai bakarra -- lehendabizikoa -- kendu eta beste gainontzeko guztiak sartu. Beste era batean esanda, FSS problemarako ingurune definizio hau ez da oso egokia.
+Bektore bitarrak zenbaki oso moduan interpreta daitezke eta, hortaz, inguruneko soluzioak lortzeko modu bat horiei balio txikiak gehitzea/kentzea da. Adibidez, $(01001)$ soluzioak $9$ zenbakia adierazi dezake eta, hortaz, antzerako soluzioak lor ditzakegu 1 gehituz -- $(01010)$, hau da, $10$ zenbakia -- edo kenduz -- $(01000)$, $8$ zenbakia --. Adibide honetan lortutako soluzioak nahiko antzerakoak dira; lehendabiziko kasuan azken aldagaia azken-aurrekoarekin ordezkatu dugu eta bigarren kasuan azken aldagaia kendu dugu. Edonola ere, beste kasu batzuetan lokaltasuna ez da mantentzen; $(1000000)$ soluzioari 1 kentzen badiogu, $(0111111)$ lortuko dugu, hau da, aukeratuta zegoen aldagai bakarra -- lehendabizikoa -- kendu eta beste gainontzeko guztiak sartuko ditugu. Beste era batean esanda, FSS problemarako ingurune definizio hau ez da oso egokia.
 
-Azpi-multzo problematan ingurune operadore ohikoena {\em flip} aldaketan oinarritzen dena da; inguruneko soluzioak sortzeko uneko soluzioaren posizio batean dagoen balioa aldatzen da, hau da, 0 bada 1ekin ordezkatzen da eta 1 bada, 0rekin. Operadore honekin FSS probleman beti bermatzen da lokaltasuna, ingurunean dauden edozein bi soluziok aldagai bakar bateko diferentzia izango baitute. \ref{fig:locality} irudiak adibidea grafikoki erakusten du.
+Azpi-multzo problematan ingurune operadore ohikoena {\em flip} aldaketan oinarritzen da; inguruneko soluzioak sortzeko uneko soluzioaren posizio bateko balioa aldatzen da, hau da, 0 bada 1ekin ordezkatzen da eta 1 bada, 0rekin. Operadore honekin FSS probleman beti bermatzen da lokaltasuna, ingurunean dauden edozein bi soluziok aldagai bakar bateko diferentzia izango baitute. \ref{fig:locality} irudiak adibidea grafikoki erakusten du.
 \end{ifexample}
 \end{tcolorbox}
 \begin{figure}[t]
 \centering
 \includegraphics [width=0.75\textwidth]{./Irudiak/lokaltasuna}\label{fig:locality}
-\caption{Bi ingurune adibide. Goikoan bektore bitarri 1 gehitzen/kentzen diogu inguruneko soluzioak sortzeko. Eskuman dagoen soluzioan ikus daitekeen bezala, lokaltasuna ez da mantentzen. Beheko ingurunea \textit{flip} eragiketan onairritzen da. Kasu honetan sortutako soluzio guztiak antzerakoak dira.}
+\caption{Bi ingurune ezberdinen adibidea. Goikoan bektore bitarrei 1 gehitzen/kentzen diogu inguruneko soluzioak lortzeko. Eskuman dagoen soluzioan ikus daitekeen bezala, lokaltasuna ez da mantentzen, soluzioak elkarrengandik oso ezberdinak direlako. Beheko ingurunea \textit{flip} eragiketan oinarritzen da. Kasu honetan sortutako soluzio guztiak antzerakoak dira.}
 \end{figure}
 
 
-Soluzioak bektoreen bidez kodetzen direnean, inguruneak definitzeko \zkk distantzia\skk\ kontzeptua erabili ohi da, esplizituki zein inplizituki. Era honetan, bi soluzio bata bestearen ingurunean daudela esango dugu baldin eta beraien arteko distantzia finkaturiko kopurua baino txikiagoa bada. Bi soluzioen arteko distantzia $d(s,s^\prime)$ funtzioaz adierazten badugu, ingurunearen definizio orokorra hauxe izango da:
+Soluzioak bektoreen bidez kodetzen direnean, inguruneak definitzeko \zkk distantzia\skk\ kontzeptua erabili ohi da, esplizituki zein inplizituki. Era honetan, bi soluzio bata bestearen ingurunean daudela esango dugu baldin eta beraien arteko distantzia finkaturiko kopuru bat baino txikiagoa bada. Bi soluzioen arteko distantzia $d(s,s^\prime)$ funtzioaz adierazten badugu, ingurunearen definizio orokorra hauxe izango da:
 
 \begin{align}
 N(s;k) = \{s^\prime\ |\ d(s,s^\prime)\leq k\}
 \end{align}
 
-Bektorearen motaren arabera distantzia ezberdinak erabil ditzakegu. Jarraian adibide hedatuenak ikusiko ditugu.
+Bektore motaren arabera distantzia ezberdinak erabil ditzakegu. Jarraian adibide hedatuenak ikusiko ditugu.
 
 \noindent{\bf Bektore errealak} - Bektore errealekin dihardugunean euklidearra da gehien erabiltzen den distantzia
 
@@ -99,17 +100,23 @@ Bektorearen motaren arabera distantzia ezberdinak erabil ditzakegu. Jarraian adi
 d_e(s,s^\prime) = \sqrt{\sum_{i=1}^n (s_i^\prime - s_i)^2}
 \end{eqnarray*}
 
-Ingurune tamainari erreparatuz, zenbaki errealak direnez infinitu soluzio izango ditugu edozein soluzioren ingurunean. Euklidearra distantziarik ezagunena izan arren, badira beste metrika batzuk ere -- Manhanttan- edo Chevyshev-distantziak, besteak beste --.
+Ingurune tamainari erreparatuz, zenbaki errealekin dihardugunez, infinitu soluzio izango ditugu edozein soluzioren ingurunean. Euklidearra distantziarik ezagunena izan arren, badira beste metrika batzuk ere -- Manhanttan- edo Chevyshev-distantziak, besteak beste --.
 
-\noindent{\bf Bektore kategorikoak eta bitarrak} - Bektoreetan dauden aldagaiak kategorikoak direnean, bi bektoreen arteko distantzia neurtzeko metrikarik ezagunena Hamming-ek proposatutakoa da: $d_h(s,s^\prime) = \sum_{i=1}^n I(s_i\neq s_i^\prime)$ da, non $I$ funtzioak 1 balioa hartzen du bere argumentua egia denean eta 0 beste kasuan; hau da, Hamming-distantziak posizioz posizioko desberdintasunak neurtzen ditu. Hamming-distantzia inguruneak definitzeko erabiltzen denean ohikoena 1 distantziara dauden soluzioak erabiltzea da, hau da:
+\noindent{\bf Bektore kategorikoak eta bitarrak} - Bektoreetan dauden aldagaiak kategorikoak direnean, bi bektoreen arteko distantzia neurtzeko metrikarik ezagunena Hamming-ek proposatutakoa da: $d_h(s,s^\prime) = \sum_{i=1}^n I(s_i\neq s_i^\prime)$, non $I$ funtzioak 1 balioa hartzen duen bere argumentua egia denean eta 0 beste kasuan; hau da, Hamming-distantziak posizioz posizioko desberdintasunak neurtzen ditu. Hamming-distantzia inguruneak definitzeko erabiltzen denean, ohikoena 1 distantziara dauden soluzioetara mugatzea da, hau da:
 
 \begin{align}\label{eq:hamming1_neigh}
 N_{h1}(s) = \{s^\prime\in {\cal S}\ |\ d_h(s,s^\prime) = 1\}
 \end{align}
 
-Algoritmoak diseinatzean oso garrantzitsua da ingurunearen tamaina aztertzea. Aurreko operadorea $n$ tamainako bektore bitar bati aplikatzen badiogu, $|N(s)| = n$ izango da, posizio bakoitza aldatzeko aukera bakarra baitaukagu. Bektore kategorikoetan, posizio bakoitzean $r_i$ balio hartzeko aukera dagoenean, ingurunearen tamaina $|N(s)| = \sum_{i=1}^n (r_i - 1)$ izango da.
+Algoritmoak diseinatzean oso garrantzitsua da ingurunearen tamaina aztertzea. Aurreko operadorea $n$ tamainako bektore bitar bati aplikatzen badiogu, $|N(s)| = n$ izango da, posizio bakoitza aldatzeko aukera bakarra baitaukagu. Bektore kategorikoetan, posizio bakoitzean $r_i$ balio hartzeko aukera dagoenean, ingurunearen tamaina $|N(s)| = \sum_{i=1}^n (r_i - 1)$ izango da. 
 
-Ikus dezagun adibide bat, \code{metaheuR} paketea erabiliz. Motxilaren problema erabiliko dugu eta, horretarako, lehenengo ausazko problema bat eta soluzio bat sortuko ditugu. Pisua eta balioa korrelaturik egoteko, balioari ausazko kopuru bat gehituko diogu. Gero, motxilaren kapazitatea definitzeko ausazko $\frac{n}{2}$ elementuen pisua batuko ditugu. Ausazko soluzioa sortzen dugu; elementu bakoitza aukeratzeko probabilitatea heren bat izango da.
+Bestalde, ondoko ekuazioak, edozein distantziarako ingurune funtzio orokor bat adierazten du-- distantzia maximoa bektorearen tamaina dela kontutan hartuz, betiere  --.:
+
+\begin{align}
+N_{hk}(s;k) = \{s^\prime\in {\cal S}\ |\ d_h(s,s^\prime) \leq k\}
+\end{align}
+
+Ikus dezagun adibide bat, \code{metaheuR} paketea erabiliz. Motxilaren problema erabiliko dugu eta, horretarako, lehenengo, ausazko problema bat eta soluzio bat sortuko ditugu. Pisua eta balioa korrelaturik egoteko, elementu bakoitzaren pisua lortzeko, haren balioari ausazko kopuru bat gehituko diogu. Gero, motxilaren kapazitatea definitzeko ausaz aukeratutako $\frac{n}{2}$ elementuen pisuak batuko ditugu. Azkenik, elementu bakoitza aukeratzeko probabilitatea heren batean ezarriz, ausazko soluzio bat sortuko dugu.
 
 <<GC_1 , prompt=TRUE, echo=-1 , message=FALSE>>=
 set.seed(1)
@@ -122,7 +129,7 @@ knp <- knapsack.problem(weight = rnd.weight , value = rnd.value , limit = max.we
 rnd.sol <- runif(n) < 1/3
 @
 
-Sortutako soluzioa bideraezina izan daitekeenez, lehenengo pausua soluzioa zuzenduko dugu. Gero, \zkk flip\skk\ operadorea erabiliko dugu inguruneko soluzioak sortzeko. Operadore honek Hamming distantzia 1era dauden soluzioak sortuko ditu.
+Kontutan hartu behar da motxilaren probleman soluzio guztiak --azpi-multzo guztiak, alegia-- ez direla bideragarriak; Hala, ausazko soluzioa sortzean, item bat aukeratzeko probabilitatea handitzen badugu, soluzio bideraezinak lortzea probableagoa izango da. Edozein kasutan, sortutako soluzioa bideraezina izan daitekeenez, lehenengo pausua soluzioa zuzentzea izango da. Gero, \zkk flip\skk\ operadorea erabiliko dugu inguruneko soluzioak sortzeko. Operadore honek Hamming-distantzia implementatzen du, zehazki, unitate 1eko distantziara dauden soluzioak sortuz. Nahiz eta uneko soluzioa bideragarria izan, ingurunekoak bideraezinak izan daitezke, beraz, pausu bakoitzean inguruneko soluzioa bideragarria den ala ez aztertu beharko dugu. 
 
 <<GC_2 , prompt=TRUE>>=
 rnd.sol <- knp$correct(rnd.sol)
@@ -137,25 +144,21 @@ while(has.more.neighbors(flip.ngh)){
 }
 @
 
-Goiko kodean ikus daitekeen bezala, badaude paketean bi funtzio inguruneak korritzeko: \code{has.more.neighbors} eta \code{next.neighbor}. Izenek adierazten duten bezala, lehenengo funtzioak ingurunean bisitaturik gabeko soluzioren bat badagoen esaten digu eta, bigarrenak, bisitatu gabeko hurrengo soluzioa itzultzen du. Horrez gain, badago beste funtzio bat, \code{reset.neighborhood}, ingurune objektua berrabiarazteko. Informazio gehiago lor dezakezu \code{?reset.neighborhood} tekleatuz R-ko terminalean.
+Goiko kodean ikus daitekeen bezala, \code{metaheuR} inguruneak korritzeko paketean bi funtzio aurki ditzakegu: \code{has.more.neighbors} eta \code{next.neighbor}. Izenek adierazten duten bezala, lehenengo funtzioak ingurunean oraindik bisitatu gabeko soluzioren bat dagoen esaten digu eta, bigarrenak, bisitatu gabeko hurrengo soluzioa itzultzen du. Horrez gain, badago beste funtzio bat, \code{reset.neighborhood}, ingurune objektua berrabiarazteko. Informazio gehiago lor dezakezu R-ko terminalean \code{?reset.neighborhood} tekleatuz.
 
-Kontutan hartu behar da motxilaren probleman soluzio guztiak --azpi-multzo guztiak, alegia-- ez direla bideragarriak; nahiz eta uneko soluzioa bideragarria izan, ingurunekoak bideraezinak izan daitezkee. Adibide bat ikusteko, proba ezazu ausazko soluzioa sortzean item bat aukeratzeko probabilitate handitzen.
 
-Ingurune funtzioa orokor daiteke edozein distantziarako -- distantzia maximoa bektorearen tamaina dela kontutan hartuz, betiere  --.:
 
-\begin{align}
-N_{hk}(s;k) = \{s^\prime\in {\cal S}\ |\ d_h(s,s^\prime) \leq k\}
-\end{align}
+\noindent{\bf Permutazioak} - Permutazioen arteko distantziak neurtzeko metrikak existitu arren, ingurune operadore klasikoak ez dituzte zuzenean erabiltzen. Horren ordez, permutazioetan definitutako eragiketak erabili ohi dira, trukaketa eta txertaketa batik bat. 
 
-\noindent{\bf Permutazioak} - Permutazioen arteko distantziak neurtzeko metrikak existitu arren, ingurune operadore klasikoak ez dituzte zuzenean erabiltzen. Horren ordez, permutazioetan definitutako eragiketak erabili ohi dira, trukaketa eta txertaketa batik bat. Trukaketan -- \textit{swap} ingelesez --, permutazioaren bi posizio hartzen dira eta beraien balioak trukatzen dira. Adibidez, $[21345]$ permutazioa badugu, 1. eta 3. posizioak trukatzen baditugu $[31245]$ permutazioa lortuko dugu. Formalki, trukaketa funtzioa defini dezakegu $t_r(s;i,j)$ non $s^\prime = t_r(s;i,j)$ bada $s^\prime(i)=s(j)$, $s^\prime(j)=s(i)$ eta $\forall k\neq i,j$ $s^\prime(k)=s(k)$ beteko den. Funtzio onetan oinarriturik, ondoko operadorea defini dezakegu:
+Trukaketan -- \textit{swap} ingelesez --, permutazioaren bi posizio hartzen dira eta beraien balioak trukatzen dira. Adibidez, $[21345]$ permutazioaren 1. eta 3. posizioak trukatzen baditugu $[31245]$ permutazioa lortuko dugu. Formalki, trukaketa funtzioa, $t_r(s;i,j)$, defini dezakegu non $s^\prime = t_r(s;i,j)$ bada $s^\prime(i)=s(j)$, $s^\prime(j)=s(i)$ eta $\forall k\neq i,j$, $s^\prime(k)=s(k)$ beteko den. Funtzio honetan oinarriturik, ondoko operadorea defini dezakegu:
 
 \begin{align}
 N_{2opt}(s) = \{t_r(s;i,j)|\ 1 \leq i,j\leq n, i > j\}
 \end{align}
 
-Operadore honi \textit{2-opt neighborhood} deritzo, bi posizio bakarrik trukatzen baitira. Era berean, operadorea hedatu ahal da trukaketa gehiago eginez. Hedatzeaz gain, operadorea murriztu ere egin ahal da, bakarrik elkarren ondoan dauden posizioak trukatuz. 2-opt operadorea \code{ExchangeNeighborhood} klaseak inplementatzen du, eta elkar ondoko trukaketari murriztutako bertsioa \code{SwapNeighborhood} klasearen bidez erabil daiteke.
+Operadore honi \textit{2-opt neighborhood} deritzo, bi posizio bakarrik trukatzen baitira. Era berean, operadorea hedatu daiteke trukaketa gehiago eginez. Azkenik, hedatzeaz gain, operadorea murriztu ere egin ahal da, trukaketak elkarren ondoan dauden posizioetara soilik mugatuz. 2-opt operadorea \code{ExchangeNeighborhood} klaseak inplementatzen du, eta ondoz-ondoko trukaketetara murriztutako bertsioa \code{SwapNeighborhood} klasearen bidez erabil daiteke.
 
-Ingurunearen tamainari dagokionez, posizio jarraien trukaketak eginez $n-1$ ingurune soluzio izango ditugu; edozein bi posizio trukatzen baditugu, berriz, ingurunearen tamaina $n(n-1)$ izango da. Hau jarraian dagoen adibidean ikus daiteke.
+Ingurunearen tamainari dagokionez, ondoz-ondoko posizioetan soilik trukaketak eginez $n-1$ ingurune soluzio izango ditugu; edozein bi posizio trukatzen baditugu, berriz, ingurunearen tamaina $n(n-1)$ izango da. Hau, jarraian dagoen adibidean ikus daiteke.
 
 <<Neighborhoods , prompt=TRUE>>=
 n <- 10
@@ -180,13 +183,13 @@ swap.count
 exchange.count
 @
 
-Txertaketa egitean elementu bat permutaziotik atera eta beste posizio batean sartzen dugu. Adibidez, $[54123]$ permutaziotik abiatuta, bigarren elementua laugarren posizioan txertatzen badugu, emaitza $[51243]$ izango da. Eragiketa $t_x(i,j)$ funtzioaren bidez adieraziko dugu -- $i$ elementua $j$ posizioan txertatu --, ingurunearen definizioa hauxe izango da:
+Txertaketan -- \textit{insert} ingelesez --, elementu bat permutaziotik atera eta beste posizio batean sartzen dugu. Adibidez, $[54123]$ permutaziotik abiatuta, bigarren elementua laugarren posizioan txertatzen badugu, emaitza $[51243]$ izango da. Eragiketa $t_x(i,j)$ funtzioaren bidez adieraziko dugu -- $i$ elementua $j$ posizioan txertatu --, eta ingurunearen definizioa hauxe izango da:
 
 \begin{align}
 N_{in}(s) = \{t_x(s;i,j)|\ 1 \leq i,j\leq n, i \neq j\}
 \end{align}
 
-Trukaketan bakarrik bi posizio aldatzen dira; txertaketan, berriz, bi indizeen artean dauden posizio guztiak aldatzen dira. Hori dela eta, ingurune operadore bakoitzaren erabilgarritasuna problemaren araberakoa izango da. Operadore hau ere \code{metaheuR} paketean dago, \code{InsertNeighobrhood} klasean inplementaturik.
+Trukaketan bakarrik bi posiziotako balioak aldatzen dira; txertaketan, berriz, bi indizeen artean dauden posizio guztietako balioak aldatzen dira. Hori dela eta, ingurune operadore bakoitzaren erabilgarritasuna problemaren araberakoa izango da. Operadore hau ere \code{metaheuR} paketean aurki dezakegu, \code{InsertNeighborhood} klasean inplementaturik.
 
 Bi inguru operadore hauetaz gain, literaturan beste zenbait topa daitezke, inbertsio eragiketan oinarritutakoak, adibidez.
 
@@ -199,37 +202,37 @@ Bilaketa lokalean -- oinarrizko bertsioan, behintzat -- soluzio batetik bestera 
 \forall s \in N(s^*)\ \ f(s^*)\leq f(s)
 \end{align*}
 
-Ekuazio hau optimo globalarenaren oso antzerakoa da --aurreko kapituluan, 2.1 definizioa--; alabaina, optimo globalaren kasuan, bilaketa espazio osoan bete behar da eta hemen, berriz, bakarrik $s^*$ soluzioaren ingurunean daudenentzat. Soluzio guztietarako betetzen bada, $s^*$ \textit{optimo globala} dela esaten da; ildo berean, inguruko soluzioentzat bakarrik betetzen baldin bada, $s^*$ \textit{optimo lokala} dela esango dugu.
+Ekuazio hau aurreko kapituluko, 2.1 definizioaren oso antzerakoa da; alabaina, 2.1 definizioaren kasuan, kondizioa bilaketa espazio osoan bete behar da eta hemen, berriz, bakarrik $s^*$ soluzioaren ingurunean. Laburbilduz, bilaketa espazioko soluzio guztietarako betetzen bada, $s^*$ \textit{optimo globala} dela esaten da, eta inguruko soluzioentzat bakarrik betetzen baldin bada, $s^*$ \textit{optimo lokala} dela esango dugu.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.66\linewidth]{./Irudiak/local_optimum}
-\caption{Optimo lokalaren adibidea. Goiko eskumako soluziotik abiatzen bada bilaketa -- (R1,C6), grisean nabarmendua dagoen soluziotik, alegia --, pausu bakoitzean aukerarik onena aukeratuko bagenuke, geziek markatzen duten bidea jarraitu eta, bi pausutan, (R2,C5) soluzioan trabatuta geldituko ginateke. Soluzio hau optimo lokala da, bere inguruneko soluzio guztiak txarragoak baitira. Optimo lokalaren ebaluazioa 586 da, oso txarra optimo globalarekin alderatzen badugu --(R3,C2) soluzioa--.}
+\caption{Optimo lokalaren adibidea. Goiko eskumako soluziotik abiatzen bada bilaketa -- (R1,C6), grisean nabarmendua dagoen soluziotik, alegia --, eta pausu bakoitzean aukerarik onena aukeratzen badugu, geziek markatzen duten bidea jarraitu eta, bi pausutan, (R2,C5) soluzioan trabatuta geldituko gara. Soluzio hau optimo lokala da, bere inguruneko soluzio guztiak txarragoak baitira. Optimo lokalaren ebaluazioa 586 da, oso txarra optimo globalarekin alderatzen badugu --(R3,C2) soluzioa--.}
 \label{fig:local_optimum}
 \end{figure}
 
-Ondorioz, bilaketa lokala optimo lokal batean amaitzen da beti. Hauxe da, hain zuzen, bilaketa lokalaren ezaugarririk -- eta, aldi berean, arazorik -- nagusiena. Aintzat hartzekoa da optimo lokalak, nahiz eta bere inguruneko soluziorik onenak izan, nahiko soluzio txarrak izan daitezkeela, \ref{fig:local_optimum} irudian erakusten den bezala. Irudi honetan kapituluan zehar erabiliko dugun grafiko mota bat ikus daiteke. Grafikoan fikziozko problema baterako soluzio guztiak jasotzen dira, bakoitza borobil baten bidez adierazita; borobilen barruan soluzio bakoitzaren helburu funtzioaren balioa idatzita dago. Ingurunearen funtzioa soluzioak lotzen dituzten marren bidez adieraziko da; bi soluzio lotuta badaude, bata bestearen ingurunean dago. 
+Definizio hauek kontutan hartuz, bilaketa lokala optimo lokal batean amaitzen dela beti ondorioztatzen dugu. Hauxe da, hain zuzen, bilaketa lokalaren ezaugarririk -- eta, aldi berean, desabantailarik -- nagusiena. Aintzat hartzekoa da optimo lokalak, nahiz eta bere inguruneko soluziorik onenak izan, nahiko soluzio txarrak izan daitezkeela, \ref{fig:local_optimum} irudian erakusten den bezala. Irudi honetan kapituluan zehar maiz erabiliko dugun grafiko mota bat ikus daiteke. Grafikoan fikziozko problema baterako soluzio guztiak jasotzen dira, bakoitza borobil baten bidez adierazita; borobilen barruan soluzio bakoitzaren helburu funtzioaren balioa dago idatzita. Ingurune funtzioa soluzioak lotzen dituzten marren bidez adierazten da; hala, bi soluzio lotuta badaude, bata bestearen ingurunean dagoela diogu. 
 
 \begin{tcolorbox}
 \begin{ifexample}
-\ref{fig:local_optimum} irudian agertzen diren geziek algoritmoak egiten duen bidea erakusten dute, (R1,C6) soluziotik abiatuta. Pausu bakoitzean inguruneko soluziorik onena aukeratzen badugu, algoritmoa bi pausutan trabatuta geldituko da (R2,C5) soluzioan; soluzio honen ebaluazioa 586 da eta, bere ingurunean dauden soluzioen ebaluazioak handiagoa direnez -- 1816, 806, 593 eta 600 --, ez dago helburu funtzioa hobetzen duen soluziorik. (R2,C5) optimo lokal bat da eta, optimo globalaren -- (R3,C2) -- ebaluazioa 15 dela kontutan hartuz, nahiko soluzio txarra ere.
+\ref{fig:local_optimum} irudian agertzen diren geziek algoritmoak egiten duen bidea erakusten dute, (R1,C6) soluziotik abiatuta. Pausu bakoitzean inguruneko soluziorik onena aukeratzen badugu, algoritmoa bi pausutan trabatuta geldituko da (R2,C5) soluzioan; soluzio honen ebaluazioa 586 da eta, bere ingurunean dauden soluzioen ebaluazioak handiagoa direnez -- 1816, 806, 593 eta 600 --, ez dago helburu funtzioa hobetzen duen soluziorik. (R2,C5) optimo lokal bat da eta, optimo globalaren -- (R3,C2) -- ebaluazioa 15 dela kontutan hartuz, baita nahiko soluzio txarra ere.
 \end{ifexample}
 \end{tcolorbox}
 
-Optimo lokaletatik ateratzeko hainbat estrategia planteatu dira literaturan, bilaketa lokalaren puntu batean edo bestean aldaketak proposatuz. Hauexek izango dira, hain juxtu, \ref{sec:BLHedapenak}. atalean aztergai izango ditugunak.
+Optimo lokaletatik ateratzeko hainbat estrategia planteatu dira literaturan, bilaketa lokalaren puntu batean edo bestean aldaketak proposatuz. Hauexek izango dira, hain justu, \ref{sec:BLHedapenak}. atalean aztergai izango ditugunak.
 
-Ikusi dugunez, edozein soluziotik abiatuta, bilaketa lokala beti optimo lokal batean amaitzen da. Are gehiago, bi soluzio ezberdinetatik hasita, bilaketa lokala soluzio berdinean amaitu ahal da. Beste era batean esanda, optimo lokalek soluzioak \zkk erakartzen\skk\ dituzte, zulo beltzak balira bezala. Ideia hau \zkk erakarpen-arroa\skk\ -- \textit{basin of attraction}, ingelesez -- deritzon kontzeptuan formalizatzen da.
+Ikusi dugunez, edozein soluziotik abiatuta, bilaketa lokala beti optimo lokal batean amaitzen da. Are gehiago, posible da bi soluzio ezberdinetatik hasita, bilaketa lokala soluzio berdinean amaitzea. Izan ere, optimo lokalek soluzioak \zkk erakartzen\skk\ dituzte, zulo beltzak balira bezala. Ideia hau \zkk erakarpen-arroa\skk\ -- \textit{basin of attraction}, ingelesez -- deritzon kontzeptuan formalizatzen da.
 
 \begin{ifdefinition}{\bf erakarpen-arroa}
 Izan bitez $N$ ingurune funtzioa, $f$ helburu funtzioa, $A(s;f,N): {\cal S}\rightarrow {\cal S}$ bilaketa lokala eta $s^*$ optimo lokala ($N$ ingurunerako eta $f$ funtziorako). $s^*$ optimo lokalaren erakarpen-arroa $\{s \in {\cal S} / A(s;N,f)=s^*\}$ soluzio multzoa da.
 \end{ifdefinition} 
 
-Erakarpen-arroa, definizioan ikus daitekeen legez, helburu funtzioaren, ingurunearen eta algoritmoaren araberakoa da. Ingurunearen eta helburu funtzioaren eragina begi bistakoa da. Algoritmoari dagokionez, ingurunea nola aztertzen den eta, bereziki, zein soluzio aukeratzen den ezartzen du; ondorioz, egiten dugun ibilbidean eragina handia izan dezake, \ref{fig:ls_selection_effect} irudiak ikus daitekeen bezala.
+Erakarpen-arroa, definizioan ikus daitekeen legez, helburu funtzioaren, ingurunearen eta algoritmoaren araberakoa da. Alde batetik, ingurunearen eta helburu funtzioaren eragina begi bistakoa da. Bestetik, algoritmoak, ingurunea nola aztertzen den eta, bereziki, zein soluzio aukeratzen den ezartzen du; ondorioz, egiten dugun ibilbidean eragina handia izan dezake, \ref{fig:ls_selection_effect} irudian ikus daitekeen bezala.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.66\linewidth]{./Irudiak/ls_selection_effect}
-\caption{Inguruneko soluzioaren aukeraketaren efektua. Irudiak, soluzio berdinetik abiatuta -- (R3,C2), grisean nabarmendua -- bi estrategia ezberdin erabiliz egindako ibilbideak erakusten ditu. Lehenengo estrategia \textit{first improvement} motakoa da, hau da, helburu funtzioa hobetzen duen lehenengo soluzioa aukeratzen dugu -- inguruneko soluzioen ordena goikoa, eskumakoa, behekoa eta ezkerrekoa izanik --. Irizpide hau erabiliz egindako ibilbidea (R2,C1), (R2,C2), (R2,C3), (R1,C3) da, azken soluzio hau optimo lokala izanik. Bigarren estrategia gutiziatsua da -- \textit{greedy}-a, alegia --; hurrengo soluzioa ingurunean dagoen soluziorik onena izango da beti. Estrategia hau erabiliz pausu bakar batean (R4,C1) optimo lokalera ailegatzen gara}
+\caption{Inguruneko soluzioaren aukeraketaren efektua. Irudiak, soluzio berdinetik abiatuta -- (R3,C2), grisean nabarmendua -- bi estrategia ezberdin erabiliz egindako ibilbideak erakusten ditu. Lehenengo estrategia \textit{first improvement} motakoa da, hau da, helburu funtzioa hobetzen duen lehenengo soluzioa aukeratzen dugu -- inguruneko soluzioen ordena goikoa, eskumakoa, behekoa eta ezkerrekoa izanik --. Irizpide hau erabiliz egindako ibilbidea (R2,C1), (R2,C2), (R2,C3), (R1,C3) da, azken soluzio hau optimo lokala izanik. Bigarren estrategia gutiziatsua da -- \textit{greedy}-a, alegia --; aukeratzen dugun hurrengo soluzioa ingurunean dagoen onena izango da beti. Estrategia hau erabiliz pausu bakar batean (R4,C1) optimo lokalera ailegatzen gara}
 \label{fig:ls_selection_effect}
 \end{figure}
 
@@ -251,16 +254,16 @@ Erakarpen-arroa, definizioan ikus daitekeen legez, helburu funtzioaren, ingurune
 \caption{Oinarrizko bilaketa lokalaren sasikodea. Uneko soluzioaren ingurunean helburu funtzioa hobetzen duen soluzio bat bilatzen dugu. Horrelakorik badago, uneko soluzioa ordezkatzen dugu; ez badago, bilaketa amaitzen da.}
 \end{ifalgorithm}
 
-\ref{alg:basicLS} algoritmoan oinarrizko bilaketa lokalaren sasikodea ikus daiteke. Zenbait gauza nabarmen daitezke algoritmo honetan. Lehenik eta behin, bilaketa soluzio batetik hasten da. Soluzio hau nola aukeratzen dugun erabakitzea garrantzitsua da, aurreko atalean ikusi dugun legez horren arabera optimo lokal batean edo bestean amituko baita bilaketa. Uneko soluzioaren ingurunean hainbat soluzio izango ditugu, beraz, zein aukeratuko dugu hurrengo soluzioa izateko? Azkenik, sasikodean dagoen prozedura optimo lokal bat topatzen dugunean amaitzen da; dena dela, beste edozein algoritmotan bezala, denboran edota ebaluazio kopuruan oinarritutako gelditze irizpideak proposa ditzakegu.\footnote{Informazio gehiago R-ren laguntzan duzu; \code{?basic.local.search} tekleatu laguntza zabaltzeko}
+\ref{alg:basicLS} algoritmoan oinarrizko bilaketa lokalaren sasikodea ikus daiteke. Zenbait gauza nabarmendu daitezke algoritmo honetan. Lehenik eta behin, bilaketa soluzio batetik hasten da. Soluzio hau nola aukeratzen dugun erabakitzea garrantzitsua da, aurreko atalean ikusi dugun legez horren arabera optimo lokal batean edo bestean amaituko baita bilaketa. Uneko soluzioaren ingurunean hainbat soluzio izango ditugu, baina, zein aukeratuko dugu hurrengo soluzioa izateko? Azkenik, sasikodean dagoen prozedura optimo lokal bat topatzen dugunean amaitzen da; dena dela, beste edozein algoritmotan bezala, denboran edota ebaluazio kopuruan oinarritutako gelditze irizpideak ere proposa ditzakegu.\footnote{Informazio gehiago R-ren laguntzan duzu; \code{?basic.local.search} tekleatu laguntza zabaltzeko}
 
-Sasikodean dagoen algorithmoa \code{metaheuR} paketeko \code{basic.local.search} funtzioak inplementatzen du. Funtzio honek zenbait parametro ditu, batzuk algoritmoarekin zerikusia dutenak eta beste batzuk problemari eta exekuzioari lotuta daudena. Paketean dauden metaheuristika guztietan zerbait antzerakoa gertatuko den legez, pausuz pausu aztertuko ditugu parametro hauek. Esan dugun bezaka, parametroak hiru motakoak dira:
+Sasikodean dagoen algorithmoa \code{metaheuR} paketeko \code{basic.local.search} funtzioak inplementatzen du. Funtzio honek zenbait parametro ditu, batzuk algoritmoarekin zerikusia dutenak eta beste batzuk problemari eta exekuzioari lotuta daudenak. Paketean dauden metaheuristika guztiek antzerako egitura izango dutenez, pausuz pausu aztertuko ditugu parametro hauek. Honela, parametroak hiru motakoak dira:
 \begin{itemize}
-\item Problemako parametroak - Bilaketa gidatzeko helburu funtzioa behar dugu. Funtzio hau \code{evaluate} parametroaren bidez pasatuko diogu algoritmoari. Algoritmoen inplementazioa orokorra denez, gerta daiteke problema baterako bideraezin diren soluzioak egotea. Problema horiekin lan egin ahal izateko soluzioak bideragarriak direnetz jakiteko eta soluzioak konpontzeko funtzioak erabil ditzakete. Funtzio hauek problema bakoitzeko ezberdinak izango dira eta algoritmoari \code{valid} eta \code{correct} parametroen bidez pasatuko dizkiogu, hurrenez hurren.
-\item Exekuzio kontrola - Badaude exekuzioaren zenbait aspektu kontrola ditzakegunak. Lehenik eta behin, algoritmoari baliabide konputazional murriztuak eman ahal dizkiogu, denbora, ebaluazio kopurua edota iterazio kopurua mugatuz. Hau \code{CResource} objektuen bidez egin dezakegu, \code{cresource} parametroaren bidez pasatuz algoritmoak eskuragarri dituen baliabideak. Jarraian dagoen adibidean klase hau nola erabili ikusiko dugu. Horrez gain, algoritmoak bilaketaren progresioa bistara dezake. Bistaraketa aktibatzeko \code{verbose} parametroa dugu. Era berean, progresioa taula batean gorde nahi izanez gero, \code{do.log} parametroaren bidez adieraz diezaiokegu funtzioari.
-\item Bilaketaren parametroak - Bilaketa lokala aplikatzeko hiru gauza behar ditugu, hasierako soluzioa, ingurune definizio bat eta inguruneko soluzio bat aukeratzeko prozedura. Hiru elementu hauek \code{initial.solution}, \code{neighborhood} eta \code{selector} parametroen bidez ezarri beharko ditugu. Horez gain, soluzio bideraezinak daudeneanhiru aukera ditugu, bideraezin diren soluzioak onartu, deskartatu edo konpondu. Zein aukera erabili \code{non.valid} parametroaren bidez adiraziko dugu.
+\item Problemari lotutako parametroak - Bilaketa gidatzeko helburu funtzio bat behar dugu. Funtzio hau \code{evaluate} parametroaren bidez pasatuko diogu algoritmoari. Algoritmoen inplementazioa orokorra denez, gerta daiteke problema batzuetarako bideraezinak diren soluzioak agertzea. Problema mota hauekin lan egin ahal izateko, \code{metaheuR} paketeak soluzioen bideragarritasuna aztertu eta soluzio bideraezinak konpontzeko funtzioak parametro gisa sartzea ahalbidetzen du. Funtzio hauek problema bakoitzeko ezberdinak izango dira eta algoritmoari \code{valid} eta \code{correct} parametroen bidez pasatuko dizkiogu, hurrenez hurren.
+\item Exekuzio kontrola - Badaude exekuzioaren zenbait aspektu kontrola ditzakegunak. Lehenik eta behin, algoritmoari baliabide konputazionalak mugatu diezazkiokegu, denbora, ebaluazio kopurua edota iterazio kopurua finkatuz. Hau \code{CResource} objektuen  \code{cresource} parametroaren bidez kontrola dezakegu, bertan algoritmoak eskuragarri dituen baliabideak definituz. Horrez gain, \code{basic.local.search} funtzioak, algoritmoak gauzatzen duen bilaketaren progresioa bistaratzeko aukera ematen digu \code{verbose} parametroaren bidez. Era berean, progresioa taula batean gorde dezakegu, \code{do.log} parametroaren bidez.
+\item Bilaketaren parametroak - Bilaketa lokala aplikatzeko hiru gauza behar ditugu, hasierako soluzioa, ingurune definizio bat eta inguruneko soluzio bat aukeratzeko prozedura. Hiru elementu hauek \code{initial.solution}, \code{neighborhood} eta \code{selector} parametroen bidez ezarri beharko ditugu. Horez gain, soluzio bideraezinak daudenean, hiru aukera ditugu, bideraezin diren soluzioak onartu, deskartatu edo konpontzea. Zein aukera erabili \code{non.valid} parametroaren bidez adiraziko dugu.
 \end{itemize}
 
-Ikus dezagun funtzioaren erabilera adibide baten bidez. Adibiderako grafoen koloreztetze-problema erabiliko dugu, ausazko grafo bat sortuz.
+Jarraian \code{basic.local.search} funtzioaren eta bere parametro guztien erabilera adibide baten bidez aztertuko dugu. Adibiderako grafoen koloreztetze-problema bat sortuko dugu \code{graph.coloring.problem} funtzioa erabiliz eta ausazko grafo bat hautatuz. Honela, \code{gcp} objektuak problemaren ebaluazio funtzioa eta soluzio bideragarriekin tratatzeko funtzioak gordeko ditu.
 
 <<GC_1, prompt=TRUE , echo=-1>>=
 set.seed(1)
@@ -269,7 +272,14 @@ rnd.graph <- random.graph.game(n = n , p.or.m = 0.25)
 gcp <- graph.coloring.problem (graph = rnd.graph)
 @
 
-Orain, hasierako soluzio gisa soluzio tribiala sortuko dugu, non nodo bakoitzak kolore bat duen. Horrez gain, Hamming distantzian oinarritutako ingurune objektua sortuko dugu.
+Orain, algoritmoari emango dizkiogun baliabideak mugatuko ditugu. Gehienez, algoritmoak 10 segundu edo $100n^2$ ebaluazio edo $100n$ iterazio erabili ahalko ditu.
+
+<<GC_3, prompt=TRUE>>=
+resources <- cresource(time = 10 , evaluations = 100*n^2 , iterations = 100*n)
+@
+
+
+Azkenik, bilaketarekin loturiko parametroei dagokienez, hasierako soluzio gisa soluzio tribiala sortuko dugu, non nodo bakoitzak kolore bat duen. Horrez gain, Hamming distantzian oinarritutako ingurune objektua sortuko dugu. Objetu honek ingurunea aztertu eta harekin lan egiteko beharrezko funtzioak gordeko ditu.
 
 <<GC_2, prompt=TRUE, cache=TRUE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=5 , fig.height=5>>=
 colors <- paste("C",1:n,sep="")
@@ -277,11 +287,6 @@ initial.solution <- factor (colors, levels = colors)
 h.ngh <- hammingNeighborhood(base = initial.solution)
 @
 
-Algoritmoari emango dizkiogun baliabideak mugatuko ditugu. Gehienez, algoritmoak 10 segundu edo $100n^2$ ebaluazio edo $100n$ iterazio erabili ahalko ditu.
-
-<<GC_3, prompt=TRUE>>=
-resources <- cresource(time = 10 , evaluations = 100*n^2 , iterations = 100*n)
-@
 
 Dena prest daukagu bilaketa abiaratzeko ...
 
@@ -298,9 +303,7 @@ plot.gpc.solution <- gcp$plot
 plot.gpc.solution(solution = final.solution , node.size = 15 , label.cex = 0.8)
 @
 
-Bilaketa lokalak --eta, oro har, beste gainontzeko algoritmoek-- objektu berezi bat itzultzen du, \code{MHResult} klasekoa. Bertan dagoen informazioa zenbait funtzio erbiliz lor daiteke; este baterako, \code{optima} funtzioak lortutako soluzio optimo(ak) itzultzen du, zerrenda batean. Nola bilaketa loklak soluzio bakarra itzultzen du, soluzio hori listaren 1. posizioan egongo da. Soluzioa grafikoki bistaratzeko \code{graph.coloring.problem} funtzioak itzultzen duen \code{plot} funtzioa erabil daiteke.
-
-Bilaketare progresioa ere bistara dezakegu, \code{plot.progress} funtzioa erabiliz. \ref{fig:bls_gcp} irudiak soluzioa eta progresioa jasotzen ditu.
+Bilaketa lokalak --eta, oro har, beste gainontzeko algoritmoek-- objektu berezi bat itzultzen dute, \code{MHResult} klasekoa. Bertan dagoen informazioa funtzio sorta baten bitartez lor daiteke; este baterako, \code{optima} funtzioak lortutako soluzio optimoa(k) itzultzen du, zerrenda batean. Bilaketa lokalak soluzio bakarra itzultzen duenez, soluzio hori listaren 1. posizioan egongo da. Soluzioa grafikoki bistaratzeko \code{graph.coloring.problem} funtzioak itzultzen duen \code{plot} funtzioa erabil daiteke. Gainera, bilaketaren progresioa ere bistara dezakegu, \code{plot.progress} funtzioa erabiliz. \ref{fig:bls_gcp} irudiak soluzioa eta progresioa jasotzen ditu.
 
 <<GC_5, prompt=TRUE , cache=TRUE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=10 , fig.height=5>>=
 plot.progress(bls , size=1.1 ) + labs(y="Evaluation")
@@ -313,27 +316,27 @@ plot.progress(bls , size=1.1 ) + labs(y="Evaluation")
 \subfigure[Bilaketaren progresioa]{
 \includegraphics[width=0.59\textwidth] {./Irudiak/GC_5-1}
 }\\
-\caption{Soluzioa grafoen koloreztatze-problemarako eta bilaketaren progresioa. X ardatzak ebaluazio kopurua adierazten du eta Y ardatzak uneko soluzioaren ebaluazioa --soluzioak erabiltzen dituen kolore kopurua, alegia--.}\label{fig:bls_gcp}
+\caption{Grafoen koloreztatze-problemarako bilaketa lokalak topatutako soluzioa eta bilaketaren progresioa. Bigarren grafiko honetan, X ardatzak ebaluazio kopurua adierazten du eta Y ardatzak uneko soluzioaren ebaluazioa --soluzioak erabiltzen dituen kolore kopurua, alegia--.}\label{fig:bls_gcp}
 \end{figure}
 
-Jarraian algoritmoaren bi aspektu garrantzitsu aztertuko ditugu: hasierako soluzioa eta inguruneko soluzioaren aukeraketa.
+Jarraian algoritmoaren bi aspektu garrantzitsu aztertuko ditugu: hasierako soluzioaren eta inguruneko soluzioaren aukeraketa.
 
-\subsection{Hasierako soluzioa}
+\subsection{Hasierako soluzioaren aukeraketa}
 
-Lehen aipatu bezala, bilaketa lokala soluzio batetik abiatuko da beti. Nondik hasi bilaketa oso garrantzitsua da, horren arabera optimo lokal batean edo bestean amaituko baitu bilaketa. Hau \ref{fig:local_optimum} irudian agerikoa da; (R1,C6) soluziotik hasten badugu bilaketa (C2,R5) soluzioan amaituko da. Gauza bera gertatzen da optimo lokaletik bertatik -- (C2,R5) --, goian dagoen soluziotik -- (C1,R5) -- edo bere eskuinean dagoen soluziotik -- (C2,R6) -- hasten bada prozesua. Beste edozein soluzio aukeratzen badugu, berriz, optimo globalera helduko gara. 
+Lehen aipatu bezala, bilaketa lokala soluzio batetik abiatuko da beti. Bilaketa nondik hasten den oso garrantzitsua da, horren arabera optimo lokal batean edo bestean amaituko baita bilaketa. Adibidez, hau argi ikusten da \ref{fig:local_optimum} irudian; (R1,C6) soluziotik hasten badugu bilaketa (C2,R5) soluzioan amaituko da. Gauza bera gertatzen da optimo lokaletik bertatik -- (C2,R5) --, goian dagoen soluziotik -- (C1,R5) -- edo bere eskuinean dagoen soluziotik -- (C2,R6) -- hasten bada prozesua. Beste edozein soluzio aukeratzen badugu, berriz, optimo globalera helduko gara. 
 
-Bi dira bilaketa lokala hasieratzeko erabiltzen diren estrategia nagusiak:
+Hau ikusirik, bi dira bilaketa lokala hasieratzeko erabiltzen diren estrategia ohikoenak:
 
 \begin{itemize}
-\item \textbf{Ausazko soluzioak sortu} -  Ausaz aukeratzen da bilaketa espazioan dagoen soluzio bat. Metodo honen abantaila bere sinpletasuna da, ausazko soluzioak sortzea erraza izan ohi baita\footnote{Hau ez da beti egia; gure probleman murrizketa asko daudenean ausazko soluzioak sortzea oso zaila izan daiteke}. Estrategia honek alde txarrak ere baditu; alde batetik, hasierako soluzioa txarra bada, bilaketa prozesua luzea izan daiteke eta, bestetik, algoritmoa aplikatzen dugun bakoitzean emaitza, oro har, ezberdina izango da. Azken puntu hau optimo lokalen arazoa ekiditeko estrategiak diseinatzeko erabil daiteke, \ref{sec:multistart} atalean ikusiko dugun legez.
-\item \textbf{Soluzio onak eraiki} - Lehenengo kapituluan ikusi genuen problemak ebazteko metodo heuristiko espezifikoak diseina daitezkeela. Oro har, metodo hauek pausuz pausu soluzio onak eraikitzen dituzte, urrats bakoitzean aukera guztietatik onena aukeratuz -- ingelesez metodo hauei \textit{constructive greedy} deritze, hau da algoritmo eraikitzaile gutiziatsuak edo jaleak --. Nahiko soluzio onak eman arren, hauek ez daukate zergatik optimoak\footnote{Ez optimo globalak eta ezta lokalak ere} izan behar eta, beraz, lortutako soluzioak bilaketa lokala hasieratzeko erabil daitezke. Estrategia hauek emaitza hobeak lortu ohi dituzte eta bilaketak iterazio gutxiago behar izaten dituzte; desabantaila nagusia, ordea, kostu konputazionala da.
+\item \textbf{Ausazko soluzioak sortu} -  Ausaz aukeratzen da bilaketa espazioan dagoen soluzio bat eta hortik hasten da bilaketa. Metodo honen abantaila bere sinpletasuna da, ausazko soluzioak sortzea erraza izaten baita\footnote{Hau ez da beti egia; gure probleman murrizketa asko daudenean ausazko soluzioak sortzea oso zaila izan daiteke}. Hala ere, estrategia honek alde txarrak ere baditu; alde batetik, hasierako soluzioa txarra bada, bilaketa prozesua luzea izan daiteke eta, bestetik, algoritmoa aplikatzen dugun bakoitzean emaitza, oro har, ezberdina izango da. Azken puntu hau optimo lokaletan trabatuta gelditzea ekiditeko estrategiak diseinatzeko erabil daiteke, \ref{sec:multistart} atalean ikusiko dugun legez.
+\item \textbf{Soluzio onak eraiki} - Lehenengo kapituluan ikusi genuen problema bakoitza ebazteko metodo heuristiko espezifikoak diseina daitezkeela. Oro har, metodo hauek pausuz pausu eraikitzen dituzte soluzioak, urrats bakoitzean aukera guztietatik onena aukeratuz -- ingelesez metodo hauei \textit{constructive greedy} deritze, hau da algoritmo eraikitzaile gutiziatsuak edo jaleak --. Nahiko soluzio onak lortu arren, hauek ez dira zertan optimoak \footnote{Ez optimo globalak eta ezta lokalak ere} eta, beraz, lortutako soluzioak bilaketa lokala hasieratzeko erabil daitezke. Estrategia hauek ausazko soluzioetatik abiatzeak baina emaitza hobeak lortu ohi dituzte eta, normalean, bilaketak iterazio gutxiago behar izaten dituzte; desabantaila nagusia, ordea, kostu konputazionala da.
 \end{itemize}
 
 \subsection{Inguruneko soluzioaren aukeraketa}\label{sec:LS_selection}
 
-Behin inguruneko soluzioen multzoa definiturik, hurrengo pausua soluzioen aukeraketa irizpidea ezartzea da. Lehen aipatu bezala, bi dira, nagusiki, erabiltzen diren estrategiak: helburu funtzioa hobetzen duen lehenengo soluzioa aukeratzea edo helburua gehien hobetzen duen soluzioa bilatzea. Oro har, inguruneak txikiak direnean bigarren hurbilketa da interesgarriena; hala eta guztiz ere, inguruneak handiak direnean, kostu konputazionala dela eta, bideraezina gerta daiteke.
+Behin inguruneko soluzioen multzoa definiturik, hurrengo pausua soluzio horien artean bat aukeratzeko irizpidea ezartzea da. Lehen aipatu bezala, bi dira, nagusiki, erabiltzen diren estrategiak. Lehenengo estrategian inguruneko soluzioak banan banan analizatzen dira eta helburu funtzioa hobetzen duen lehenengo soluzioa aukeratzen da. Hurbilketan honetan, inguruneko soluzioen \zkk ordenazioa\skk\ oso garrantzitsua da, uneko soluzioa hobetzen duen lehenengo soluziora mugituko baikara. Bigarren estrategiak ingurune osoa arakatzen du eta helburua gehien hobetzen duen soluzioa aukeratzen du. Oro har, inguruneak txikiak direnean bigarren hurbilketa da interesgarriena baina, inguruneak handiak direnean, kostu konputazionala dela eta, bideraezina gerta daiteke estrategia hau.
 
-Lehenengo hurbilketan inguruneko soluzioen \zkk ordenazioa\skk\ oso garrantzitsua da, uneko soluzioa hobetzen duen lehenengo soluziora mugituko baikara. 
+
 
 \begin{tcolorbox}
 \begin{ifexample}
@@ -345,13 +348,13 @@ Demagun problema baterako soluzioak bektore bitarren bidez kodetzen ditugula. Un
 \item $s_4=(0,1,1,1,1)$; $f(s_4)=27$
 \item $s_5=(0,1,1,0,0)$; $f(s_5)=29$
 \end{itemize} 
-Inguruneko soluzioak esploratzeko posizioak banan-banan aldatu behar ditugu. Lehenengo posiziotik abiatzen bagara, $s_2$ soluzioa izango da helburu funtzioa hobetzen duen lehenengoa, bere ebaluazioa $24$ baita. Azken posiziotik abiatzen bagara, berriz, $s_3$ soluzioarekin geldituko ginateke, ebaluazioa $5$ baita. Helburu funtzioa ez ezik, soluzioa ezberdina da eta, hortaz, hurrengo urratsean izango dugun ingurunea ezberdina izango da. Hori dela eta, inguruneko soluzioen azterketa alde batera edo bestera eginez azken soluzioa ezberdina izan daiteke. Inguruneko soluziorik onena aukeratzen badugu, logikoki, ez du axola nondik hasi, beti soluzio berdina topatuko dugu, berdinketarik ez badaude betiere.
+Inguruneko soluzioak lortzeko posizio bakoitzeko balioa banan-banan aldatu behar dugu. Lehenengo posiziotik abiatzen bagara, $s_2$ soluzioa izango da helburu funtzioa hobetzen duen lehenengo soluzioa, bere ebaluazioa $24$ baita. Azken posiziotik abiatzen bagara, berriz, $s_3$ soluzioarekin geldituko ginateke, ebaluazioa $5$ baita. Kasu bakoitzean soluzio ezberdina aukeratu dugu lehenengo pausu honetan, hortaz, hurrengo urratsean izango dugun ingurunea ere ezberdina izango da. Hori dela eta, inguruneko soluzioen azterketa orden desberdinetan eginez, azken soluzioa ezberdina izan daiteke. Inguruneko soluziorik onena aukeratzen ordea, ordenak ez du garrantziarik eta beti soluzio berdina topatuko dugu, berdinketarik ez badaude betiere.
 \end{ifexample}
 \end{tcolorbox}
 
-Adibidean inguruneko soluzioak kodeketarekin zerikusia duen ordena erabiltzen da. Horren ordez, esplorazioa ausaz egin daiteke, helburua hobetzen duen soluzioetatik ausazko bat aukeratuz.
+Adibidean, soluzioen kodeketarekin zerikusia duen ordena erabiltzen da inguruneko soluzioak lortzeko. Horren ordez, esplorazioa ausaz ere egin daiteke.
 
-Jarraian kodean ingurune azterketaren ordenak duen eragina ikus daiteke. Lehenik eta behin, TSPlib repositorioan dagoen problema bat kargatuko dugu, \code{tsplib.parser} funtzioa erabiliz. Erabiliko dugun probleman Babariako 29 hiri izango ditugu.
+Jarraian azaltzen den kodean ingurunearen azterketan ordenak duen eragina ikusi daiteke. Lehenik eta behin, TSPlib repositorioan dagoen problema bat kargatuko dugu, \code{metaheuR} paketeko \code{tsplib.parser} funtzioa erabiliz. TSPlib repositorioan TSP problemaren zenbait adibide ezberdin topa ditzakegu. Erabiliko dugun probleman Babariako 29 hiri izango ditugu. Hasierako soluzio gisa identitate permutazioa hartuko dugu.
 
 <<Order_1, prompt=TRUE , echo=-1 , message=FALSE , tidy=TRUE>>=
 set.seed(1)
@@ -363,14 +366,14 @@ csol <- identity.permutation(n)
 eval <- tsp.babaria$evaluate(csol)
 @
 
-Orain, 2-opt ingurunea sortzen dugu, ausazko eta ez-ausazko esplorazioa erabiliz.
+Problema definitu ostean, hasierako soluzioaren ingurunea sortuko dugu. 2-opt ingurunea aukeratu dugu, ausazko eta ez-ausazko esplorazioak hautatuz. Lehenengoan inguruneko soluzioak ausazko orden batean aztertuko dira eta bigarrenean, ordea, kodeketaren araberako orden zehatz bat jarraituko da ingurunea arakatzeko.
 
 <<Order_2, prompt=TRUE>>=
 ex.nonrandom <- exchangeNeighborhood(base = csol , random = TRUE)
 ex.random <- exchangeNeighborhood(base = csol , random = FALSE)
 @
 
-Inguruneko helburu funtzioa hobetzen duen lehenengo soluzioa aukeratzen badugu, bi ordenazio erabiliz emaitza ezberdina da. Aukeratzeko prozesu hau \code{first.improvement.selector} funzioaren bidez egin dezakegu.
+Bilaketaren pausu bakoitzean inguruneko helburu funtzioa hobetzen duen lehenengo soluzioa aukeratzen badugu, hautatutako bi ordenazioak erabiliz emaitza ezberdinak lortuko ditugu. Ingurunea modu honetan arakatzeko, \code{first.improvement.selector} funzioa erabili dezakegu. Funtzio honek, uneko soluzioaren ingurunea analizatzen du eta helburua hobetzen duen lehenengo soluzioa itzultzen du.
 
 <<Order_3, prompt=TRUE , cache=TRUE>>=
 first.improvement.selector(neighborhood = ex.nonrandom , evaluate = tsp.babaria$evaluate , 
@@ -379,7 +382,7 @@ first.improvement.selector(neighborhood = ex.random , evaluate = tsp.babaria$eva
                            initial.solution = csol , initial.evaluation = eval)$evaluation
 @
 
-Inguruneko soluziorik onena aukeratzen badugu, bi ordenazioak erabiliz emaitza izango da, kasu guztietan inguruneko soluzio guztiak aztertzen baitira. Aukeraketa hau \code{greedy.selector} funtzioak inplementatzen du.
+Inguruneko soluziorik onena aukeratzen badugu, hautatutako bi ordenazioak erabiliz emaitza bera lortuko dugu, kasu guztietan inguruneko soluzio guztiak aztertzen baitira. Ingurunea aztertzeko estrategia hau \code{greedy.selector} funtzioak inplementatzen du.
 
 <<Order_4, prompt=TRUE,cache=TRUE>>=
 greedy.selector(neighborhood = ex.nonrandom , evaluate = tsp.babaria$evaluate ,
@@ -388,16 +391,14 @@ greedy.selector(neighborhood = ex.random , evaluate = tsp.babaria$evaluate ,
                 initial.solution = csol , initial.evaluation = eval)$evaluation
 @
 
-Inguruneak handiak direnean ordenak oso eragin handia izan dezake eta, hortaz, heuristikoak erabil daitezke esplorazioa egiteko. Adibide gisa, Fred Glover-ek TSP problemarako proposatutako \textit{ejection chains} \citep{pesch1997} aipa daitezke. 
-
-Metodo heuristikoez gain, tamaina handiko inguruneak era eraginkorrean zehazki aztertzeko algoritmoak ere badaude; hauetako adibide bat \textit{dynasearch}\citep{congram2000} algoritmoa da.
+Inguruneak handiak direnean ordenak oso eragin handia izan dezake eta, hortaz, heuristikoak erabil daitezke esplorazioa egiteko. Adibide gisa, Fred Glover-ek TSP problemarako proposatutako \textit{ejection chains} \citep{pesch1997} aipa daitezke. Gainera, metodo heuristikoez gain, tamaina handiko inguruneak era eraginkorrean zehazki aztertzeko algoritmoak ere badaude; hauetako adibide bat \textit{dynasearch}\citep{congram2000} algoritmoa da.
 
 
 \subsection{Bilaketa lokalaren elementuen eragina}\label{sec:LS_elements}
 
-Ikusi dugun bezala, bilaketa lokal arrunt bat aplikatzeko hiru aspektu aztertu behar ditugu. Lehenengoa, hasierako soluzioa, bigarrena, erebiliko dugun ingurunea eta, azkena, inguruneko soluzioaren aukeraketa. Atal honetan aspektu hauen eragina aztertuko dugu adibide bat erabiliz. 
+Ikusi dugun bezala, bilaketa lokal arrunt bat aplikatzeko hiru aspektu aztertu behar ditugu. Lehenengoa, hasierako soluzioa, bigarrena, erabiliko dugun ingurunea eta, azkena, inguruneko soluzioaren aukeraketa. Atal honetan aspektu hauen eragina aztertuko dugu adibide baten bidez. 
 
-Aurreko ataleko problema (Babariako hiriena) erabiliko dugu. Problema honetarako bi hasierako soluzio erabiliko ditugu, bat ausazkoa eta bestea algoritmo eraikitzaileak itzultzen duena.
+Zehazki, aurreko atalean aurkeztutako Babariako hirien problema erabiliko dugu. Problema honetarako bi hasierako soluzio erabiliko ditugu, bat ausazkoa eta bestea algoritmo eraikitzaileak itzultzen duena.
 
 <<Babaria_1, prompt=TRUE,cache=TRUE,echo=-1>>=
 set.seed(1)
@@ -407,7 +408,7 @@ tsp.babaria$evaluate(rnd.sol)
 tsp.babaria$evaluate(greedy.sol)
 @
 
-Ikus daitkeenez, algoritmo eraikitzaileak (\code{tsp.greedy}) ematen duen soluzioa ausazkoa baino askoz ere hobea da. Bi soluzio hauei bilaketa lokala aplikatu ahal diegu, swap ingurunea erabiliz. Inguruneko soluziorik onena aukera dezkaegu edo, bestela, hobetzen duen lehenengo soluzioa.
+Ikus daitekeenez, algoritmo eraikitzaileak (\code{tsp.greedy}) ematen duen soluzioa ausazkoa baino askoz ere hobea da. Bi soluzio hauek hasierako soluzio gisa hartuz, bilaketa lokala aplikatu ahal dugu, swap ingurunea erabiliz. Gainera, pausu bakoitzean, inguruneko soluziorik onena aukera dezakegu edo, bestela, helburu funtzioa hobetzen duen lehenengo soluzioa hartu. Honenbestez, lau bilaketa ezberdin exekutatuko ditugu.
 
 <<Babaria_2, prompt=TRUE,cache=TRUE>>=
 eval <- tsp.babaria$evaluate
@@ -418,40 +419,40 @@ swap.greedy.rnd.sol <- basic.local.search(evaluate = eval , initial.solution = r
                                           selector = greedy.selector , verbose = FALSE)
 
 swap.fi.rnd.sol <- basic.local.search(evaluate = eval , initial.solution = rnd.sol ,
-                                      neighborhood = swp.ngh.rnd , verbose = FALSE ,
-                                      selector = first.improvement.selector)
+                                      neighborhood = swp.ngh.rnd ,
+                                      selector = first.improvement.selector, verbose = FALSE)
 
-swap.greedy.greedy.sol <- basic.local.search(evaluate = eval , verbose = FALSE , 
-                                             initial.solution = greedy.sol ,
+swap.greedy.greedy.sol <- basic.local.search(evaluate = eval , initial.solution = greedy.sol ,
                                              neighborhood = swp.ngh.greedy , 
-                                             selector = greedy.selector)
+                                             selector = greedy.selector, verbose = FALSE)
 
 swap.fi.greedy.sol <- basic.local.search(evaluate = eval , initial.solution = greedy.sol ,
-                                         neighborhood = swp.ngh.greedy , verbose = FALSE , 
-                                         selector = first.improvement.selector )
+                                         neighborhood = swp.ngh.greedy , 
+                                         selector = first.improvement.selector, verbose = FALSE)
 @
 
-Azter dezagun zein nolako hobekuntza lortu dugun bilaketa lokalarekin, ausazko soluziotik abitazen garenean.
+Azter dezagun zer nolako hobekuntza lortu dugun bilaketa lokalarekin, ausazko soluziotik abiatzen garenean.
 
 <<Babaria_3, prompt=TRUE,cache=TRUE>>=
 tsp.babaria$evaluate(rnd.sol) - evaluation(swap.greedy.rnd.sol)
 tsp.babaria$evaluate(rnd.sol) - evaluation(swap.fi.rnd.sol)
 @
 
-Ikus daitekeenez bilaketak topatutako soluzioa hasierakoa baino askoz hobea da. Hare gehiago, bilaketa prozesuan inguruneko soluziorik onenan aukeratzen badugu, hobekuntza handiagoa da. Halere, kontutan hartu behar da ebaluazio kopurua ere handiagoa dela.
+Ikus daitekeenez bilaketa lokalaren bidez, topatutako soluzioa hasierakoa baino askoz ere hobea da. Are gehiago, bilaketa prozesukopausu bakoitzean inguruneko soluziorik onena aukeratzen badugu, hobekuntza handiagoa da. Halere, kontutan hartu behar da ebaluazio kopurua ere handiagoa dela kasu honetan.
 
 <<Babaria_4, prompt=TRUE,cache=TRUE>>=
 consumed.evaluations(resources(swap.greedy.rnd.sol))
 consumed.evaluations(resources(swap.fi.rnd.sol))
 @
 
-Algoritmo eraikitzailearekin lortutako soluzioa ausazko soluziotik abitatutako bilaketa lokalak lortutakoak baino hobea da. Halere, soluzio horri bilaketa lokal bat aplikatzen badiogu, soluzioa hobetuko dugu, nahiz eta gutxi izan.
+
+Algoritmo eraikitzailearekin lortutako hasierako soluzioa, ausazko soluzioa baina hobea dela ikusi dugu. Hala ere, soluzio horri bilaketa lokala aplikatuz, soluzio oraindik hobea lortuko dugu, nahiz eta kasu honetan hobekuntza hain handia ez izan. 
 
 <<Babaria_5, prompt=TRUE,cache=TRUE>>=
 tsp.babaria$evaluate(greedy.sol) - evaluation(swap.greedy.greedy.sol)
 @
 
-Bilaketa greedy hurbilketa erabiliz emaitza hobeak ematen ditu --ausazko soluziotik abitazen garenean, behintzat--, bilaketa espazioa sakonkiago aztertzen delako. Beste era bat bilaketa sakonago egiteko, swap ingurunearen ordez 2-opt ingurunea erabiltzea da, lehen ikusi dugun bezala, azken ingurunea hau swap baino askoz ere handiagoa baita.
+Inguruneko soluzio guztietatik onena hartzeak emaitza hobeak ematen ditu --ausazko soluziotik abiatzen garenean, behintzat--, bilaketa espazioa sakonago aztertzen delako. Bilaketa sakonagoa egiteko beste era bat, swap ingurunearen ordez 2-opt ingurunea erabiltzea da. Izan ere, lehen ikusi dugun bezala, 2-opt ingurunea swap ingurunea baino askoz ere handiagoa da.
 
 <<Babaria_6, prompt=TRUE,cache=TRUE>>=
 ex.ngh.rnd <- exchangeNeighborhood (base = rnd.sol)
@@ -468,12 +469,11 @@ Ikus daitekeen bezala, hobekuntza handiagoa da baina, inguruneak handiagoak dire
 
 \section{Bilaketa lokalaren hedapenak}\label{sec:BLHedapenak}
 
-Aurreko atalean ikusi dugun legez, bilaketa lokala soluzioak areagotzeko prozedura egokia izan arren, arazo larri bat du; optimo lokaletan trabatuta gelditzen da. Arazo hau saihesteko -- soluzioen dibertsifikazioa suspertzeko, alegia -- bilaketa lokalak dituen lau aspektu nagusietan aldaketak sar ditzakegu: hasierako soluzioan, ingurunearen definizioan, inguruneko soluzioen aukeraketan eta helburu funtzioaren definizioan. Hurrengo ataletan elementu bakoitzean aldaketak sartzen dituzten algoritmo batzuk aurkeztuko ditugu.
+Aurreko atalean ikusi dugun legez, bilaketa lokala soluzioak areagotzeko prozedura egokia izan arren, desabantaila handi bat du; optimo lokaletan trabatuta gelditzen da. Arazo hau saihesteko -- soluzioen dibertsifikazioa suspertzeko, alegia -- bilaketa lokalak dituen lau aspektu nagusietan aldaketak sar ditzakegu bilaketan zehar: hasierako soluzioan, ingurunearen definizioan, inguruneko soluzioen aukeraketan eta helburu funtzioaren definizioan. Hurrengo ataletan hauetako elementu  bakoitzean aldaketak egiten dituzten algoritmo batzuk aurkeztuko ditugu.
 
 
 \subsection{Hasieraketa anizkoitza}\label{sec:multistart}
-Soluzio bakoitzetik abiatzen garenean optimo lokal batera heltzen gara; soluzio ezberdinetatik abitatzen bagara, optimo lokal ezberdinetara heldu gaitezke. Ideia hau \ref{alg:randomMultistartLS} sasikodean inplementatuta dagoena da. Algoritmoan agertzen diren \textit{generate\_random\_solution} eta \textit{local\_search} funtzioetan dago prozeduraren mamia. Batak espazioaren esplorazioa egiten du eta besteak, bere izenak adierazten duen bezala, soluzioen areagotzeaz arduratzen da.
-
+Bilaketa lokala aplikatzean, soluzio bakoitzetik abiatuz optimo lokal batera heltzen gara; soluzio ezberdinetatik abiatzen bagara, optimo lokal ezberdinetara heldu gaitezke. Ideia hau \ref{alg:randomMultistartLS} sasikodean inplementatuta dagoena da. Algoritmoan agertzen diren \textit{generate\_random\_solution} eta \textit{local\_search} funtzioetan dago prozeduraren mamia eta, beraz, haien definizioan datza algoritmo ezberdinen arteko diferentzia nagusia. Batak espazioaren esplorazioa egiten du eta bestea, bere izenak adierazten duen bezala, soluzioen areagotzeaz arduratzen da.  
 
 \begin{ifalgorithm}[t]
 \begin{ifpseudo}{Hasiera-anizkoitza bilaketa lokal orokorra}
@@ -490,14 +490,13 @@ Soluzio bakoitzetik abiatzen garenean optimo lokal batera heltzen gara; soluzio 
 \caption{Hasieraketa anizkoitza erabiltzen duen bilaketa lokalaren hedapenaren sasikode orokorra}\label{alg:randomMultistartLS}
 \end{ifalgorithm}
 
-Ausazko soluzioak sortzeko hainbat aukera ditugu. Lehendabizikoa uniformeki ausaz sortzea da, hots, pasu bakoitzean probabilitate berdinarekin espazioaren edozein soluzioa aukeratuko dugu, bilaketa lokala hasieratzeko. 
+Hasteko, ausazko soluzioak sortzeko hainbat aukera ditugu. Lehendabizikoa uniformeki ausaz sortzea da, hots, iterazio bakoitzean probabilitate berdinarekin espazioko edozein soluzio aukeratuko dugu eta bilaketa lokala soluzio horretatik hasiko dugu. 
 
-Uniformeki ausazko soluzioetatik abiatzea problema gehienetan aukera erraza da; alabaina, ez da oso estrategia adimentsua. Gainera, murrizketa askoko problemetan ausazko soluzio bideragarriak sortzea zaila izan daiteke. Ausazko soluzio \zkk onak\skk\ eraikitzeko prozedura bat izanez gero bi arazo hauek saihes ditzakegu. Hain juxtu, hauxe da GRASP algoritmoan egiten dena; hasierako soluzio multzo sortzeko heuristiko gutiziatsu bat erabili, gero \textit{random\_solution} funtzioak multzo horretatik soluzioak ausaz ateratzeko. Ausazko soluzioak sortzeko beste aukera bat aurreko pausuan lortutako optimo lokaletik abiatzea da, ILS algoritmoan egiten den legez.
-
+Uniformeki ausazko soluzioetatik abiatzea, gehienetan, aukera erraza da; alabaina, ez da oso estrategia adimentsua. Gainera, murrizketa askoko problemetan ausazko soluzio bideragarriak sortzea zaila izan daiteke. Bilaketa hasieratzeko soluzio \zkk onak\skk\ eraikitzeko prozedura bat izanez gero, bi arazo hauek saihestu ditzakegu. Hain juxtu, hauxe da hurrengo atalean ikusiko ditugun ILS eta GRASP algoritmoak egiten dutena. 
 
 \subsubsection{Bilaketa Lokala Iteratua (ILS)}
 
-Bilaketa lokala berrabiarazteko ausazko soluzioak erabili beharrean, ILS -- \textit{Iterated Local Search}, ingelesez -- algoritmoan uneko optimo lokala hartuko dugu oinarritzat. Ideia oso sinplea da; optimo lokal batean trabaturik gelditzen garenean, soluzioa \zkk perturbatu\skk\ eta bilaketarekin jarraituko dugu. Optimo lokal berri batera heltzean, soluzio hau onartuko dugunetz erabaki behar dugu. \ref{alg:ILS} algoritmoan ILS-aren sasikode orokorra ikus daiteke.
+Bilaketa lokala berrabiarazteko uniformeki ausazko soluzioak erabili beharrean, ILS -- \textit{Iterated Local Search}, ingelesez -- algoritmoak uneko optimo lokala hartuko du oinarritzat. Ideia oso sinplea da; optimo lokal batean trabaturik gelditzen garenean, uneko soluzioa \zkk perturbatu\skk\ eta bertatik bilaketarekin jarraituko dugu. Optimo lokal berri batera heltzen garenean, soluzio hau onartuko dugunetz erabaki behar dugu. \ref{alg:ILS} algoritmoan ILS-aren sasikode orokorra ikus daiteke.
 
 \begin{ifalgorithm}[t]
 \begin{ifpseudo}{Bilaketa Lokala Iteratua (ILS)}
@@ -518,36 +517,36 @@ Bilaketa lokala berrabiarazteko ausazko soluzioak erabili beharrean, ILS -- \tex
 \end{ifalgorithm}
 
 
-Bi prozedura dira algoritmo honetan definitu behar ditugunak:
+Bi prozedura dira algoritmo hau zehazteko definitu behar ditugunak:
 
 \begin{itemize}
-\item \textbf{Perturbazioa} - Bilaketa lokalean soluziotik soluziora mugitzeko aldaketa txikiak egiten dira. Optimo lokaletatik ateratzeko, beraz, egin behar diren aldaketak handiagoak izan beharko dira. Hau \ref{fig:ILS} irudiak ikus daiteke. Perturbazioa txikiegia izango bazen -- (R1,C5) soluziora mugitzea, adibidez --, berriro optimo lokal berdinean amaituko zen bilaketa. Perturbazioa nahiko handia bada, uneko optimo lokalaren erakarpen-arrotik aterako gara eta, definizioz, beste optimo lokal batean trabaturik geldituko gara. Kontutan hartzekoa da perturbazio prozedurak itzulitako soluzioa erabat ausazkoa bada --hau da, perturbazioa oso handia bada --, ILS algoritmoa ausazko hasieraketa anizkoitz algoritmoa bilakatuko dela. Perturbazioaren tamaina egokitzea ez da erraza, problemaren \textit{landscape}-arekin zerikusia baitu eta, lehen ikusi dugun moduan, hau instantziatik instantziara alda daiteke.
+\item \textbf{Perturbazioa} - Hasteko, optimo lokal batean trabaturik geratzean, hau nola perturbatuko den erabaki behar da. Inguruneko soluzio guztiak antzekoak direnez, bilaketa lokalean soluziotik soluziora mugitzeko aldaketa txikiak egiten dira. Optimo lokaletatik ateratzeko, beraz, egin behar diren aldaketak handiagoak izan behar dira. Hau \ref{fig:ILS} irudian ikus daiteke. Uneko soluzioa (R2,C5) izanik, perturbazioa txikiegia egingo bagenu -- (R1,C5) soluziora mugitzea, adibidez --, berriro optimo lokal berdinean amaituko litzateke bilaketa. Perturbazioa nahiko handia bada, uneko optimo lokalaren erakarpen-arrotik aterako gara eta, definizioz, beste optimo lokal batean trabaturik geldituko gara. Alabaina, kontutan hartzekoa da perturbazio prozedurak itzulitako soluzioa erabat ausazkoa bada --hau da, perturbazioa oso handia bada --, ILS algoritmoa ausazko hasieraketa anizkoitz algoritmoa bilakatuko dela. Guzti honekin, ondorioztatzen dugu perturbazioaren tamaina egokitzea ez dela erraza, problema bakoitzaren araberakoa baita.
 
-Perturbazioa definitzean inguruneko soluzioak definitzeko mugimendu mota berberak edo beste batzuk erabil daitezke. Esate baterako, permutazioetan oinarritzen den problema batean \textit{2-opt} ingurune operadorea erabiltzen badugu, \textit{k-opt} operadorea erabil daiteke soluzioak perturbatzeko. Perturbazioa trukaketan oinarritu beharrean, txertaketa ere erabil dezakegu, $k$ elementu hartu eta ausazko posizioetan sartuz. 
+Perturbazioa definitzean inguruneko soluzioak definitzeko erabiltzen diren operazio mota berberak edo beste batzuk erabil daitezke. Esate baterako, permutazioetan oinarritzen den problema batean \textit{2-opt} ingurune operadorea erabiltzen badugu, \textit{k-opt} operadorea erabil daiteke soluzioak perturbatzeko. Perturbazioa trukaketan oinarritu beharrean, txertaketa ere erabil dezakegu, $k$ elementu hartu eta ausazko posizioetan sartuz. 
 
-Perturbazioaren tamaina aurretik finkatu eta bilaketaren zehar aldatu barik mantendu ahal da. Estrategia estatiko honen ordez, estrategia dinamikoak erabil daitezke, non tamaina bilaketaren zehar aldatzen den.
+Perturbazioaren tamaina aurrez finkatu daiteke eta bilaketaren zehar aldatu barik mantendu ala, bestalde, estrategia dinamikoak erabil daitezke, non perturbazioaren maila bilaketaren zehar aldatzen den.
 
-Soluzioak perturbatzeko prozedura aurreratuetan bilaketaren \zkk historia\skk\ erabil daiteke, soluzioaren zein osagai perturbatu eta zein ez erabakitzeko. Estrategia hauek \zkk memoria\skk\ kontzeptua erabiltzen dute; erabiltzen diren mekanismoak -- memoria motak -- tabu bilaketan soluzioak areagotzeko eta dibertsifikatzeko erabiltzen direnen antzerakoak dira.
+Gainera, soluzioak perturbatzeko prozedura aurreratuetan bilaketaren \zkk historia\skk\ erabil daiteke, soluzioaren zein osagai perturbatu eta zein ez erabakitzeko. Estrategia hauek \zkk memoria\skk\ kontzeptua erabiltzen dute eta memoria mota ezberdinak soluzioak areagotzeko eta dibertsifikatzeko balio dezakete.
 
-\item \textbf{Optimo lokalak onartzeko irizpideak} - Uneko optimo lokala perturbatu ondoren bilaketa lokala aplikatzen da, optimo (berri) bat sortuz. Hurrengo iterazioan lortutako optimo berria edo optimo zaharra perturbatuko dugun erabaki behar da. Bi hurbilketa estremo plantea daitezke: beti optimo berria onartu edo unekoa baino hobea denean bakarrik onartu. Lehendabiziko estrategiak dibertsifikazioa suspertzen du; bigarrenak, berriz, areagotzeko egokia da. Ohikoena tarteko zerbait erabiltzea da, optimo zaharraren eta berriaren arteko ebaluazioaren diferentzia kontutan hartuz. Esate baterako, optimoak era probabilistikoan onar daitezke, Boltzmann-en distribuzioa erabiliz, gero \textit{simmulated annealing} algoritmoan ikusiko dugun bezala. 
+\item \textbf{Optimo lokalak onartzeko irizpideak} - Uneko optimo lokala perturbatu ondoren bilaketa lokala aplikatzen da, optimo (berri) bat sortuz. Hurrengo iterazioan, lortutako optimo berria edo berriro optimo zaharra perturbatuko dugun erabaki behar da. Bi muturreko hurbilketa plantea daitezke: beti optimo berria onartu edo soilik unekoa baino hobea denean onartu. Lehendabiziko estrategiak dibertsifikazioa suspertzen du; bigarrena, berriz, soluzioak areagotzeko egokia da. Ohikoena tarteko zerbait erabiltzea da, optimo zaharraren eta berriaren ebaluazioen arteko  diferentzia kontutan hartuz. Esate baterako, optimoak era probabilistikoan onar daitezke, Boltzmann-en distribuzioa erabiliz, gero \textit{simmulated annealing} algoritmoan ikusiko dugun bezala. 
 \end{itemize}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.66\linewidth]{./Irudiak/ILS}
-\caption{ILS algoritmoaren funtzionamendua. Goiko eskumako soluziotik abiatzen bada bilaketa -- (R1,C6), grisean nabarmendua dagoen soluziotik, alegia --, (R2,C5) optimo lokalean trabatuta geldituko ginateke. Egoera desblokeatzeko soluzioa \zkk perturbatzen\skk\ dugu, (R3,C4) soluziora eramanez; hortik abiatuta bilaketa lokala aplikatzen dugu, kasu honetan optimo globalera heldu arte}
+\caption{ILS algoritmoaren funtzionamendua. Goiko eskumako soluziotik abiatzen bada bilaketa -- (R1,C6), grisean nabarmendua dagoen soluziotik, alegia --, (R2,C5) optimo lokalean trabatuta geldituko litzateke bilaketa lokala. Egoera desblokeatzeko soluzioa \zkk perturbatzen\skk\ dugu, (R3,C4) soluziora mugituz; hortik abiatuta bilaketa lokala aplikatzen dugu berriro, kasu honetan optimo globalera heldu arte}
 \label{fig:ILS}
 \end{figure}
 
-ILS-a \code{iterated.local.search} funtzioan inplementatuta dago. Funtzio honen gainontzeko parametroak \code{basic.local.search} funtzioaren berberak dira, inplmentazioa funtzio horretan oinarritzen baita. Horrez gain, hiru parametro berri izango digutu:
+\code{metaheuR} paketean, ILS-a \code{iterated.local.search} funtzioan inplementatuta dago. Funtzio honen parametro gehienak \code{basic.local.search} funtzioaren berberak dira, inplmentazioa funtzio horretan oinarritzen baita. Alabaina, hiru parametro berri izango ditugu:
 
 \begin{itemize}
-\item \code{perturb} - Parametro honen bidez soluzioak perturbatzeko erabili behar den funtzioa pasatuko diogu funtzioari. Funtzio honek parametro bakarra izan beharko du, perturbatu behar den soluzioa, eta itzultzen duen emaitza perturbatutako soluzioa izan beharko da.
-\item \code{accept} -  Parametro hau funtzio bat izan behar da, soluzio berriak noiz onartzen ditugun definitzen duena. Gutxienez parametro bat izan beharko du, \code{delta}, soluzio berria eta zaharraren ebaluazioen arteko diferentzia.
-\code{num.restarts} - Bilaketa optimo lokal batean trabatuta gelditzen denean, zenbat alditan berrabiarazi behar dugun bilaketa, perturbatutako soluziotik.
+\item \code{perturb} - Parametro honen bidez soluzioak perturbatzeko erabiliko den funtzioa pasatuko diogu funtzioari. \code{perturb} funtzioak parametro bakarra izan dezake, perturbatu behar den soluzioa, eta perturbatutako soluzioa itzuli beharko du.
+\item \code{accept} -  Parametro hau, soluzio berriak noiz onartzen ditugun definitzen duen funtzio bat izan behar da. Gutxienez parametro bat izan beharko du, \code{delta}, soluzio berria eta zaharraren ebaluazioen arteko diferentzia jasoko duena.
+\item \code{num.restarts} - Optimo lokalak perturbatuz, bilaketa zenbat alditan berrabiarazi behar dugun esaten digun zenbaki osoa da.
 \end{itemize}
 
-Ikus dezagun adibide bat, TSP problema bat erabiliz. Problema honetan Burma-ko 14 hirien arteko distantziak izango ditugu. Problema ebazteko ausazko soluzio batetik abiatuko dugu bilaketa. Ingurune gisa \textit{2-opt} erabiliko dugu (trukaketa orokorrak, ez bakarrik elkar-ondokoak) eta soluzioak perturbatzeko eragiketa bera erabiliko dugu, hau da, trukaketa; eragiketa hau ausaz egiteko \code{shuffle} funtzioa erabil dezakegu.
+Ikus dezagun adibide bat, TSPlib-eko problema bat erabiliz. Problema honetan Burma-ko 14 hirien arteko distantziak izango ditugu. Problema ebazteko ausazko soluzio batetik abiatuko dugu bilaketa. Ingurune gisa \textit{2-opt} erabiliko dugu (trukaketa orokorrak, ez bakarrik elkar-ondokoak) eta soluzioak perturbatzeko eragiketa bera erabiliko dugu baina behin baino gehiagotan aplikatuz; Soluzio bati operazio hau ausaz aplikatzeko \code{shuffle} funtzioa erabil dezakegu.
 
 <<Burma_1, prompt=TRUE,cache=TRUE>>=
 f <- paste("http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95"
@@ -559,18 +558,28 @@ burma.tsp <- tsp.problem(burma.mat)
 
 init.sol <- random.permutation(n)
 ngh <- exchangeNeighborhood(init.sol)
-sel <- first.improvement.selector
+sel <- greedy.selector
+
+@
+
+Segidan, optimo lokalak onartzeko irizpideak definituko ditugu. Kasu honetan, soluzioen arteko diferentzia 0 baina handiagoa izan beharko da, optimo lokal berria onartzeko. Hau da,  optimo lokal berria aurrekoa baina hobea izan behar da.
+
+<<Burma_2, prompt=TRUE,cache=TRUE>>=
 th.accpet <- threshold.accept
 th <- 0
 @
 
-Soluzioen perturbazioa kontrolatzeko zenbat trukaketa egiten diren kontrola dezakegu. Kopuru hori aldatu ahal izateko, gure perturbazio funtzioaren parametro bat izan beharko da\footnote{\code{iterated.local.search} funtzioarekin (eta paketearen beste hainbat funtzioekin) arazorik ez izateko pasatutako funtzioak \code{...} argumentua izan behar du, nahiz eta gero barruan ez erabili}.
+Perturbazio maila soluzioari aplikatuko dizkiogun trukaketa kopuruaren bidez kontrolatuko dugu. Beraz, trukaketa kopurua, gure perturbazio funtzioaren parametro bat izan beharko da\footnote{\code{iterated.local.search} funtzioarekin (eta paketearen beste hainbat funtzioekin) arazorik ez izateko pasatutako funtzioak \code{...} argumentua izan behar du, nahiz eta gero barruan ez erabili}.
 
-<<Burma_2, echo=-1 , prompt=TRUE,cache=TRUE , results='hide', fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=14 , fig.height=6 >>=
+<<Burma_3, prompt=TRUE,cache=TRUE>>=
 set.seed(1)
 perturb.2opt <- function(solution , ratio , ...)
   shuffle(permutation = solution , ratio = ratio)
+@ 
 
+Honekin guztiarekin ILS algoritmoa exekutatu dezakegu perturbazio maila ezberdinekin:
+
+<<Burma_4, echo=-1 , prompt=TRUE,cache=TRUE , results='hide', fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=14 , fig.height=6 >>=
 r <- 5
 ratio <- 0.01
 ils.1 <- iterated.local.search(evaluate = burma.tsp$evaluate , 
@@ -600,32 +609,31 @@ plot.progress(result = list(ILS1 = ils.1 , ILS33 = ils.25 , ILS100 = ils.100)) +
 
 \begin{figure}[t]
 \includegraphics[width=\textwidth]{./Irudiak/Burma_2-1}
-\caption{ILS algoritmoaren progresioa 14 hiriko TSP problema batean. Ezkerretik eskuinera, perturbazioaren ratioa 0.01, 0.25 eta 1 da.}\ref{fig:ILS}
+\caption{ILS algoritmoaren progresioa 14 hiriko TSP problema batean. Ezkerretik eskuinera, perturbazioaren ratioak 0.01, 0.25 eta 1 dira.}\ref{fig:ILS}
 \end{figure}
 
-Hiru bilaketen progresioa \ref{fig:ILS} irudian ikus daitezke. Hirurak soluzio berdinatik hasten dira eta, pausu bakoitzean inguruko soluziorik onena aukeratzen dutenez, lehenengo jaitsiera berdina da hiru grafikoetan. Lehenengo optimo lokala topatzen den momentuan, ordea, diferentziak hasten dira. Ezkerretik eskuinera, lehenengo grafikoan soluzioak posizioen \%1 trukatuz perturbatzen dira; guztira 14 posizioak direnez, trukaketa bakar bat egiten da. Erdiko grafikoan perturbazioa \%25ekoa da, 3 trukaketa, alegia. Azeken grafikoan, berriz, 14 trukaketa egiten dira (posizioen \%100). Perturbazio txiki bat erabiltzen dugunean, lortutako soluzioaren ebaluazioa optimo lokalaren antzerakoa da (agertzen diren \zkk pikoak\skk\  ez dira oso altuak, alegia); geroz eta perturbazio handiagoa orduan eta diferentzia handiagoa soluzio berria eta optimoaren artean.
+Hiru bilaketa hauek progresioak \ref{fig:ILS} irudian ikus daitezke. Hirurak soluzio berdinetik hasten dira eta, pausu bakoitzean inguruko soluziorik onena aukeratzen dutenez, lehenengo jaitsiera berdina da hiru grafikoetan. Lehenengo optimo lokala topatzen den momentuan, ordea, diferentziak hasten dira. Ezkerretik eskuinera, lehenengo grafikoan soluzioak posizioen \%1 trukatuz perturbatzen dira; guztira soluzioak 14 posizio dituztenez, trukaketa bakar bat egiten da. Erdiko grafikoan perturbazioa \%25ekoa da, 3 trukaketa egiten dira, alegia. Azken grafikoan, berriz, 14 trukaketa egiten dira (posizioen \%100). Perturbazio txiki bat erabiltzen dugunean, lortutako soluzioaren ebaluazioa optimo lokalaren antzerakoa da (agertzen diren jauziak  ez dira oso altuak, alegia); geroz eta perturbazio handiagoa orduan eta diferentzia handiagoa soluzio berria eta optimoaren artean. Azken kasuan, perturbazioa oso handia da eta, beraz, optimo lokaletatik ateratzeko, soluzioak guztiz ausaz aukeratzen dira, hasieraketa anizkoitzeko algoritmoan bezalaxe.
 
 
 \subsubsection{GRASP algoritmoa}
 
-Optimizazio problemak ebazteko ohiko da metodo eraikitzaileak erabiltzea. Aurreko kapituluan ikusi genuen bezala, algoritmo hauek soluzio pausuz pausu eraikitzen dute, urrats bakoitzean aukera guztietatik onena hautatuz. Era honetan, soluzio onak sortzen dira baina, berdinketak egon ezean, instantzia bakoitzeko soluzio bakarra lortzen dugu.
-
-Metodo hauen bidez lortutako soluzioak onak izan arren ez daukate zergatik optimoak izan, ez globalki eta ezta lokalki ere. Hori dela eta, behin soluzioa sortuta, bilaketa lokal bat erabil daiteke soluzioa areagotzeko.
+Optimizazio problemak ebazteko ohikoa da metodo eraikitzaileak erabiltzea. Aurreko kapituluan ikusi genuen bezala, algoritmo hauek soluzioa pausuz pausu eraikitzen dute, urrats bakoitzean aukera guztietatik onena hautatuz. Era honetan, soluzio onak sortzen dira baina, hauek ez dute zertan optimoak izan, ez globalki eta ezta lokalki ere. Hori dela eta, behin soluzioa sortuta, bilaketa lokal bat erabil daiteke soluzioa areagotzeko. Alabaina, berdinketak egon ezean, metodo eraikitzaileek instantzia bakoitzeko soluzio bakarra eta beti berdina lortzen dute eta beraz hasieraketa bakarra ahalbidetzen dute.
 
 Ideia hau apur bat landuz, metodo eraikitzaileak soluzio bakarra sortu beharrean soluzio multzo bat sortzeko egoki ditzakegu. Gero, \ref{alg:randomMultistartLS} algoritmoan dagoen \textit{random\_solution} metodoak multzo horretatik ausazko soluzioak aterako ditu, bilaketa lokala hasieratzeko. Ideia hau GRASP \textit{Greedy Randomized Adaptative Search Procedure} algoritmoaren atzean dagoena da \cite{feo1989}.
 
-Ausazko soluzio onak eraikitzeko, pausu bakoitzean aukerarik onena aukeratu beharrean \zkk hautagai zerrenda\skk\ izango dugu -- \textit{candidate list}, ingelesez --; algoritmoak zerrenda horretan dauden osagaiak ausaz aukeratuko ditu hasierako soluzioak eraikitzeko.
+Ausazko soluzio onak eraikitzeko, pausu bakoitzean aukerarik onena aukeratu beharrean \zkk hautagai zerrenda\skk\ bat izango dugu -- \textit{candidate list}, ingelesez --; algoritmoak zerrenda horretan dauden osagaiak ausaz aukeratuko ditu hasierako soluzioak eraikitzeko.
 
 \begin{tcolorbox}
 \begin{ifexample}
-Demagun motxilaren problema ebatzi nahi dugula. Oso sinplea den algoritmo eraikitzaile bat hauxe da: kalkulatu, motxilan sartzek ditugun elementu bakoitzeko balioa/pisua ratioa eta gero, pausu bakoitzean, motxilan sartu ahal diren elementuetatik (pisu-muga gaindiarazi ez dutenak) ratiorik handiena duena aukeratu. 
+Demagun motxilaren problema ebatzi nahi dugula. Oso sinplea den algoritmo eraikitzaile bat hauxe da: kalkulatu, motxilan sartzen ditugun elementu bakoitzaren balioa/pisua ratioa eta gero, pausu bakoitzean, pisu-muga gaindiarazi ez duten elementuetatik, ratiorik handiena duena aukeratu. 
 
-Algoritmo hau GRASP algoritmoa inplementatzeko egoki daiteke. Algoritmoaren iterazio bakoitzean soluzio bat eraikiko dugu, pausu bakoitzean ratiorik handiena duen elementua aukeratu beharrean ratio handienak duten $\%\alpha$ soluzioen artetik bat ausaz aukeratuz. Behin soluzioa eraikita, bilaketa lokala aplikatuko dugu lortutako soluzioa areagotzeko. 
+Algoritmo hau GRASP algoritmoaren ideiara modu errezean egoki daiteke. Algoritmoaren iterazio bakoitzean hasierako soluzio bat eraikiko dugu pausu bakoitzean ratiorik handiena duen elementua aukeratu beharrean ratio handiena duten $\%\alpha$ soluzioen artetik bat ausaz aukeratuz. Behin soluzioa eraikita, bilaketa lokala aplikatuko dugu lortutako soluzioa areagotzeko. 
 \end{ifexample}
 \end{tcolorbox}
 
-Adibidean planteatzen den estrategia ausazko soluzio onak sortzeko procedura bat inplementatu beharko dugu. 
+Edozein problemari GRASP algoritmoa aplikatzeko, adibidean planteatzen den hasierako soluzio onak sortzeko estrategiaren antzerako prozedura bat sortu eta inplementatu beharko dugu. Funtzio honen parametro gehienak problema bakoitzarentzat ezberdinak izango dira baina, gainera, kandidatoen zerrendaren luzeera adierazi beharko dugu ratio baten bidez. 
 
+Adibide gisa, \code{metaheuR} paketean motxilaren problema GRASP algoritmoaren bitartez ebatzi ahal izateko, \code{knap.GRASP} funtzioa izango dugu. Funtzio honetan, hasteko, zenbait datu atera eta aldagai batzuk hasieratzen dira. Besteak beste, soluzio \zkk hutsa\skk sortzen dugu, elementurik ez duena.
 
 <<Knap_GRASP, prompt = TRUE , echo = FALSE>>=
 knap.GRASP <- function (weight , value , limit , cl.size = 0.25){
@@ -650,12 +658,12 @@ knap.GRASP <- function (weight , value , limit , cl.size = 0.25){
 }
 @
 
-Funtzioaren pamateroak problemarenak izango dira, gehi kandidatoen zerrendaren luzeera, ratio baten bidez adieraziko duguna. Hasteko, zenbait datu atera eta aldagai batzuk hasieratzen ditugu. Besteak beste, soluzio \zkk hutsa\skk sortzen dugu, elementurik ez duena.
+
 
 <<Knap_GRASP, eval=FALSE , echo=1:5 , purl=FALSE>>=
 @
 
-Soluzioan elementuak sartzeko begizta bat izango dugu, motxila beteta ez dagoen bitartean errepikatuko dena. Begiztaren lehenengo pausua sarturik gabeko elementuei antzemate diegu eta, uneko iterazioan, gure hautagai zerrenda izan behar duen tamaina kalkulatu egiten dugu (gogoratu tamaina urratsean ditugun aukera kopuruaren araberakoa dela). 
+Soluzioa sortzeko, elementuak banan banan sartzeko ditugu motxilan eta honetarako, begizta bat izango dugu, motxila beteta ez dagoen bitartean errepikatuko dena. Begiztaren lehenengo pausuan, motxilan oraindik sartu gabeko elementuei antzematen diegu eta, uneko iterazioan, gure hautagai zerrendak izango duen tamaina kalkulatzen dugu (gogoratu tamaina urratsean ditugun aukera kopuruaren araberakoa dela). 
 
 <<Knap_GRASP, eval=FALSE , echo=6:8 , purl=FALSE>>=
 @
@@ -665,12 +673,12 @@ Orain ratioak ordenatu ondoren, lehenengo elementuak hartzen ditugu hautagai zer
 <<Knap_GRASP, eval=FALSE , echo=9:10 , purl=FALSE>>=
 @
 
-Amaitzeko, aukeratutako elementua soluzioan sartzen dugu eta, motxila betetzen ez bada, aurrera jarraitzen dugu. Bestela, soluzioa deusestatzen dugu eta begizta amaitzen dugu.
+Amaitzeko, aukeratutako elementua soluzioan sartzen dugu eta, motxila betetzen ez bada, aurrera jarraitzen dugu. Bestela, soluzioa deuseztatzen dugu eta begizta amaitzen dugu.
 
 <<Knap_GRASP, eval=FALSE , echo=-(1:10) , purl=FALSE>>=
 @
 
-Sortu dugun futnzioa GRASP algoritmoa guztiz ausazkoa den hasieraketa anizkoitzarekin alderatzeko erabil dezakegu, \code{cl.size} parametroarekin jolastuz. Lehenik eta behin, ausazko problema bat sortuko dugu. Kasu honetan 50 item izango ditugu eta hauen balioa bi multzotan banatuko dugu. Elementuen erdirako balioa 0 eta 10 arteko ausazko zenbakiak dira; beste erdirako, ausazko zenbakiak 0 eta 25 tartean. Kasu guztietan pisua balioarekiko proportzionala da, faktorea ausazko zenbakia izanik. Limite gisa ausaz aukeratutako 10 elementuen pisuaren batura erabiliko dugu.
+Sortu dugun funtzioa GRASP algoritmoa guztiz ausazkoa den hasieraketa anizkoitzarekin alderatzeko erabil dezakegu, \code{cl.size} parametroarekin jolastuz. Lehenik eta behin, ausazko motxilaren problema bat sortuko dugu. Kasu honetan 50 item izango ditugu eta hauen balioa bi multzotan banatuko dugu. Elementuen erdiaren balioak 0 eta 10 arteko ausazko zenbakiak izango dira; beste erdiarentzat, 0 eta 25 tarteko ausazko zenbakiak hautatuko ditugu. Kasu guztietan pisua balioarekiko proportzionala da, faktorea ausazko zenbaki bat izanik. Limite gisa, ausaz aukeratutako 10 elementuen pisuaren batura erabiliko dugu.
 
 <<GRASP_vs_rndstart_1, echo=-1 , prompt=TRUE , cache=TRUE>>=
 set.seed(5)
@@ -680,7 +688,7 @@ weights <- values * rnorm(n,1,0.05)
 limit   <- sum(sample(weights , n/5))
 @
 
-GRASP eta hasieraketa anizkoitzan oinarritzen den beste edozein algoritmo erabiltzeko \cite{multistart.local.search} funtzioa daukagu. Orain arte ikusitakoen antzerakoa da funtzio hau, baina hasierako soluzioa argumentu moduan pasatu beharrean, soluzioak sortzeko funtzio bat pasatu behar diogu. Parametro asko direnez, funtzioen argumentuak antolatzeko beste era bat erabiliko dugu. Zerrenda batean sartuko ditugu, izenak erabiliz eta gero R-ren \code{do.call} funtzioa erabiliko dugu.
+GRASP eta hasieraketa anizkoitzean oinarritzen den beste edozein algoritmo erabiltzeko \code{multistart.local.search} funtzioa erabil dezakegu. Orain arte ikusitakoen antzerakoa da funtzio hau, baina argumentu moduan hasierako soluzioa pasatu beharrean, soluzioak sortzeko funtzio bat pasatu behar diogu. Funtzioak parametro asko dituenez, sarrerako balioak antolatzeko beste era bat erabiliko dugu kodea irakurterrezagoa izateko. Zerrenda batean sartuko ditugu, izenak erabiliz eta gero R-ren \code{do.call} funtzioa erabiliko dugu.
 
 <<GRASP_vs_rndstart_2, echo=-1 , prompt=TRUE , cache=TRUE>>=
 args <- list()
@@ -701,7 +709,7 @@ args$value              <- values
 args$limit              <- limit
 @
 
-Behin (ia) parametro guztiak ezarrita, \code{cl.size} parametroari 3 balio ezberdin esleituko diogu, 1, 0.5 eta 0.1. Lehenengo kasuan hautagai zerrendan aukera guztiak egongo direnez, funtzioak ausazko soluzioak sortuko ditu, hots, ausazko hasieraketa anizkoitza erabiliko du bilaketa lokalak. Beste kasuetan, berriz, aukera guztietatik \%50 eta \%10 erabiltzen dira bakarrik, hurrenez hurren.
+Behin parametro guztiak ezarrita, \code{cl.size} parametroari 3 balio ezberdin esleituko dizkiogu, 1, 0.5 eta 0.1. Lehenengo kasuan hautagai zerrendan aukera guztiak egongo direnez, funtzioak guztiz ausazko soluzioak sortuko ditu, hots, ausazko hasieraketa anizkoitza erabiliko du bilaketa lokalak. Beste kasuetan, berriz, aukera guztietatik \%50 eta \%10 erabiltzen dira bakarrik, hurrenez hurren.
 
 <<GRASP_vs_rndstart_3, echo=-1 , prompt=TRUE , cache=TRUE , results='hide'>>=
 args$cl.size <- 1
@@ -732,37 +740,35 @@ plot.progress(list(GRASP50 = GRASP.50 , GRASP10 = GRASP.10 , RND = rnd.ls) , y =
 \caption{Hasieraketa anizkoitza estrategia ezberdinen konparaketa, motxilaren problema batean. Ezkerreko grafikoan uneko soluzioaren progresioa ikus daiteke. Eskumakoan, berriz, uneko soluziorik onenaren progresioa erakusten da.}\label{fig:GRASP}
 \end{figure}
 
-\ref{fig:GRASP} irudian bilaketaren progresioa ikus daiteke. Ezkerreko grafikoan uneko soluzioaren eboluzioa jasotzen da. Ikus daitekeen bezala, berabiarazte bakoitzean bilaketa soluzio txarragoetatik hasten da (gorago daudenak). GRASP algoritmoan, berriz, hasierako soluzioak hobeak dira, eta baita ere lortzen den emaitza. Hori argi ikusten da eskumako grafikoan, non uneko soluziorik onenaren eboluzioa erakusten den.
+\ref{fig:GRASP} irudian bilaketaren progresioa ikus daiteke. Ezkerreko grafikoan uneko soluzioaren eboluzioa jasotzen da. Ikus daitekeen bezala, berabiarazte bakoitzean bilaketa soluzio txarragoetatik hasten da (gorago daudenak). GRASP algoritmoan, berriz, hasierako soluzioak hobeak dira, eta baita lortzen den emaitza ere. Hori argi ikusten da eskumako grafikoan, non uneko soluziorik onenaren eboluzioa erakusten den.
 
 \subsection{Inguruneko soluzioen hautaketa}
 
-Definizioz, optimo lokal baten inguruan dauden soluzio guztiak optimoa bera baino txarragoa dira; hortaz, ez dugu soluzio hoberik aukeratzerik eta trabatuta gelditzen da. Bilaketa prozesuari amaiera ez emateko, soluzio hoberik egon ezean, helburu funtzioa hobetzen ez duten soluzioak onar ditzakegu. Estrategia honi esker, txarragoak diren soluzio batzuetatik pasatuz gero bilaketa espazioaren eskualde hobeetara ailega gintezke.
+Definizioz, optimo lokalen inguruko soluzio guztiak optimoa bera baino okerragoak dira; hortaz, hauetara iristean, ez dugu soluzio hoberik aukeratzerik eta trabatuta gelditzen da bilaketa lokala. Egoera hauetan, bilaketa prozesuari amaiera ez emateko, inguruneko soluzioen hautaketa estrategia alda genezake, soluzio hoberik egon ezean, helburu funtzioa hobetzen ez duten soluzioak ere onartuz. Estrategia honi esker, okerragoak diren soluzio batzuetatik pasatuz, bilaketa espazioaren eskualde berrietara ailega gintezke.
 
-Soluzio \zkk txarrak\skk\ aukeratzeko bi estrategia daude. Lehendabizikoan helburua hobetzen ez duen soluzio bat aukeratzean sortutako \zkk galera\skk\ kontutan hartzen da, era probabilistikoan zein deterministan. Algoritmorik ezagunena \textit{suberaketa estokastikoa} --\textit{simulated snnealing}~\cite{kirkpatrick1983,cerny1985} ingelesez-- izenekoa da, zeinek probabilitate-banaketa parametriko bat erabiltzen duen aukeraketa egiteko. Algoritmo honetan inspiratutako beste hainbat algoritmoak proposatu dira, \textit{demon algoritm}~\cite{pepper2000} eta \textit{threshold accepting}~\cite{dueck1990,moscato1990} algoritmoak, besteak beste.
+Soluzio \zkk txarrak\skk\ aukeratzeko bi estrategia daude. Lehendabizikoan helburu funtzioa hobetzen ez duen soluzio bat aukeratzean sortutako \zkk galera\skk\ kontutan hartzen da, era probabilistikoan zein deterministan. Algoritmorik ezagunena \textit{suberaketa estokastikoa} --\textit{simulated annealing}~\cite{kirkpatrick1983,cerny1985} ingelesez-- izenekoa da, zeinek probabilitate-banaketa parametriko bat erabiltzen duen aukeraketa egiteko. Algoritmo honetan inspiratutako beste hainbat algoritmo proposatu dira, \textit{demon algorithm}~\cite{pepper2000} eta \textit{threshold accepting}~\cite{dueck1990,moscato1990} algoritmoak, besteak beste.
 
-Soluzio txarragoak aukeratzen dituen estrategiren beste interpretazioa Gloverrek 1986an proposaturiko \textit{tabu bilaketa}~\cite{glover1986} --\textit{tabu search} ingelesez-- algoritmoarena da. Kasu honetan helburu funtzioa hobetzen ez duten soluzioak aukeratzen dira, baina bakarrik ingurune osoan helburua hobetzen duen soluziorik ez badago. Estrategia honen arriskua dagoeneko bisitatu ditugun soluzioak bisitatzea den legez, \zkk memoria\skk\ erabili beharra dago zikloak saihesteko.
+Soluzio txarrak aukeratzeko bigarren estrategia mota Gloverrek 1986an proposaturiko \textit{tabu bilaketa}~\cite{glover1986} --\textit{tabu search} ingelesez-- algoritmoak erabiltzen duena da. Kasu honetan, helburu funtzioa hobetzen ez duten soluzioak aukeratzen dira, baina bakarrik ingurune osoan helburua hobetzen duen soluziorik ez badago. Estrategia honen arriskua dagoeneko bisitatu ditugun soluzioak berriro bisitatzea den legez, \zkk memoria\skk\ erabili beharra dago zikloak saihesteko.
 
 \subsubsection{Suberaketa Simulatua}
 
-Tresnak edo piezak sortzeko prozesatzen direnean, metalek hainbat propietate gal dezakete, euren kristal-egituran eragindako aldaketak direla eta. Propietate horiek berreskuratzeko metalurgian \zkk suberaketa\skk\ prozesua erabiltzen da; metal pieza oso tenperatura handira berotzen da, gero astiro hozten uzteko. Tenperatura igotzean metalaren atomoen energia handitzen da eta, hortaz, beraien artean sortzen diren indar molekularrak apurtzeko gai dira; mugitzeko askatasun handiagoa dute, alegia. 
+Tresnak edo piezak sortzeko prozesatzen direnean, metalek hainbat propietate gal ditzakete, euren kristal-egituran eragindako aldaketak direla eta. Propietate horiek berreskuratzeko metalurgian \zkk suberaketa\skk\ prozesua erabiltzen da; metal pieza behar adina berotzen da, gero astiro-astiro hozten uzteko. Tenperatura igotzean metalaren atomoen energia handitzen da eta, hortaz, beraien artean sortzen diren indar molekularrak apurtzeko gai dira; mugitzeko askatasun handiagoa dute, alegia. 
 
-Metala oso azkar hozten bada --tenplatzean egiten den bezala, adibidez-- molekulak zeuden tokian \zkk izoztuta\skk\ gelditzen dira. Honek metala gogortzen du, baina hauskorragoa bihurtzen du, aldi berean. Suberatzean, berriz, metala poliki-poliki hozten da eta, ondorioz, molekulak astiro galtzen dute beraien energia --hots, abiadura--. Hozketa-abiadura motelari esker molekulak euren kristal-egiturako \zkk kokapen optimora\skk\ joaten dira, hau da, energia minimoko kristal-egitura sortzen da.
+Metala oso azkar hozten bada --tenplatzean egiten den bezala, adibidez-- molekulak zeuden tokian \zkk izoztuta\skk\ gelditzen dira. Honek metala gogortzen du, baina hauskorragoa bihurtzen du, aldi berean. Suberatzean, berriz, metala poliki-poliki hozten da eta, ondorioz, molekulak astiro galtzen dute beraien energia --hots, abiadura--. Hozketa-abiadura motelari esker molekulak euren kristal-egituraren \zkk kokapen optimora\skk\ joaten dira, hau da, energia minimoko kristal-egitura sortzen da.
 
 1983an Kirkpatrick-ek~\cite{kirkpatrick1983} eta bi urte geroago Cerny-k~\cite{cerny1985}, suberaketaren prozesuan inspiratuta, optimizazio algoritmoak proposatu zituzten; Kirpatrick-ek bere algoritmoari \textit{simmulated annealing}, suberaketa simulatua, izena eman zion eta hauxe da gaur egun hedatuen dagoena.
 
 Algoritmoaren funtzionamendua sinplea da oso. Soluzio batetik ($s$) txarragoa den beste soluzio batera ($s^\prime$) mugitzeko, \zkk energia\skk\ behar dugu; behar den energia bi soluzioen ebaluazioen arteko diferentzia izango da, hau da, $\Delta E = f(s^\prime) - f(s)$. 
 
-Energia-muga hau gainditzeko sistemak energia behar du; sistemaren energia \zkk tenperatura\skk ren bidez neurtuko dugu. Beste era batean esanda, uneoro sistemak $T$ tenperatura izango du eta, zenbat eta tenperatura altuago, orduan eta errazago izango da energia-mugak gainditzea.
-
-Zehazki, soluzio batetik bestera mugitzeko gainditu behar den energia-muga gainditzen denetz erabakitzeko Boltzmann probabilitate-banaketa erabiltzen da:
+Energia-muga hau gainditzeko, sistemak energia behar du eta sistemaren energia \zkk tenperatura\skk k neurtuko du. Beste era batean esanda, uneoro, sistemak $T$ tenperatura izango du eta, zenbat eta tenperatura altuagoa, orduan eta errazagoa izango da energia-mugak gainditzea. Zehazki, soluzio batetik bestera mugitzeko behar den energia-muga gainditzen denetz erabakitzeko Boltzmann probabilitate-banaketa erabiltzen da:
 
 \begin{align*}
 P(\Delta E, T) = e^{-\frac{\Delta E}{T}}
 \end{align*}
 
-Ikus daitekeenez, distribuzio esponentzial honetan muga gainditzeko probabilitatea --hots, helburua hobetzen ez duen soluzioa onartzekoarena-- tenperaturarekiko proportzionala da; energia diferentziarekiko, ostera, alderantzizko proportzionala da.
+Ikus daitekeenez, distribuzio esponentzial honetan muga gainditzeko probabilitatea --hots, helburua hobetzen ez duen soluzioa onartzekoarena-- tenperaturarekiko proportzionala da; energia diferentziarekiko, ostera, alderantziz proportzionala da.
 
-Aintzat hartzekoa da $\Delta E<0$ denean funtzioaren balioa 1 baino handiagoa dela. Izanez, ekuazioa bakarrik energia diferentzia positiboa denean erabiltzen da, negatiboa bada $s^\prime$ soluzioa hobea baita eta, ondorioz, beti onartzen da.
+Aintzat hartzekoa da $\Delta E<0$ denean funtzioaren balioa 1 baino handiagoa dela. Izatez, ekuazioa bakarrik energia diferentzia positiboa denean erabiltzen da, negatiboa bada $s^\prime$ soluzioa hobea baita eta, ondorioz, beti onartzen da.
 
 \begin{ifalgorithm}[t]
 \begin{ifpseudo}{Suberaketa Simulatua - Simulated Annealing}
@@ -788,33 +794,35 @@ Aintzat hartzekoa da $\Delta E<0$ denean funtzioaren balioa 1 baino handiagoa de
 \caption{Suberaketa Simulatuaren sasikodea}\label{alg:SA}
 \end{ifalgorithm}
 
-Suberaketaren gakoa hozte-abiadura da eta, era berean, suberaketa simulatuaren tenperaturaren eguneraketa izango da zatirik garrantzitsuena. Izan ere, hasieran $T$ balio handiak erabiliko ditugu, ia edozein soluzio onartzeko, eta gero, astiro, $T$ txikiagotuko dugu, gelditzeko baldintza bete arte. \ref{alg:SA} algoritmoan suberaketa simulatuaren sasikodea ikus daiteke.
+Suberaketaren gakoa hozte-abiadura da eta, era berean, suberaketa simulatuaren tenperaturaren eguneraketa izango da alderdirik garrantzitsuena. Izan ere, hasieran $T$ balio handiak erabiliko ditugu, ia edozein soluzio onartu ahal izateko, eta gero, astiro-astiro, $T$ txikiagotuko dugu, gelditzeko baldintza bete arte. \ref{alg:SA} algoritmoan suberaketa simulatuaren sasikodea ikus daiteke.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.66\linewidth]{./Irudiak/example_boltzman_dist}
-\caption{Soluzioak onartzeko probabilitateen adibideak. Uneko soluzioa grisez nabarmendua dagoena izanik hiru soluzio ditugu ingurunean, $s_i,s_j$ eta $s_k$. Taulak soluzio bakoitza onartzeko probabilitateak jasotzen ditu, hiru tenperatura ezberdinekin. Ikus daitekeenez, tenperatura baxua denean edozein soluzioa aukeratzeko probabilitatea oso baxua da; tenperatura oso altua denean, berriz, edozein soluzioa hartuta litekeena onartzea da.}
+\caption{Soluzioak onartzeko probabilitateen adibideak. Uneko soluzioa grisez nabarmendua dagoena izanik, hiru soluzio ditugu ingurunean, $s_i,s_j$ eta $s_k$. Taulak hiru tenperatura ezberdinekin soluzio bakoitza onartzeko probabilitateak jasotzen ditu. Ikus daitekeenez, tenperatura baxua denean, edozein soluzio aukeratzeko probabilitatea oso baxua da; tenperatura oso altua denean, berriz, edozein soluzio hartuta litekeena oso probablea da.}
 \label{fig:example_boltzman_dist}
 \end{figure}
 
 
-Suberaketa simulatuaren motako algoritmoak diseinatzean lau aspektu hartu behar ditugu kontutan:
+Suberaketa simulatuan oinarritutako algoritmoak diseinatzean lau aspektu hartu behar ditugu kontutan:
 \begin{itemize}
-\item \textbf{Hasierako tenperatura} - Altuegia bada, hasierako iterazioetan \textit{random walk}, hau da, ausazko ibilbide bat jarraituko dugu; baxuegia bada, berriz, bilaketa oinarrizko bilaketa lokala bihurtuko da. \ref{fig:example_boltzman_dist} irudian adibide bat ikus daiteke. $T=20$ denean, nahiz eta helburu funtzioen diferentzia txikia izan, soluzioa onartzeko probabilitatea txikia da; $T=2000$ denean ebaluazioen arteko diferentzia handia izan arren, litekeena soluzioak onartzea da. $T=200$ denean, berriz, optimo lokaletik atera gaitezke, probabilitate handiarekin, $s_j$ aukeratuz; aldi berean, tarteko tenperatura honekin oso soluzio txarrak onartzea zaila izango da. 
+\item \textbf{Hasierako tenperatura} - Altuegia bada, hasierako iterazioetan \textit{random walk}, hau da, ausazko ibilbide bat jarraituko dugu; baxuegia bada, berriz, bilaketa oinarrizko bilaketa lokala bihurtuko da. \ref{fig:example_boltzman_dist} irudian adibide bat ikus daiteke. $T=20$ denean, nahiz eta helburu funtzioen arteko diferentzia txikia izan, soluzioa onartzeko probabilitatea txikia da; $T=2000$ denean ebaluazioen arteko diferentzia handia izan arren, oso probablea da soluzioak onartzea. $T=200$ denean, berriz, optimo lokaletik atera gaitezke, probabilitate handiarekin, $s_j$ aukeratuz baina tarteko tenperatura honekin oso soluzio txarrak onartzea zaila izango da. 
 
-Tenperatura hasieratzeko bi estrategia ditugu. Lehendabizikoa tenperatura oso altua erabiltzea da; dibertsifikazio ikuspegitik interesgarria izan arren, estrategia hau konputazionalki garestia izan daiteke. Beste estrategian bilaketa espazioaren itxura aztertuko dugu, ingurunean dauden soluzioen arteko diferentziak nolakoak diren jakiteko. Gero, informazio hau onarpen ratio edo probabilitate ezagun bat lortzeko behar dugun tenperatura finkatzeko erabil daiteke~\cite{huang1986,aarts1987}.
+Tenperatura hasieratzeko bi estrategia ditugu. Lehendabizikoa tenperatura oso altua erabiltzea da. Dibertsifikazio ikuspegitik interesgarria izan arren, estrategia honekin bilaketak asko luzatu daitezke eta konputazionalki garestia izan daiteke. Beste estrategian bilaketa espazioaren itxura aztertuko dugu, ingurunean dauden soluzioen arteko diferentziak nolakoak diren jakiteko. Gero, informazio hau onarpen ratio edo probabilitate ezagun bat lortzeko behar dugun tenperatura finkatzeko erabil daiteke~\cite{huang1986,aarts1987}, goi eta behe mugekin egin degun antzera.
 
 
 \begin{tcolorbox}
 \begin{ifexample}
-Demagun 10 tamainako TSP-aren instantzia bat ebatzi nahi dugula. Kostu matrizean dagoen baliorik handiena -- hau da, bi hirien arteko distantziarik handiena -- 7.28 da. Problemarako soluzio guztietan 10 hiri izango ditugu eta, hortaz, soluzio guztien ebaluazioa matrizean dauden 10 elementuen batura izango da. Hori dela eta, $f_g=7.28 \cdot 10=78.2$ problema honetarako ebaluazio funtzioaren goi-muga bat da\footnote{Kontutan hartuz aipatutako baturan matrizeko elementuak ezin direla errepikatu, goi-muga birfindu daiteke 10 elementurik handienak batuz}. Era berean, matrizeko distantziarik txikiena 2.5 izanik, behe-muga kalkula ditzakegu: $f_b = 2.5\cdot 10$. Beraz, edozein soluzio aukeratzeko hasierako probabilitatea finkatzen badugu -- 0.75, adibidez --, bi muga hauek hasierako tenperatura kalkulatzeko erabil dezakegu, edozein bi soluzioen arteko ebaluazioaren diferentzia $f_g-f_b$ baino txikiagoa izango dela baitakigu:
+Demagun 10 tamainako TSP-aren instantzia bat ebatzi nahi dugula. Kostu matrizeko baliorik handiena -- hau da, bi hirien arteko distantziarik handiena -- 7.28 da. Problemarako soluzio guztietan 10 hiri izango ditugu eta, hortaz, soluzio guztien ebaluazioa matrizean dauden 10 elementuen batura izango da. Hori dela eta, $f_g=7.28 \cdot 10=78.2$ problema honen ebaluazio funtzioaren goi-muga bat da\footnote{Kontutan hartuz aipatutako baturan matrizeko elementuak ezin direla errepikatu, goi-muga birfindu daiteke matrizeko 10 elementurik handienak batuz}. Era berean, matrizeko distantziarik txikiena 2.5 izanik, behe-muga kalkula dezakegu: $f_b = 2.5\cdot 10$. 
+
+Beraz, edozein soluzio aukeratzeko hasierako probabilitatea finkatzen badugu -- 0.75-an, adibidez --, bi muga hauek hasierako tenperatura kalkulatzeko erabil ditzakegu, edozein bi soluzioen arteko ebaluazioaren diferentzia $f_g-f_b$ baino txikiagoa izango dela baitakigu:
 
 \begin{align*}
 P=0.75= e^{-\frac{f_g-f_b}{T_0}} = e^{-\frac{78.2-25}{T_0}}\\
 T_0 = -\frac{78.2-25}{\ln(0.75)} = 184.93
 \end{align*}
 
-Beraz, hasierako tenperatura 185 balioan finkatzen badugu, badakigu hasierako iterazioetan edozein soluzio aukeratzeko probabilitatea \%75 edo handiagoa izango dela.
+Hasierako tenperatura 185 balioan finkatzen badugu, badakigu hasierako iterazioetan edozein soluzio aukeratzeko probabilitatea \%75 edo handiagoa izango dela.
 \end{ifexample}
 \end{tcolorbox}
 
@@ -825,7 +833,7 @@ url <- system.file("bays29.xml.zip" , package = "metaheuR")
 cost.matrix <- tsplib.parser(url)
 @
 
-Goiko adibidean egin dugun bezala, helburu funtzioaren maximoa eta minimoa kalkulatuko ditugu eta beraien arteko diferentzia hasierako tenperatura definitzeko erabiliko dugu. Horretarako, elementu minimoak eta maximoak bilatu beharko ditugu kostu matrizearen goiko triangeluan. Adibidean ez bezala, kasu honetan, hozketa prozesua gehiegi ez luzatzeko hasierko tenperatura kalkulatzeko diferentzia maximoaren probabilitatea 0.5-en finkatuko dugu.
+Goiko adibidean egin dugun bezala, helburu funtzioaren maximoa eta minimoa kalkulatuko ditugu eta beraien arteko diferentzia hasierako tenperatura definitzeko erabiliko dugu. Horretarako, elementu minimoak eta maximoak bilatu beharko ditugu kostu matrizearen goiko triangeluan. Gainera, adibidean ez bezala, kasu honetan, hozketa prozesua gehiegi ez luzatzeko hasierako tenperatura kalkulatzeko diferentzia maximoaren probabilitatea 0.5-en finkatuko dugu.
 
 <<TSP_SA_2, prompt=TRUE , cache=TRUE>>=
 n <- ncol(cost.matrix)
@@ -838,19 +846,19 @@ init.t <- -1*(ebal.max - ebal.min) / log(probability)
 init.t
 @
 
-\item \textbf{Oreka lortzeko iterazio kopurua} - Tenperatura balio bakoitzeko zenbait iterazio egin behar dira -- hau da, zenbait inguruneko soluzio aztertu behar da -- \zkk oreka\skk\ lortu arte. Behin oreka lorturik, tenperatura eguneratu behar da, berriro oreka bilatzeko. Lehenengo pausua, beraz, oreka lortzeko behar dugun iterazio kopurua ezartzea da. Ohikoena inguruneko tamainaren araberako iterazio kopurua finkatzea da. Beste era batean esanda, aurretik $\rho$ ratioa finkatuko dugu; gero, tenperatura bakoitzeko $\rho|N(s)|$ soluzio ebaluatuko ditugu, non $|N(s)|$ uneko soluzioaren ingurunearen tamaina den. 
+\item \textbf{Oreka lortzeko iterazio kopurua} - Tenperatura balio bakoitzeko zenbait iterazio egin behar dira -- hau da, zenbait inguruneko soluzio aztertu behar dira -- \zkk oreka\skk\ lortu arte. Behin oreka lorturik, tenperatura eguneratu behar da bilaketa jarraitu ahal izateko. Lehenengo pausua, beraz, oreka lortzeko behar dugun iterazio kopurua ezartzea da. Ohikoena inguruneko tamainaren araberako iterazio kopuru bat finkatzea da. Beste era batean esanda, aurretik $\rho$ ratioa finkatuko dugu; gero, tenperatura bakoitzeko $\rho|N(s)|$ soluzio ebaluatuko ditugu, non $|N(s)|$ uneko soluzioaren ingurunearen tamaina den. 
 
-Estrategia honetan iterazio kopurua finkatuta dago, baina badaude beste estrategiak non kopurua tenperatura bakoitzeko aldakorra den. Adibide gisa, tenperatura soluzio berri bat onartzen dugun bakoitzean alda dezakegu; batzuetan ebaluatzen dugun lehendabiziko soluzioa onartuko dugu eta, bestetan, hainbat soluzio probatu beharko ditugu, bat onartu arte. Kasu honetan, beraz, iterazio kopurua aldakorra da. Ingurunean soluzio on asko badaude, iterazio gutxi beharko ditugu; kontrako kasuan, inguruneko soluzio gehienak txarrak badira, iterazio gehiago beharko ditugu uneko soluzio aldatzeko.
+Badaude beste estrategia batzuk non iterazio kopurua tenperatura bakoitzaren araberakoa den. Adibide gisa, tenperatura soluzio berri bat onartzen dugun bakoitzean alda dezakegu; batzuetan ebaluatzen dugun lehendabiziko soluzioa onartuko dugu eta, bestetan, hainbat soluzio probatu beharko ditugu, bat onartu arte. Kasu honetan, beraz, iterazio kopurua aldakorra da. Ingurunean soluzio on asko badaude, iterazio gutxi beharko ditugu; kontrako kasuan, inguruneko soluzio gehienak txarrak badira, iterazio gehiago beharko ditugu uneko soluzio aldatzea lortzeko.
 
 \item \textbf{Tenperatura jaitsieraren abiadura} - Hau da, ziurrenik, algoritmoaren osagairik nagusiena. Hainbat formula erabil daitezke tenperatura eguneratzeko. Hona hemen batzuk:
   \begin{itemize}
-  \item \textit{Lineala}: $T_i=T_0 - i\beta$, non $T_i$ $i$ iterazioko tenperatura den. Eguneraketa honetan tenperatura beti positiboa izan behar dela kontrolatu behar dugu, ekuazioak tenperatura negatiboak itzuli baititzake.
-  \item \textit{Geometrikoa}: $T_i = \alpha T_{i-1}$. $\alpha \in (0,1)$ abiadura kontrolatzen duen parametroa da eta, ohikoena, 0.5 eta 0.99 tartean egotea da.
-  \item \textit{Logaritmikoa}: $T_i=\frac{T_0}{log(i)}$. Abiadura hau oso motela da baina, nahiz eta praktikan oso erabilgarria ez izan, algoritmoaren konbergentzia demostratuta dago ekuazio hau erabiltzen denean.
+  \item \textit{Lineala}: $T_i=T_0 - i\beta$, non $T_i$ $i$. iterazioko tenperatura den. Eguneraketa mota honetan tenperatura beti positiboa izan behar dela kontrolatu behar dugu, ekuazioak tenperatura negatiboak itzuli baititzake.
+  \item \textit{Geometrikoa}: $T_i = \alpha T_{i-1}$. $\alpha \in (0,1)$ abiadura kontrolatzen duen parametroa da eta, ohikoena, 0.5 eta 0.99 tarteko balio bat aukeratzea da.
+  \item \textit{Logaritmikoa}: $T_i=\frac{T_0}{log(i)}$. Abiadura hau oso motela da eta, nahiz eta praktikan oso erabilgarria ez izan, interes teorikoa du suberaketa simulatu algoritmoaren konbergentzia demostratuta baitago ekuazio honekin.
 \end{itemize}
 Funtzio guzti hauek monotonoak dira, hau da, iterazio bakoitzean tenperatura beti jaisten da. Edonola ere, problema batzuetan funtzio ez-monotonoek hobeto funtziona dezakete\footnote{Tenperatura igotzen denean dibertsifikazioan gailentzen da; tenperatura jaistean, berriz, areagotze prozesua indartzen da. Hau kontutan hartuz, funtzio ez-monotonoak dibertsifikazio/areagotze prozesuen arteko oreka kontrolatzeko erabil daitezke}.
 
-\item \textbf{Algoritmoa gelditzeko irizpidea} - Aurreko puntuan ikusi dugun legez, iterazioak aurrera egin ahala tenperatura zero baliora hurbiltzen da baina, kasu gehienetan, ez da inoiz heltzen. Honek esan nahi du beti optimo lokaletatik ateratzeko aukera izango dugula, probabilitatea oso txikiarekin bada ere. Hori dela eta, algoritmoa gelditzeko baldintzaren bat beharko dugu. Irizpide hedatuena tenperatura minimo bat finkatzea da; bestela, denbora edota ebaluazio kopuru maximoak ere finka ditzakegu.
+\item \textbf{Algoritmoa gelditzeko irizpidea} - Aurreko puntuan ikusi dugun legez, iterazioak aurrera egin ahala tenperatura zero baliora hurbiltzen da baina, kasu gehienetan, ez da inoiz heltzen. Honek esan nahi du beti optimo lokaletatik ateratzeko aukera izango dugula, probabilitate oso txikiarekin bada ere. Hori dela eta, algoritmoa gelditzeko baldintzaren bat definitu beharko dugu. Irizpide hedatuena tenperatura minimo bat finkatzea da; bestela, denbora edota ebaluazio kopuru maximoa ere finka ditzakegu.
 \end{itemize}
 
 Suberaketa simulatuaren erabilera erakusteko Bavierako TSP adibidearekin jarraituko dugu. Algoritmoa \code{simulated.annealing} funtzioak inplementatzen du. Funtzio honek, ohiko argumentuez gain, beste zenbait parametro berezi ditu:
@@ -858,14 +866,14 @@ Suberaketa simulatuaren erabilera erakusteko Bavierako TSP adibidearekin jarrait
 \begin{itemize}
 \item \code{cooling.scheme} - Argumentu honen bidez tenperaturak eguneratzeko funtzio bat pasatu behar da. Funtzioak uneko tenperatura jasoko du argumentu gisa eta hurrengo tenperatura itzuliko du.
 \item \code{initial.temperature} - Hasierako tenperatura.
-\item \code{initial.temperature} - Amaierako tenperatura. Hau algoritmoa gelditzeko irizpidea definitzeko erabiltzen da.
-\item \code{eq.criterion} - String bat da, oreka baldintza zeren araberazkoa den adierazten duena. Bi balio posible daude, \code{\tq evaluations\tq} eta \code{\tq acceptaces\tq}. Lehenengoa erabiltzen bada, oreka baldintza ebaluazio kopuru jakinda batera ailegatzen denean beteko da. Bigarrenaren kasuan, ostera, helburu funztioa hobetzen ez duten soluzio kopuru konkretu onartzen denean beteko da.
-\item \code{eq.value} - Goiko irizpidean erabiliko den balioa.
+\item \code{final.temperature} - Amaierako tenperatura. Hau algoritmoa gelditzeko irizpidea definitzeko erabiltzen da.
+\item \code{eq.criterion} - Oreka baldintza zeren araberakoa den adierazten duen string motako parametro bat da. Bi balio posible har ditzake, \code{\tq evaluations\tq} eta \code{\tq acceptaces\tq}. Lehenengoa erabiltzen bada, oreka baldintza ebaluazio kopuru jakin batera iristean beteko da. Bigarren kasuan, ostera, helburu funtzioa hobetzen ez duten soluzio kopuru finko bat onartzen denean beteko da.
+\item \code{eq.value} - \code{eq.criterion} parametroa zehaztuko duen ebaluazio edo onarpen kopurua.
 \end{itemize}
 
-Hasierako tenperatura kalkulatuta dugu, baina ez amaierako tenperatura. Ebaluazioen arteko diferentziarako behe-muga bilatzea ez da hain erraza. Alternatiba bat, muga bat kalkulatu beharrean, ausazko soluzioak sortuko ditugu eta, gero, beraien arteko diferentzien arabera behe muga bat finka dezakegu. 
+Hasierako tenperatura kalkulatu dugu, baina ez amaierakoa. Gainera, ebaluazioen arteko diferentziaren behe-muga bilatzea ez da hain erraza. Alternatiba bat, muga bat kalkulatu beharrean, ausazko soluzioak sortzea da eta, gero, beraien arteko diferentzien arabera behe muga bat finkatzea. 
 
-Estrategia hau gauzatzeko 500 ausazko soluzio sortuko eta ebaluatuko ditugu. Gero, edozein bi soluzioen arteko diferentzia balio absolutuan konputatuko dugu. Azkenik, 0 ez diren diferentzien artean txikiena hartuko dugu minimo gisa.
+Estrategia hau gauzatzeko 500 ausazko soluzio sortuko eta ebaluatuko ditugu. Gero, edozein bi soluzioen arteko diferentzia balio absolutuan konputatuko dugu. Azkenik, 0 ez diren diferentzien artean txikiena hartuko dugu behe-muga gisa.
 
 <<TSP_SA_3, prompt=TRUE , cache=TRUE>>=
 rep <- 500
@@ -894,9 +902,9 @@ init.t <- -max.delta / log(probability)
 init.t
 @
 
-Ikus daitekeen bezala, kalkulatutako diferentzietan oinarritzen bagara hasierako tenperatura askoz ere txikiagoa da, teorikoki kalkulatutako goi-muga laginketan izan ditugun diferentziak baino handiagoa delako.
+Ikus daitekeen bezala, simulazioz kalkulatutako diferentzietan oinarritzen bagara hasierako tenperatura askoz ere txikiagoa da, teorikoki kalkulatutako goi-muga laginketan lortu ditugun diferentziak baino handiagoa delako.
 
-Informazio guztiarekin funtzioaren argumentuak pausuz pausu munta ditzakegu. Ingurunea definitzeko, elkar-ondoko trukaketak erabiliko ditugu eta bilaketa ausazko soluzio batetik abiatuko dugu.
+Informazio guztiarekin funtzioaren argumentuak pausuz pausu munta ditzakegu. Ingurunea definitzeko, ondoz-ondoko trukaketak erabiliko ditugu eta bilaketa ausazko soluzio batetik abiatuko dugu.
 
 <<TSP_SA_6_1, echo=-2 , prompt=TRUE , cache=TRUE , results='hide' >>=
 set.seed(90)
@@ -907,7 +915,7 @@ args$initial.solution     <- random.permutation(n)
 args$neighborhood         <- swapNeighborhood(args$initial.solution)
 @
 
-Hozeketa funtzioa sortzeko \code{geometric.cooling} funtzioa erabiliko dugu --hozketa geometrikoa inplementatzen duena--. Funtzio honi hasierako eta amaierako tenperaturak eman behar dizkiogu; horrez gain, hasierako tenperaturatik amaierakora zenbat eguneraketa behar diren ere adierazi beharko diogu.
+Hozketa funtzioa sortzeko \code{geometric.cooling} funtzioa erabiliko dugu --hozketa geometrikoa inplementatzen duena--. Funtzio honi hasierako eta amaierako tenperaturak eman behar dizkiogu. Horrez gain, hasierako tenperaturatik amaierakora zenbat eguneraketa behar diren ere adierazi beharko diogu.
 
 <<TSP_SA_6_2 , prompt=TRUE , cache=TRUE , results='hide' >>=
 steps <- 20
@@ -926,7 +934,7 @@ next.t <- args$cooling.scheme(next.t)
 next.t
 @
 
-Oreka baldintza ebaluazioen arabera egingo dugu. Erabiliko dugun ingurunearen tamaina hiri kopurua da, eta horren arabera finkatuko dugu oreka baldintza. Zehazki, 10 bider ingurunearen tamaina erabiliko dugu.
+Oreka baldintza ebaluazioen arabera egingo dugu. Erabiliko dugun ingurunearen tamaina hiri kopurua da ($n$), eta horren arabera finkatuko dugu oreka baldintza. Zehazki, 10 bider ingurunearen tamaina erabiliko dugu.
 
 <<TSP_SA_6_4, echo=-1 , prompt=TRUE , cache=TRUE , results='hide' >>=
 args$eq.value             <- 10*n
@@ -952,19 +960,21 @@ plot.progress(sa) + labs(y="Evaluation") + geom_line(aes(y=Best_sol) , col="red"
 \end{figure}
 
 
-Bilaketaren eboluzioa \ref{fig:SA} irudian jasota dago. Irudiak uneko soluzioaren zein soluziorik onenaren progresioa erakusten du (beltzez eta gorriz, hurrenez hurren).Bilaketan zehar egindako tenperatura aldaketak marra bertikalen bidez adierazita daude. Uneko soluzioaren eboluzioa ikus daiteke uneko soluzioaren ebaluazioa, hasieran, oso aldakorra dela. Hau tenperaturaren ergainari esker da, tenperatura altuak soluzio txarrak aukeratzeko probabilitate handitze baitu. Hozketa prozesuaren zehar, tenperatura jaisten den heinean, probabilitatea txikitu egiten da eta, ondorioz, soluzioen arteko aldakortasuna murriztu egiten da. Amaieran, tenperatura oso txiki denean ia ezinezkoa da soluzio txarragoak onartzea eta, hortaz, uneko soluzioa ez da ia aldatzen.
+Bilaketaren eboluzioa \ref{fig:SA} irudian jasota dago. Irudiak uneko soluzioaren zein soluziorik onenaren progresioa erakusten du (beltzez eta gorriz, hurrenez hurren). Bilaketan zehar egindako tenperatura aldaketak marra bertikalen bidez adierazita daude. Uneko soluzioaren eboluzioan ikus daiteke ebaluazioa, hasieran, oso aldakorra dela. Hau tenperaturaren eraginaren ondorioz da, tenperatura altuak soluzio txarrak aukeratzeko probabilitatea handitzen baitu. Hozketa prozesuaren zehar, tenperatura jaisten den heinean, soluzio txarrak onartzeko probabilitatea txikitu egiten da eta, ondorioz, soluzioen arteko aldakortasuna murriztu egiten da. Amaieran, tenperatura oso txikia denean, ia ezinezkoa da soluzio okerragoak onartzea eta, hortaz, uneko soluzioa ez da ia aldatzen.
 
-Grafikan ere ikus daiteke algoritmoak arinegi konbergitzen duela. Hori ez gertatzeko, egin daitekeena azken tenperatura handiagoa jartzea da.
+Grafikan ere ikus daiteke algoritmoak arinegi konbergitzen duela. Hori ez gertatzeko, azken tenperatura handiagoa jarri daiteke.
 
-Ikusitako algoritmoetan soluzioen onarpena probabilistikoa da; alabaina, suberaketa simulatuaren kontzeptua era deterministan ere inplementa daiteke. Honen adibidea da Deabru Algoritmoa~\cite{pepper2000} -- \textit{Demon Algorithm}, ingelesez --. Hasiera batean Creutz-ek algoritmoa simulazio molekularrak egiteko proposatu zuen, baina optimizazio problemak ebazteko ere egoki daiteke. 
+Ikusitako algoritmoetan soluzioen onarpena probabilistikoa da; alabaina, suberaketa simulatuaren kontzeptua era deterministan ere inplementa daiteke. Honen adibidea da Deabru Algoritmoa~\cite{pepper2000} -- \textit{Demon Algorithm}, ingelesez --. Hasiera batean Creutz-ek  simulazio molekularrak egiteko proposatu zuen algoritmo hau, baina optimizazio problemak ebazteko ere egoki daiteke. 
 
-Algoritmoan soluzioak onartuko direnetz erabakitzeko tenperatura erabili beharrean \zkk deabru\skk\ bat erabiltzen da; deabru honek uneoro $E_D$ energia du. Soluzio bakoitza aztertzerakoan, subaeraketa simulatuan legez, $\Delta E$ kalkulatzen da eta, une horretan $\Delta E>E_D$ bada, soluzioa onartzen da -- suberaketa simulatuan bezala, $\Delta E<0$ denean soluzioa onartzen da --. Algoritmoaren gakoa deabruaren energia eguneratzean datza; soluzio bat onartzen den bakoitzean deabruaren energia $E_D + \Delta E$ izatera pasatzen da, hau da, \zkk sistemaren\skk\ energia aldaketa deabruak jasotzen du. Onartutako soluzioa hobea denean, deabruak energia irabazten du eta, txarragoa denean, berriz, energia galtzen du -- energia nahiko baldin badu, betiere --. Algoritmo honen abantaila sinpletasuna da, Boltzmann distribuzioa ebaluatzeko beharrik ez baitugu.
+Algoritmoan soluzioak onartuko direnetz erabakitzeko, tenperatura erabili beharrean \zkk deabru\skk\ bat erabiltzen da; deabru honek uneoro $E_D$ energia kopurua dauka. Soluzio bakoitza aztertzerakoan, subaeraketa simulatuan legez, $\Delta E$ kalkulatzen da eta, une horretan $\Delta E>E_D$ bada, soluzioa onartzen da. Gainera, suberaketa simulatuan bezala, $\Delta E<0$ denean ere soluzioa onartu egiten da. 
+
+Algoritmoaren gakoa deabruaren energia eguneratzean datza; soluzio bat onartzen den bakoitzean, deabruaren energia $E_D + \Delta E$ izatera pasatzen da, hau da, \zkk sistemaren\skk\ energia aldaketa deabruak jasotzen du. Onartutako soluzioa hobea denean, deabruak energia irabazten du eta, okerragoa denean, berriz, energia galtzen du -- energia nahikoa baldin badu, betiere --. Algoritmo honen abantaila sinpletasuna da, Boltzmann distribuzioa ebaluatzeko beharrik ez baitago.
 
 \subsubsection{Tabu bilaketa}
 
-Tabu bilaketa -- \textit{tabu search}, inglesez -- izango da, ziurrenik , bilaketa lokalaren aldaera hedatuena. Duen eraginkortasuna eta sinpletasuna dela eta, optimizazio konbinatorioan asko erabiltzen den eta, zenbait problematan, emaitzarik onenak ematen dituen metaheuristikoa da.
+Tabu bilaketa -- \textit{tabu search}, inglesez -- izango da, ziurrenik , bilaketa lokalaren aldaerarik hedatuena. Duen eraginkortasuna eta sinpletasuna dela eta, optimizazio konbinatorioan asko erabiltzen da eta, zenbait problematan, emaitza onenak ematen dituen metaheuristikoa da.
 
-1977an lehenengo aldiz proposatuta, tabu bilaketak, optimo lokaletan trabaturik ez geratzeko, bilaketa soluzio txarragoetara bideratzea baimentzen du. Neurri honek prozesua amaigabeko ziklo batean sartzeko arriskua sortzen du, egindako bidea berregiteko aukera baitago. Arazo hori saihesteko, tabu bilaketak, bisitatutako soluzioen historikoa gordetzen du.
+1977an proposatu zen lehenengo aldiz eta optimo lokaletan trabaturik ez geratzeko, bilaketa soluzio okerragoetara bideratzea baimentzen du. Estrategia hau hutsean erabiliz gero, prozesua amaigabeko ziklo batean sartzeko arriskua dago, egindako bidea behin eta berriro errepikatzeko aukera baitago. Beraz, arazo hau saihesteko, tabu bilaketak, bisitatutako soluzioen historikoa gordetzen du.
 
 \begin{ifalgorithm}[t]
 \begin{ifpseudo}{Tabu Bilaketa}
@@ -991,28 +1001,28 @@ Tabu bilaketa -- \textit{tabu search}, inglesez -- izango da, ziurrenik , bilake
 \end{ifalgorithm}
 
 
-Oinarrizko tabu bilaketa, bilaketa lokal gutiziatsuan oinarritzen da, non \zkk tabu zerrenda\skk\ deitzen den bisitatutako soluzio multzo bat gordeko den uneoro. Urrats bakoitzean tabu ez diren -- bideragarriak diren, alegia -- inguruneko soluzioetatik onena aukeratuko dugu, helburu funtzioa hobetzen duen ala ez kontutan hartu barik. Tabu ez diren soluzioak bakarrik hartzen ditugunez aintzat, ez da ziklorik sortuko.
+Oinarrizko tabu bilaketa, bilaketa lokal gutiziatsuan oinarritzen da, baina \zkk tabu zerrenda\skk\ deituriko bisitatutako soluzioen multzoa gordeko da uneoro. Urrats bakoitzean tabu ez diren -- bideragarriak diren, alegia -- inguruneko soluzioetatik onena aukeratuko dugu, helburu funtzioa hobetzen duen ala ez kontutan hartu barik. Tabu ez diren soluzioak bakarrik hartzen ditugunez aintzat, ez da ziklorik sortuko.
 
-Bisitatutako soluzio guztiak gordetzen dituen zerrenda mantentzea ez da bideragarria; hori dela eta, tabu zerrendan azkenengoz bisitatutako soluzioak bakarrik gordeko ditugu. Algoritmoaren iterazio bakoitzean, aukeratutako soluzioa tabu zerrendara gehituko da, eta zerrendatik soluzio bat aterako da -- tabu zerrendak FIFO pilak dira, hau da, sartzen lehendabizikoa den elementua ateratzeko ere lehendabizikoa izango da--. Azken soluzioak bakarrik gordetzen direnez tabu zerrendari epe laburreko memoria esaten zaio.
+Alabaina, bisitatutako soluzio guztiak gordetzen dituen zerrenda mantentzea ez da bideragarria; hori dela eta, tabu zerrendan bisitatutako azkeneko soluzioak bakarrik gordeko ditugu. Algoritmoaren iterazio bakoitzean, aukeratutako soluzioa tabu zerrendan sartuko da, eta zerrendatik soluzio bat aterako da -- tabu zerrendak FIFO pilak dira, hau da, sartzen lehendabizikoa den elementua ateratzen ere lehendabizikoa izango da--. Bisitatutako azken soluzioak bakarrik gordetzen direnez tabu zerrendari epe laburreko memoria esaten zaio.
 
-Tabu zerrendan soluzioak gordetzen baditugu, eta zerrendaren tamaina $k$ bada $k$ tamainako zikloak ekiditeko gai izango gara. Edonola ere, eraginkortasuna dela eta, soluzio osoak maneiatzeak kostu handia lekarke. Hori dela eta, aukera egokiagoak ere aurki ditzakegu literaturan, atributuak gordetzea, besteak beste. Atributuak soluzioen zatiak, mugimenduak, edo soluzioen arteko desberdintasunak izan ohi dira. Soluzioen elementu hauek ebazten ari garen problemaren menpekoak dira eta, hortaz, aukera ugari proposatu daitezke, kasu bakoitzeko tabu lista eredu desberdin bat inplementatuz. Ikus dezagun adibide bat.
+Bigarren estrategia mota honekin, tabu zerrendaren tamaina $k$ bada $k$ tamainako zikloak ekiditeko gai izango gara. Edonola ere, eraginkortasuna dela eta, soluzio osoak maneiatzeak kostu handia ekar dezake. Hori dela eta, aukera egokiagoak ere aurki ditzakegu literaturan, soluzioen atributu batzuk soilik gordetzea, adibidez. Atributuak soluzioen zatiak, ezaugarriak, edo soluzioen arteko desberdintasunak izan ohi dira. Hauek, ebazten ari garen problemaren menpekoak dira eta, hortaz, aukera ugari proposatu daitezke, kasu bakoitzerako tabu lista eredu desberdin bat inplementatuz. Ikus dezagun adibide bat.
 
 \begin{tcolorbox}
 \begin{ifexample}
-Demagun permutazioetan oinarritutako problema batean tabu bilaketa bat inplementatu nahi dugula. Bilaketa lokalak {\em 2-opt} ingurunea erabiltzen badu, soluzio batetik bestera mugitzeko $i$ eta $j$ posizioak trukatuko ditugu. Era honetan, tabu zerrendan bi posizio hauek gorde ditzakegu, alderantzizko trukaketa tabu bihurtuz. Esate baterako, uneko soluzioa $[13245]$ bada eta $[31245]$ soluziora mugitzen bagara, hurrengo urratsetan lehenengo eta bigarren posizioak trukatzea debekatuko dugu. Problemaren arabera, beste irizpide batzuk erabil genitzake. Adibide gisa, adibidean lehenengo posizioan $1$a eta bigarrenean $3$a egotea tabu egin genezake.
+Demagun permutazioetan oinarritutako problema batean tabu bilaketa bat inplementatu nahi dugula. Bilaketa lokalak {\em 2-opt} ingurunea erabiltzen badu, soluzio batetik bestera mugitzeko $i$ eta $j$ posizioak trukatuko ditugu. Era honetan, tabu zerrendan trukatzen ditugun bi posizioak gorde ditzakegu, alderantzizko trukaketa tabu bihurtuz. Esate baterako, uneko soluzioa $[13245]$ bada eta $[31245]$ soluziora mugitzen bagara, hurrengo urratsetan lehenengo eta bigarren posizioak trukatzea debekatua izango dugu. Problemaren arabera, beste irizpide batzuk erabil genitzake. Adibide gisa, lehenengo posizioan $1$a eta bigarrenean $3$a egotea debekatu genezake.
 \end{ifexample}
 \end{tcolorbox}
 
-Soluzioen atributuak erabiltzen ditugunean memoria gutxiago behar dugu eta, hortaz, tabu zerrenda handiagoak erabil ditzakegu; edonola ere, aintzat hartzekoa da estrategia honekin tabu zerrenda baino txikiagoak diren zikloak ager daitezkeela. Horrez gain, diseinatutako atributuak oso zehatzak izan behar dira, bisitatu gabeko soluzio onak ezabatu ez ditzagun. Ildo honetan \textit{aspiration criteria} deritzen irizpideak erabili ohi dira bilaketa prozesuan soluzioak onartzeko, tabu izan arren. Esate baterako, uneko soluziotik, tabu den mugimendu bat erabiliz orain arte topatutako soluziorik onena baino hobea den soluzio bat lortzen badugu, soluzio horretara pasatuko gara.
+Soluzioen atributuak erabiltzen ditugunean memoria gutxiago behar dugu eta, hortaz, tabu zerrenda handiagoak erabil ditzakegu; edonola ere, aintzat hartzekoa da estrategia honekin tabu zerrenda baino txikiagoak diren zikloak ager daitezkeela. Horrez gain, diseinatutako atributuak oso zehatzak izan behar dira, bisitatu gabeko soluzio onak baztertu ez ditzagun. Ildo honetan \textit{aspiration criteria} deritzen irizpideak erabili ohi dira bilaketa prozesuan tabu  diren soluzioak onartzeko. Esate baterako, uneko soluziotik, tabu den mugimendu bat erabiliz orain arte topatutako soluziorik onena topatzen badugu, soluzio horretara pasatuko gara.
 
-Tabu zerrendaren tamainak, tabu bilaketaren portaera definitzen du; txikia baldin bada, espazioko eremu txikietan zentratuko da; handia bada, berriz, algoritmoak eremu zabalagoetara bultzatuko du bilaketa, soluzio asko tabu izango baitira. Ohikoena, lista tamaina aldakor bat erabiltzea izaten da, algoritmoaren portaera kasu bakoitzeko beharretara egokitzeko.
+Tabu zerrendaren tamainak, tabu bilaketaren portaera definitzen du; txikia baldin bada, espazioko eremu txikietan zentratuko da; handia bada, berriz, algoritmoak eremu zabalagoetara bideratuko du bilaketa, soluzio asko tabu izango baitira. Ohikoena, lista tamaina aldakor bat erabiltzea da, algoritmoaren portaera kasu bakoitzeko beharretara egokitu ahal izateko.
 
-Tabu zerrendaz gain, bestelako aukera konplexuagoak, ere proposatu dira. Epe motzeko memoria erabiltzeaz gain, bilaketa prozesuan jasotako informazioa ere oso baliotsua izan daiteke algoritmoa gidatzeko. Informazio hau epe erdiko edota epe luzeko memorian gorde daiteke. Lehendabiziko kasuan soluzio onenen informazioa bakarrik gordeko dugu, bilaketa areagotzeko asmoarekin. Bigarren kasuan, berriz, bilaketa osoan soluzioen osagaien frekuentziak gordeko ditugu; frekuentzia hauek bisitatu ez ditugun eremuei antzemateko erabil daitezke -- hau da, bilaketa dibertsifikatzeko --.
+Tabu zerrendaz gain, bestelako aukera konplexuagoak ere proposatu dira. Epe motzeko memoria erabiltzeaz gain, bilaketa prozesuan zehar jasotako informazioa ere oso baliotsua izan daiteke algoritmoa gidatzeko. Informazio hau epe erdiko edota epe luzeko memorian gorde daiteke. Lehendabiziko kasuan soluzio onenen informazioa bakarrik gordeko dugu, bilaketa areagotzeko asmoarekin. Bigarren kasuan, berriz, bilaketa osoan zehar soluzioen osagaien frekuentziak gordeko ditugu; frekuentzia hauek bisitatu ez ditugun eremuei atzemateko erabil daitezke -- hau da, bilaketa dibertsifikatzeko --.
 
 
 \begin{tcolorbox}
 \begin{ifexample}
-TSP-rako soluzioak eraikitzeko hiri bakoitzetik zein hirira mugituko garen erabaki behar dugu. Algoritmo eraikitzaile tipikoan erabaki hori kostu matrizea begiratuz hartzen da, uneko hiritik bisitatu gabeko gertuen dagoen hira aukeratuz. Era berean, epe erdiko eta epe luzeko memoriak matrize karratu batean inplementa ditzakegu. Matrize hauetan, bisitatutako zenbat soluzioetan $i$ hiritik $j$ hirira joaten garen gordeko dugu. Epe erdiko memorian azken $k$ soluzio onenen informazioa bakarrik gordeko dugu, areagotze prozesuan gehien erabili direnak finkatzeko eta bilaketa falta diren loturetan zentratzeko. Epe luzeko memorian, berriz, bisitatu ditugun soluzio guztien informazioa gordeko dugu. Era honetan, bilaketa esploratu gabeko eremuetara eraman nahi badugu, gutxien erabilitako loturak erabiliz soluzioak sor ditzakegu, bilaketa prozesua bertatik abiatzeko.
+TSP-rako soluzioak eraikitzeko, hiri bakoitzetik zein hirira mugituko garen erabaki behar dugu. Algoritmo eraikitzaile tipikoan, erabaki hori kostu matrizea begiratuz hartzen da, uneko hiritik bisitatu gabeko hirietatik gertuen dagoena aukeratuz. Era berean, epe erdiko eta epe luzeko memoriak matrize karratu batean inplementa ditzakegu. Matrize hauetan, bisitatutako zenbat soluzioetan $i$ hiritik $j$ hirira joaten garen gordeko dugu. Epe erdiko memorian azken $k$ soluzio onenen informazioa bakarrik gordeko dugu, areagotze prozesuan gehien erabili direnak finkatzeko eta bilaketa falta diren loturetan zentratzeko. Epe luzeko memorian, berriz, bisitatu ditugun soluzio guztien informazioa gordeko dugu. Era honetan, bilaketa esploratu gabeko eremuetara eraman nahi badugu, gutxien erabilitako loturak erabiliz soluzioak sor ditzakegu, bilaketa prozesua bertatik abiatzeko.
 \end{ifexample}
 \end{tcolorbox}
 
@@ -1020,17 +1030,17 @@ TSP-rako soluzioak eraikitzeko hiri bakoitzetik zein hirira mugituko garen eraba
 
 \subsection{Optimizazio problemen \zkk itxura\skk}
 
-Bilaketa lokalean uneko soluziotik honen inguruan dagoen soluzio batera mugitzen gara beti, hau da, soluzio bakoitzetik zenbait soluzioetara mugi gaitezke. Hori dela eta, bilaketa espazioa grafo baten bidez adieraz daiteke non erpinak soluzioak dira eta ertzek mugimendu posibleak adierazte dituen; \ref{fig:local_optimum} irudiak horrelako grafo bat adierazten du.
+Bilaketa lokalean uneko soluziotik honen inguruan dagoen soluzio batera mugitzen gara beti, hau da, soluzio bakoitzetik soluzio kopuru mugatu batetara mugi gaitezke soilik. Hori dela eta, bilaketa espazioa grafo baten bidez adieraz daiteke, non erpinak soluzioak diren eta ertzek mugimendu posibleak adierazten dituzten; \ref{fig:local_optimum} irudiak horrelako grafo bat adierazten du.
 
-Bilaketa espazioaren definizioari soluzioen ebaluazioa gehitzen badiogu optimizazio problemaren \zkk itxura\skk\ -- \textit{landscape}-a, ingelesez -- daukagu. Problemaren itxuraren eragina berebizikoa da algoritmoen performantzian eta, beraz, algoritmoak diseinatzerakoan kontuan hartu beharreko elementua da. Zentsu horretan, aintzat hartzekoa da problemaren arabera ez ezik, \textit{landscape}-a problema instantzia konkretuen arabera ere alda daitekeela.
+Bilaketa espazioaren definizioari soluzioen ebaluazioa gehitzen badiogu, optimizazio problemaren \zkk itxura\skk\ -- \textit{landscape}-a, ingelesez -- daukagu. Problemaren itxuraren eragina berebizikoa da algoritmoen performantzian eta, beraz, algoritmoak diseinatzerakoan kontuan hartu beharreko elementua da. Zentzu horretan, aintzat hartzekoa da problema motaren arabera ez ezik, \textit{landscape}-a problema instantzia konkretuen arabera ere alda daitekeela.
 
-Soluzio bakarrean oinarritzen diren algoritmoekin amaitzeko bilaketa espazioaren \textit{landscape}-a eraldatzen dituzten algoritmoak aztertuko ditugu. Zehazki, bi algoritmo ikusiko ditugu. Lehenengoak, VNS-ak, ingurune definizio ezberdinak erabiltzen ditu optimo lokaletatik ateratzeko. Bigarrenak, berriz, helburu funtzio berriak sortzen ditu optimo lokalen kopurua murriztekotan.
+Soluzio bakarrean oinarritzen diren algoritmoekin amaitzeko, bilaketa espazioaren \textit{landscape}-a eraldatzen dituzten algoritmoak aztertuko ditugu. Zehazki, bi algoritmo ikusiko ditugu. Lehenengoak, VNS-ak, ingurune definizio ezberdinak erabiltzen ditu optimo lokaletatik ateratzeko. Bigarrenak, berriz, helburu funtzio berriak sortzen ditu optimo lokalen kopurua murrizteko.
 
 \subsubsection{Variable Neighborhood Search algoritmoa}
 
-Bilaketa lokalean optimo lokal batean trabaturik gelditzen gara, definizioz bere ingurunean helburu funtzioa hobetzen duen soluziorik ez dagoelako baina, zer gertatuko litzateke ingurune definizioa aldatuko bagenuke?. Adibide gisa, demagun optimizazio problema bat dugula non soluzioak permutazioen bidez kodetzen ditugun. Bilaketa lokala aplikatzeko \textit{2-opt} operadorea erabiliko dugu -- hau da, \textit{swap} eragiketan oinarritutako ingurunea --. Izan bedi $[1432]$ soluzioa, ingurune eta problema honetarako optimo lokala dena, hau da, edozein bi posizio trukatuz lortutako soluzioak txarragoak dira. Txertaketan oinarritzen den ingurunea erabiliz \textit{2-opt} ingurunean ez dauden soluzioak lor ditzakegu -- lehenengo elementua azken elementuaren ostean txertatuz lortzen den $[4321]$ soluzioa, esate baterako --. Beraz, gerta daiteke \textit{2-opt} ingururako optimo lokala den gure soluzioa txertaketa erabiltzen duen ingurunerako optimoa ez izatea.
+Bilaketa lokalean optimo lokal batean trabaturik gelditzen gara, definizioz bere ingurunean helburu funtzioa hobetzen duen soluziorik ez dagoelako. Baina, zer gertatuko litzateke ingurune definizioa aldatuko bagenu?. Adibide gisa, demagun optimizazio problema batean soluzioak permutazioen bidez kodetzen ditugula. Bilaketa lokala aplikatzeko \textit{2-opt} operadorea erabiliko dugu -- hau da, \textit{swap} eragiketan oinarritutako ingurunea --. Izan bedi $[1432]$ soluzioa, ingurune eta problema honetarako optimo lokala dena. Definizioz, soluzio honen edozein bi posizio trukatuz lortutako soluzioak okerragoak izango dira. Alabaina, txertaketan oinarritzen den ingurunea erabiliz \textit{2-opt} ingurunean ez dauden soluzioak lor ditzakegu -- lehenengo elementua azken elementuaren ostean txertatuz lortzen den $[4321]$ soluzioa, esate baterako --. Beraz, gerta daiteke \textit{2-opt} ingururako optimo lokala den gure soluzioa txertaketak definitzen duen ingurunerako optimoa ez izatea.
 
-Ideia hau \textit{Variable Neighborhood Descent} (VND) algoritmoan erabiltzen da bilaketa lokala optimo lokaletan trabaturik gera ez dadin. \ref{alg:VND} algoritmoan VND-aren sasikodea ikus daiteke. 
+Ideia hau \textit{Variable Neighborhood Descent} (VND) algoritmoan erabiltzen da bilaketa lokala optimo lokaletan trabaturik geratzea ekiditeko. \ref{alg:VND} algoritmoan VND-aren sasikodea ikus daiteke. 
 
 \begin{ifalgorithm}[t]
 \begin{ifpseudo}{VND algoritmoaren sasikodea}
@@ -1051,11 +1061,11 @@ Ideia hau \textit{Variable Neighborhood Descent} (VND) algoritmoan erabiltzen da
 \caption{VND algoritmoaren sasikodea}\label{alg:VND}
 \end{ifalgorithm}
 
-Algoritmoan ikusten den bezala, VND-an ingurune funtzio bakarra izan beharrean multzo bat daukagu. Lehenengo funtzioarekin hasita, iterazio bakoitzean uneko soluzioaren inguruneko soluziorik onena bilatzen dugu. Inguruneko soluzio guztiak txarragoak badira -- soluzioa uneko ingurunerako optimo lokala bada, alegia -- hurrengo ingurune funtziora pasatzen gara; ingurune funtzio gehiagorik egon ezean bilaketa amaitzen da. Iterazio batean inguruneko soluzio berri batera pasatzen garen bakoitzean, berriro hasierako ingurune definiziora bueltatzen gara.
+Algoritmoan ikusten den bezala, VND-an ingurune funtzio bakarra izan beharrean hauen multzo bat dago. Lehenengo ingurunea erabiliz, uneko soluzioaren ingurunea arakatu eta soluzio onena aukeratuko dugu. Inguruneko soluzio guztiak okerragoak direnean -- topatutako soluzioa uneko ingurunerako optimo lokala bada, alegia -- hurrengo ingurune definiziora pasatuko gara; honela, ingurune funtzio guztiak erabili arte. Gainera, iterazio bakoitzean, inguruneko soluzio berri batera pasatzen garenean, berriro ere hasierako ingurune definiziora itzuliko gara.
 
 Bilaketa amaitzeko baldintza kontutan hartuz, algoritmo honek itzultzen duen soluzioa \textit{ingurune definizio guztietarako optimo lokala} izango da.
 
-\textit{Variable Neighborhood Search} algoritmoa VND-aren hedapen bat da, non iterazio bakoitzean, uneko ingurune definizioa erabiliz bilaketa lokala amaiera arte eramaten den. Hau da, helburu funtzioa hobetzen duen soluzio bat topatu arren uneko ingurune definizioa mantentzen dugu optimo lokal batera heldu arte. Behin optimo lokal batean, hurrengo ingurune definiziora mugitzen gara, VND-an legez, lortutako soluzioa ingurune guztietarako optimo lokala izan arte. \ref{alg:VNS} algoritmoak VNS-aren sasikodea erakusten du.
+\textit{Variable Neighborhood Search} algoritmoa VND-aren hedapen bat da, non iterazio bakoitzean, uneko ingurune definizioa erabiliz, bilaketa lokala amaiera arte eramaten den. Hau da, helburu funtzioa hobetzen duen soluzio bat topatu arren, uneko ingurune definizioa mantentzen dugu optimo lokal batera heldu arte. Behin optimo lokal batera heldutakoan, hurrengo ingurune definizioa erabiltzera pasatuko gara, VND-an legez, lortutako soluzioa ingurune guztietarako optimo lokala izan arte. \ref{alg:VNS} algoritmoak VNS-aren sasikodea erakusten du.
 
 \begin{ifalgorithm} [t]
 \begin{ifpseudo}{Oinarrizko VNS algoritmoaren sasikodea}
@@ -1081,9 +1091,9 @@ Bilaketa amaitzeko baldintza kontutan hartuz, algoritmo honek itzultzen duen sol
 
 \subsection{\textit{Smoothing} algoritmoak}
 
-Optimizatu behar dugun funtzioak optimo lokal asko dituenean, bilaketa lokalak ez dira oso metodo egokiak, globala ez den optimo batean trabaturik gelditzeko probabilitatea oso altua delako. Leuntze-metodoetan -- \textit{smoothing methods}, ingelesez -- iterazio bakoitzean jatorrizko helburu funtzioa eraldatu -- leundu -- egiten da, optimo lokal kopurua gutxitzeko asmoz; helburu funtzio berria erabiliz bilaketa lokala aplikatzen da. Behin bilaketa trabaturik -- optimo lokal batean --, helburu funtzioa berriro aldatzen da, aurreko iterazioan baino gutxiago leunduz. Helburu funtzio berri honekin eta aurreko iterazioan lortutako optimoarekin bilaketa lokala aplikatzen da, optimo berri bat lortuz. 
+Optimizatu behar dugun funtzioak optimo lokal asko dituenean, bilaketa lokalak ez dira oso metodo egokiak, globala ez den optimo batean trabaturik gelditzeko probabilitatea oso altua delako. Leuntze-metodoetan -- \textit{smoothing methods}, ingelesez -- iterazio bakoitzean jatorrizko helburu funtzioa eraldatu -- leundu -- egiten da, optimo lokal kopurua gutxitzeko asmoz; helburu funtzio berria erabiliz, bilaketa lokala aplikatzen da. Bilaketa trabaturik geratzen denean -- optimo lokal batean --, helburu funtzioa berriro aldatzen da, aurreko iterazioan baino gutxiago leunduz. Helburu funtzio berri honekin eta aurreko iterazioan lortutako optimoarekin, bilaketa lokala aplikatzen da, optimo berri bat lortuz. 
 
-Iterazioz iterazioa leuntze-maila geroz eta txikiago eginez, azkenengo iterazioan problemaren jatorrizko helburu funtzioa erabiliko dugu, problemarako soluzioa topatzeko. 
+Iterazioz iterazioa leuntze-maila geroz eta txikiagoa bihurtuz, azken iterazioan problemaren jatorrizko helburu funtzioa erabiliko dugu, problemarako soluzioa topatzeko. 
 
 
 \begin{figure}[t]
@@ -1093,7 +1103,7 @@ Iterazioz iterazioa leuntze-maila geroz eta txikiago eginez, azkenengo iterazioa
 \label{fig:smoothing}
 \end{figure}
 
-Helburu funtzioa nola leundu problemaren araberakoa da. Edonola ere, kasu guztietan algoritmo inplementatu ahal izateko leuntze-parametro bat beharko dugu. Parametro hau handia denean, helburu funtzioa asko leunduko dugu; parametroa 1 denean, berriz, helburu funtzioa ez da bat ere aldatuko. Hau aintzat hartuz, \ref{alg:smooth} algoritmoan metodoaren sasikodea definituta dago. Ikus dezagun adibide bat.
+Helburu funtzioa nola leundu problemaren araberakoa erabakia da. Edonola ere, kasu guztietan, algoritmoa inplementatu ahal izateko leuntze-parametro bat definitu beharko dugu. Parametro hau handia denean, helburu funtzioa asko leunduko dugu; parametroa 1 denean, berriz, helburu funtzioa ez da bat ere aldatuko. Hau aintzat hartuz, \ref{alg:smooth} algoritmoan metodoaren sasikodea definituta dago. Ikus dezagun adibide bat.
 
 \begin{ifalgorithm}[t]
 \begin{ifpseudo}{\textit{Smoothing} metodoen sasikodea}
@@ -1115,7 +1125,7 @@ Helburu funtzioa nola leundu problemaren araberakoa da. Edonola ere, kasu guztie
 \begin{tcolorbox}
 \begin{ifexample}
 
-TSP-an helburu funtzioa kalkulatzeko distantzia matrizea erabiltzen dugu. Matrize horretan edozein bi hirien arteko distantzia jasota dugu. Helburu funtzioa leuntzeko matrizea eralda daiteke, distantzia guztiak batez-besteko distantziara gerturatuz, adibidez. Demagun ondoko matrizea definitzen dugula:
+TSP-an helburu funtzioa kalkulatzeko distantzia matrizea erabiltzen dugu. Matrize horretan edozein bi hirien arteko distantzia dago jasota. Helburu funtzioa leuntzeko, matrizea hau eralda daiteke, distantzia guztiak batez-besteko distantziara hurbilduz, adibidez. Demagun ondoko matrizea definitzen dugula:
 
 \begin{align}
 \renewcommand*{\arraystretch}{1.5}
@@ -1126,7 +1136,7 @@ d_{ij}(\alpha) = \left\{
 \end{array}\right.
 \end{align}
 
-\noindent non $\bar{d}$ distantzien batez-bestekoa eta $d_{ij}$ jatorrizko matrizearen elementuak diren. Distantzia matrizea normalizaturik badago -- distantzia guztiak 1 edo txikiagoak badira\footnote{Kontutan hartu behar da, normalizatuta ere soluzio optimoa, hau da, balio minimoa duena, ez dela aldatzen}, alegia -- $\alpha$ parametroa oso handia denean distantzia guztiak batez-bestekoari hurbiltzen dira, $0\leq (d_{ij} - \bar{d}),(\bar{d} - d_{ij})<1$ baita. Limite horretan soluzio tribiala da, soluzio guztiak berdinak baitira. 
+\noindent non $\bar{d}$ distantzien batez-bestekoa eta $d_{ij}$ jatorrizko matrizearen elementuak diren. Distantzia matrizea normalizatuta badago -- distantzia guztiak 1 edo txikiagoak badira\footnote{Kontutan hartu behar da, matrizea normalizatuta ere soluzio optimoa, hau da, balio minimoa duena, ez dela aldatzen} -- $\alpha$ parametroa oso handia denean distantzia guztiak batez-bestekoari hurbilduko zaizkio, $0\leq (d_{ij} - \bar{d}),(\bar{d} - d_{ij})<1$ baita. Muturreko kasu horretan, soluzioa tribiala da, soluzio guztiak berdinak baitira. 
 
 Iterazioz iterazio $\alpha$ parametroa gutxituko dugu, 1 baliora heldu arte. Goiko ekuazioan ikus daitekeen bezala, $\alpha=1$ denean distantzia matrizea jatorrizkoa da.
 \end{ifexample}

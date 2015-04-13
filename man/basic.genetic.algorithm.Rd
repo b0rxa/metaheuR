@@ -52,5 +52,7 @@ The first three arguments in the selection functions have to be a list with the 
 }
 \seealso{
 \code{\link{tournament.selection}}
+
+Other Evoluationary algorithms: \code{\link{basic.eda}}
 }
 

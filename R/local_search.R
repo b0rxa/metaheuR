@@ -50,8 +50,10 @@ basic.local.search<-function (evaluate, initial.solution, neighborhood, selector
       current.solution <- selection$solution
       current.evaluation <- selection$evaluation
       resources <- add.consumed(resources , it = 1)
-      stop <- is.finished(resources)
+      stop <- is.finished(resources)  
+      t0<-Sys.time()
       reset.neighborhood(neighborhood = neighborhood , solution = current.solution)
+      add.consumed(resources , t = as.numeric(Sys.time()-t0))
     }else{
       stop <- TRUE
     }
@@ -107,7 +109,7 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
                                       neighborhood = neighborhood , selector = selector , 
                                       do.log = do.log , verbose = verbose ,
                                       non.valid = non.valid , valid = valid , 
-                                      correct = correct , resources = resources)
+                                      correct = correct , resources = resources , ...)
   ## Extract the best solution and its evaluation, as well as the remaining resources
   best.solution <- optima(search.result)[[1]]
   best.evaluation <- evaluation(search.result)
@@ -126,7 +128,7 @@ multistart.local.search<-function (evaluate , generate.solution , neighborhood, 
                                         neighborhood = neighborhood , selector = selector , 
                                         do.log = do.log , verbose = verbose ,
                                         non.valid = non.valid , valid = valid , 
-                                        correct = correct , resources = resources)
+                                        correct = correct , resources = resources , ...)
     ## If we have a better solution, update the current best
     if (evaluation(search.result) < best.evaluation){
       best.solution <- optima(search.result)[[1]]
@@ -184,7 +186,7 @@ iterated.local.search<-function (evaluate , initial.solution , neighborhood, sel
                                       neighborhood = neighborhood , selector = selector , 
                                       do.log = do.log , verbose = verbose ,
                                       non.valid = non.valid , valid = valid , 
-                                      correct = correct , resources = resources)
+                                      correct = correct , resources = resources , ...)
   ## Extract the best solution and its evaluation, as well as the remaining resources
   current.solution <- optima(search.result)[[1]]
   current.evaluation <- evaluation(search.result)
@@ -204,7 +206,7 @@ iterated.local.search<-function (evaluate , initial.solution , neighborhood, sel
                                         neighborhood = neighborhood , selector = selector , 
                                         do.log = do.log , verbose = verbose ,
                                         non.valid = non.valid , valid = valid , 
-                                        correct = correct , resources = resources)
+                                        correct = correct , resources = resources , ...)
     ## If we have a better solution, update the current best
     if (evaluation(search.result) < best.evaluation){
       best.solution <- optima(search.result)[[1]]

@@ -19,7 +19,7 @@ tournament.selection(population, evaluation, size = 2, ...)
 This function implements the tournament selection.
 }
 \details{
-This function takes random pairs of individuals and selects the best one
+This function takes random pairs of individuals and selects the best one. If the population contains no individual, \code{NULL} is returned. If there is only one individual, it is returned \code{size} times.
 }
 \examples{
 url <- system.file("bays29.xml.zip", package = "metaheuR")

@@ -15,7 +15,7 @@ binary.mutation(solution, ratio, ...)
 This function takes random positions of a logical vector and changes their value
 }
 \examples{
-F.sol <- rep(F , 10)
+F.sol <- rep(FALSE , 10)
 binary.mutation (F.sol , ratio = 0.1)
 binary.mutation (F.sol , ratio = 0.1)
 binary.mutation (F.sol , ratio = 0.5)

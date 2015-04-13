@@ -8,3 +8,9 @@ Documents
 *.tex
 *.synctex.gz
 Dokumentazioa/cache
+Dokumentazioa/Probak.R
+vignettes/*cache
+vignettes/*back
+2014_2015
+.Rbuildignore
+.gitignore

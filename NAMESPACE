@@ -7,7 +7,9 @@ exportClasses(
   FlipNeighborhood,
   ExchangeNeighborhood,
   InsertNeighborhood,
-  MHResult
+  MHResult,
+  MallowsModel,
+  UnivariateMarginals
 )
 
 exportMethods(
@@ -68,6 +70,12 @@ export(
   insertNeighborhood,
   basic.genetic.algorithm,
   tournament.selection,
+  roulette.selection,
+  elitist.selection,
   binary.mutation,
-  k.point.crossover
+  factor.mutation,
+  k.point.crossover,
+  basic.eda,
+  mallowsModel,
+  univariateMarginals
 )

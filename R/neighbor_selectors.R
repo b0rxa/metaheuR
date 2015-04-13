@@ -26,10 +26,12 @@ greedy.selector<-function (neighborhood, evaluate , initial.solution, initial.ev
   best.eval<-initial.evaluation
   improved<-FALSE
   ## Initialize neighborhood with the first solution and then explore the whole neighborhood
+  t0<-Sys.time()
   reset.neighborhood(neighborhood, initial.solution)
+  improved <- FALSE
+  add.consumed(resources , t = as.numeric(Sys.time()-t0))
   while(has.more.neighbors(neighborhood) && !is.finished(resources)){
     ## Get each neighbor and evaluate it
-    ## Note that, 
     t0<-Sys.time()
     new.sol<-next.neighbor(neighborhood)
     if (!valid(new.sol) && non.valid!='ignore'){
@@ -92,8 +94,10 @@ first.improvement.selector<-function (neighborhood, evaluate , initial.solution,
   best.sol<-initial.solution
   best.eval<-initial.evaluation
   ## Initialize neighborhood with the first solution and then explore the whole neighborhood
+  t0<-Sys.time()
   reset.neighborhood(neighborhood, initial.solution)
   improved <- FALSE
+  add.consumed(resources , t = as.numeric(Sys.time()-t0))
   while(has.more.neighbors(neighborhood) && !is.finished(resources) && !improved){
     ## Get each neighbor and evaluate it
     ## Note that, 
