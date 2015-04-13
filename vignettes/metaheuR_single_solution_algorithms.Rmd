@@ -1,0 +1,13 @@
+---
+title: "metaheuR: Single solution algorithms"
+author: "Borja Calvo and Usue Mori"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+
+vignette: >
+  %\VignetteIndexEntry{Single solution algorithms}
+  %\VignetteEngine{knitr::docco_linear}
+  %\usepackage[utf8]{inputenc}
+---
+
+# metaheuR: Single solution algorithms
