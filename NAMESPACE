@@ -75,6 +75,7 @@ export(
   binary.mutation,
   factor.mutation,
   k.point.crossover,
+  order.crossover,
   basic.eda,
   mallowsModel,
   univariateMarginals

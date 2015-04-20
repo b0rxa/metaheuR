@@ -16,8 +16,7 @@
 
 k.point.crossover <- function (sol.1 , sol.2 , k=1 , ...){
   
-  ## Parameter control
-  if(!is.vector(sol.1) | !is.vector(sol.2)) stop("This crossover operator is for verctors") 
+  ## Parameter control 
   if (length(sol.1)!=length(sol.2)) stop("The two vectos should be of the same size") 
   
   n <- length(sol.1)
