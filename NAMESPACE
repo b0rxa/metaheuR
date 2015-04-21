@@ -36,7 +36,8 @@ exportMethods(
   resources,
   progress,
   plot.progress,
-  plot.correlation
+  plot.correlation,
+  simulate
 )
 
 export(
