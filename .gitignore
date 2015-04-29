@@ -14,3 +14,4 @@ vignettes/*back
 2014_2015
 .Rbuildignore
 .gitignore
+pruebas.R

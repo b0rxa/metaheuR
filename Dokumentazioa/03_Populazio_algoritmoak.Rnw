@@ -92,7 +92,7 @@ Hortaz, hasierako populazioa sortzean bi aspektu izan behar ditugu kontutan: kal
 
 Populazioa guztiz ausaz sortzen badugu dibertsitatea handia izan arren, badaude beste estrategia batzuk --sasiausazkoak direnak-- dibertstiatea maximizatzeko. Hori dela eta, proposatu dira beste prozedura batzuk populazioak sasi-ausaz sortzeko dibertsitatea maximizatuz. Esate baterako dibertsifikazio sekuentzialean soluzio berri bat onartzeko populazioan dauden soluzioekiko distantzia minimo batera egon behar da. Adibide moduan, demagun 10 tamainako populazio bat sortu nahi dugula non soluzioak 25 tamainako bektore bitarrak diren. Dibertsitatea bermatzeko beraien arteko Hamming distantzia minimoa 10 izan behar dela inposa dezakegu. Jarraian dagoen kodeak horrelako populazioak sortzen ditu:
 
-<<ham_dis , prompt=TRUE, echo=-1 , message=FALSE>>=
+<<ham_dis , prompt=TRUE, echo=-1 , message=FALSE , cache=TRUE>>=
 set.seed(1)
 hamm.distance <- function (v1 , v2){
   d <- sum(v1!=v2)
@@ -106,7 +106,7 @@ rnd.binary <- function(n){
 
 Lehenik, Hamming distantzia neurtzeko eta ausazko bektore bitarrak sortzeko funtzioak sortzen ditugu. Gero, soluzioak asuaz sortzen ditugu eta, distantzia minimoko baldintza bete ezean, deusestatzen dira; prozedura nahi ditugun soluzio kopurua lortu arte exekutatzen da. 
 
-<<seq_divers , prompt=TRUE, message=FALSE>>=
+<<seq_divers , prompt=TRUE, message=FALSE, cache=TRUE>>=
 sol.size <- 25
 pop.size <- 10
 min.distance <- 10
@@ -125,7 +125,7 @@ Hau prozedura ez da bat ere eraginkorra, zenbait kasutan soluzio asko sortu beha
 
 Orain arte dibertsitateari bakarrik erreparatu diogu. Hasierako popuazioaren kalitatea handitu nahi izanez gero, hasieraketa heuristikoak erabil daitezke. Hau lortzeko era sinple bat, GRASP algoritmoetan ausazko soluzioak sortzeko erabiltzen diren prozedurak erabiltzea da. Ikus dezagun adibide bat TSP problemarako; lehenik, Bavierako hirien problema kargatuko dugu.
 
-<<heur_init_1 , prompt=TRUE, echo=-1 , message=FALSE , warning=FALSE>>=
+<<heur_init_1 , prompt=TRUE, echo=-1 , message=FALSE , warning=FALSE, cache=TRUE>>=
 library("metaheuR")
 url <- system.file("bays29.xml.zip" , package = "metaheuR")
 cost.matrix <- tsplib.parser(url)
@@ -133,7 +133,7 @@ cost.matrix <- tsplib.parser(url)
 
 Orain, \code{tsp.greedy} funtzioan oinarrituta ausazko soluzio onak sortzeko funtzio bat definitzen dugu.
 
-<<heur_init_2 , prompt=TRUE, message=FALSE>>=
+<<heur_init_2 , prompt=TRUE, message=FALSE, cache=TRUE>>=
 rnd.sol <- function(cl.size = 5){
   tsp.greedy(cmatrix = cost.matrix , cl.size = cl.size)
 }
@@ -141,14 +141,14 @@ rnd.sol <- function(cl.size = 5){
 
 \code{tsp.greedy} funtzioak TSP-rako algoritmo eraikitzaile bat inplementatzen du; pausu bakoitzean, uneko hiritik zein hirira mugituko garen erabakitzen da. Hiria aukeratzeko gertuen dauden \code{cl.size} hirietatik --5, gure kasuan-- bat ausaz aukeratzen da. Populazioa sortzeko funtzio hau erabiliko dugu.
 
-<<heur_init_3 , prompt=TRUE, message=FALSE>>=
+<<heur_init_3 , prompt=TRUE, message=FALSE, cache=TRUE>>=
 pop.size <- 25
 population <- lapply (1:pop.size , FUN = function(x) rnd.sol())
 @
 
 Hautagaien zerrenda problemaren tamainaraino handitzen badugu, pausu bakoitzean aukera guztietatik bat ausaz hartuko dugu, hots, guztiz ausazkoak diren soluzioak sortuko ditugu. Hau eginda populazioaren kalitatea goiko kodearekin lortutakoa baino txarragoa izango da:
 
-<<heur_init_4 , prompt=TRUE, message=FALSE>>=
+<<heur_init_4 , prompt=TRUE, message=FALSE, cache=TRUE>>=
 rnd.population <- lapply (1:pop.size , 
                           FUN = function(x) rnd.sol(cl.size = ncol(cost.matrix)))
 tsp <- tsp.problem(cost.matrix)
@@ -159,7 +159,7 @@ eval.rnd <- unlist(lapply(rnd.population , FUN = tsp$evaluate))
 
 Bi populazioen ebaluazioak \eng{boxplot} baten bidez aldera dezakegu.
 
-<<plot_heur_vs_rnd , echo = -1 , warning=FALSE, prompt=TRUE , cache=TRUE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=8 , fig.height=4>>=
+<<plot_heur_vs_rnd , echo = -1, cache=TRUE , warning=FALSE, prompt=TRUE , cache=TRUE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=8 , fig.height=4>>=
 library("ggplot2")
 df <- rbind (data.frame (Method = "Heuristic" , Evaluation = eval.heur) , 
              data.frame (Method = "Random" , Evaluation = eval.rnd))
@@ -233,7 +233,7 @@ Badaude zenbait operadore kodeketa klasikoekin erabil daitezkeenak. Ezagunena pu
 
 Operadore hau \code{metaheuR} liburutegian inplementaturik dago, \code{k.point.crossover} funtzioan. Ikus ditzagun adibide batzuk:
 
-<<k_point_cross , prompt=TRUE, echo=-1 , message=FALSE>>=
+<<k_point_cross , prompt=TRUE, echo=-1 , message=FALSE, cache=TRUE>>=
 set.seed(666)
 A.sol <- rep("A" , 10)
 B.sol <- rep("B" , 10)
@@ -250,7 +250,7 @@ Erabiliko dugun puntu kopurua eragin handia izan dezake algoritmoaren performant
 
 Ikusitako operadorea nahiko orokorra da, ia edozen bektoreari aplikatu ahal baitzaio. Hala eta guztiz ere, kodeketa batzuetan operadore bereziak erabil daitezke\cite{gwiazda2006}. Esate baterako, bektore errealak baldin baditugu, bi bektore harturik era ezberdinetan konbina daitezke; adibidez, bataz bestekoa kalkulatuz. Ikus dezagun operadore hau nola inplementa daitekeen R-n:
 
-<<mean_cross , prompt=TRUE, message=FALSE>>=
+<<mean_cross , prompt=TRUE, message=FALSE, cache=TRUE>>=
 mean.crossover <- function (sol1 , sol2){
   new.solution <- (sol1 + sol2) / 2
   return(new.solution)
@@ -267,7 +267,7 @@ Permutazioak ere bektoreak dira baina, kasu honetan, \eng{k point crossover} ope
 
 Nola saihestu daiteke arazo hau? Soluzio sinple bat hauxe da: lehenengo posizioak zuzenean soluzio batetik kopiatzea; besteak zuzenean beste soluziotik kopiatu beharrean, ordena bakarrik erabiliko dugu. Hau da, soluzio berria sortzeko $s_1$-etik lehenengo 3 elementuak kopiatuko ditugu, $123$, eta falta direnak, $45678$, $s_2$-an agertzen den ordenean kopiatuko ditugu, hots, $87654$. Emaitza, beraz, $s^\prime = 12387654$ izango da eta beraz, orain bai, permutazio bat lortu dugu. Era berean, beste soluzio berri bat sor daiteke $s_2$-tik lehenengo hiru posizioak kopiatuz ($876$) eta beste gainontzeko guztiak $s_1$-an duten ordenean kopiatuz ($12345$); beste soluzioa, beraz, $87612345$ izango da. Operadore honi \hgl{Order crossover} deritzo eta \code{metaheuR} liburutegian inplementaturik dago, \code{order.crossover} funtzioan \footnote{Funtzio honetan inplementatuta dagoena \eng{2-point crossover} operadorea da. Hau da, bi puntu erabiltzen dira eta, soluzioak eraikitzeko, bi puntuen artean dagoena soluzio batetik kopiatu ondore, beste gainontzeko elementuak beste soluzioan duden ordenean erabiltzen dira.}.
 
-<<order_cross , prompt=TRUE, message=FALSE , echo=-1 , warning=FALSE>>=
+<<order_cross , prompt=TRUE, message=FALSE , echo=-1 , warning=FALSE, cache=TRUE>>=
 set.seed(5)
 sol1 <- random.permutation(10)
 sol2 <- identity.permutation(10)
@@ -316,7 +316,7 @@ Mutazio operadorea era probabilistikoan aplikatzen da; hau da, ez zaie soluzio g
 
 Algoritmo genetiko orokorra \ref{alg:algoritmo_genetikoak} irudian ikus daiteke. Algoritmoan dagoen sasikodea \code{basic.genetic.algorithm} funtzioan inplementaturik dago. Ikus dezagun nola erabil daitekeen funtzio hau \eng{graph coloring} problema bat ebazteko. Lehenik, ausazko grafo bat sortuko dugu problemaren instantzia sortzeko.
 
-<<ga_graph_col_1 , prompt=TRUE, message=FALSE , echo=-2 , warning=FALSE>>=
+<<ga_graph_col_1 , prompt=TRUE, message=FALSE , echo=-2 , warning=FALSE, cache=TRUE>>=
 library(igraph)
 set.seed(5)
 n <- 50
@@ -327,7 +327,7 @@ gcp <- graph.coloring.problem (graph = rnd.graph)
 
 Orain zenbait elementu definitu behar ditugu. Lehenengoa, hasierako populazioa izango da. Populazioa sortzeko bere tamaina ezarri behar dugu. Hau algoritmoaren parametro garrantzitsu bat denez, bi balio erabiliko ditugu, emaitzak alderatzeko: $n$ eta $10n$. Soluzioak ausaz sortuko ditugu eta, gero, bideragarriak ez badira, zuzenduko ditugu.
 
-<<ga_graph_col_2 , prompt=TRUE, message=FALSE , warning=FALSE>>=
+<<ga_graph_col_2 , prompt=TRUE, message=FALSE , warning=FALSE, cache=TRUE>>=
 n.pop.small <- n
 n.pop.big <- 10*n
 levels <- paste("C" , 1:n , sep = "")
@@ -362,7 +362,7 @@ Hasierako populazioaz gain, ondoko parametro hauek ezarri behar ditugu:
 Jarraian parametro hauek erabiliz algoritmo genetikoa exekutatzeko kodea dago.
 
 
-<<ga_graph_col_3, prompt=TRUE, message=FALSE , warning=FALSE , results='hide' , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=10 , fig.height=5>>=
+<<ga_graph_col_3, prompt=TRUE, cache=TRUE, message=FALSE , warning=FALSE , results='hide' , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=10 , fig.height=5>>=
 args <- list()
 args$evaluate             <- gcp$evaluate
 args$initial.population   <- pop.small
@@ -388,7 +388,7 @@ plot.progress(list("Big population" = bga.big , "Small population" = bga.small) 
 @
 
 
-<<ga_graph_col_4, prompt=TRUE , echo = FALSE , message=FALSE , warning=FALSE  , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=5 , fig.height=5>>=
+<<ga_graph_col_4, prompt=TRUE, cache=TRUE , echo = FALSE , message=FALSE , warning=FALSE  , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=5 , fig.height=5>>=
 best.big <- unlist(optima(bga.big)[[1]])
 gcp$plot(best.big,node.size=15,label.cex=0.75)
 @
@@ -406,7 +406,7 @@ Populazioaren tamaina handitzen dugunean konbergentzia zailagoa da eta grafikan 
 
 Populazioaren tamaina ez ezik, beste hainbat parametro eragin handia izan dezakete algoritmoaren emaitzan; esate baterako, mutazioaren probabilitatea. Adibide gisa, popluazio tamaina txikia erabiliz mutazio probabilitate ezberdinak erabiliko ditugu, eta, ondoren, bakoitzarekin lortutako emaitzak alderatuko ditugu.
 
-<<ga_mut_rate, prompt=TRUE, echo=-1, message=FALSE , warning=FALSE , results='hide' , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=10 , fig.height=5>>=
+<<ga_mut_rate, prompt=TRUE, cache=TRUE, echo=-1, message=FALSE , warning=FALSE , results='hide' , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=10 , fig.height=5>>=
 set.seed(10)
 args$initial.population   <- pop.small
 args$verbose              <- FALSE
@@ -441,7 +441,7 @@ Konplexutasun ezberdineko eredu probabilistikoen erabilera proposatu da literatu
 
 Probabilitate marjinalak maneiatzeko \code{metaheuR} paketeko \code{UnivariateMarginals} objektua erabil dezakegu. Bere erabilera ikusteko, populazio txiki bat sortuko dugu eta probabilitate marginalak kalkulatuko ditugu. 
 
-<<UMDA_1 , echo=-1 , prompt=TRUE, message=FALSE , warning=FALSE>>=
+<<UMDA_1, cache=TRUE , echo=-1 , prompt=TRUE, message=FALSE , warning=FALSE>>=
 set.seed(1)
 population <- lapply(1:5 , FUN = function(x) factor(sample(1:3 , 10 , replace = TRUE) ,
                                                     levels = 1:3))
@@ -449,7 +449,7 @@ population <- lapply(1:5 , FUN = function(x) factor(sample(1:3 , 10 , replace = 
 
 Orain, \code{univariateMarginals} funtzioa erabiliz probabilitate marginalak kalkulatuko ditugu:
 
-<<UMDA_2 , prompt=TRUE, message=FALSE , warning=FALSE>>=
+<<UMDA_2, cache=TRUE, prompt=TRUE, message=FALSE , warning=FALSE>>=
 model <- univariateMarginals(data = population)
 
 do.call(rbind , population)
@@ -460,13 +460,13 @@ Sortutako soluzioek 10 elementu dituzte eta populazioak 5 soluzio ditu. Leheneng
 
 Ikasitako eredu probabilistikoa soluzio berriak sortzeko erabil daiteke, posizioz posizio balioak dagokion marginala laginduz; laginketa \code{simulate} funtzioaren bitartez egiten da.
 
-<<UMDA_3 , prompt=TRUE, message=FALSE , warning=FALSE>>=
+<<UMDA_3, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 simulate(model , nsim = 2)
 @
 
 UMDA erabiliz aurreko ataleko problema ebatz dezakgu. Horretarako, bakarrik hautespen operadoreak eta ereduak ikasteko funtzioak zehaztu behar ditugu --betiko parametroz gain--.
 
-<<umda_gc, echo = -1 , prompt=TRUE, message=FALSE , warning=FALSE , results='hide' , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=10 , fig.height=5>>=
+<<umda_gc, echo = -1, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE , results='hide' , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=10 , fig.height=5>>=
 set.seed(2)
 args <- list()
 args$evaluate             <- gcp$evaluate
@@ -497,7 +497,7 @@ Marjinalak zuzenean edozein bektoreekin erabil daitezke; alabaina, balio erreala
 
 Permutazio multzo bat badugu, posible da marjinalak estimatzea, baina eredua lagintzen dugunean ez ditugu permutazioak lortuko, balio errepikatuak ager baitaitezke. Hona hemen adibide bat:
 
-<<UMDA_permu_1 , prompt=TRUE, message=FALSE , warning=FALSE>>=
+<<UMDA_permu_1, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 n <- 5
 perm.pop <- lapply (1:50 , FUN = function(x) factor(as.numeric(random.permutation(n)) , 
                                                     levels = 1:n))
@@ -507,7 +507,7 @@ simulate(perm.umda)
 
 Arazo hau sahiesteko, soluzio berriak lagintzean permutazioetan ditugun murrizketak aintzat hartu behar dira. Beraz, laginketa prozesuan lehenengo elementua ausaz aukeratuko dugu, marjinala erabiliz. 
 
-<<UMDA_permu_2 , prompt=TRUE, message=FALSE , warning=FALSE , echo=-1>>=
+<<UMDA_permu_2, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE , echo=-1>>=
 set.seed(10)
 marginals <- perm.umda@prob.table
 remaining <- 1:n
@@ -518,7 +518,7 @@ new.solution <- new.element
 
 Orain, bigarren elementua aukeratu aurretik, lehenengo posizioan egongo den elementua kendu behar dugu aukeretatik eta marjinalak eguneratu behar ditugu --erabili dugun elementuaren probabilitatea kendu eta normalizatu, gelditzen diren elementuen probabilitateen batura 1 izan dezan--:
 
-<<UMDA_permu_3 , prompt=TRUE, message=FALSE , warning=FALSE>>=
+<<UMDA_permu_3, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 id <- which(remaining %in% new.element)
 remaining <- remaining [-id]
 marginals <- marginals[-id , ]
@@ -530,7 +530,7 @@ new.solution <- c(new.solution , new.element)
 
 Prozesua 3. eta 4. elementuak erauzteko errepika dezakegu.
 
-<<UMDA_permu_4 , prompt=TRUE, message=FALSE , warning=FALSE>>=
+<<UMDA_permu_4, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 id <- which(remaining %in% new.element)
 remaining <- remaining [-id]
 marginals <- marginals[-id , ]
@@ -550,7 +550,7 @@ new.solution <- c(new.solution , new.element)
 
 Amaitzeko, permutazioaren azken elementua gelditzen den elementu bakarra izango da.
 
-<<UMDA_permu_5 , prompt=TRUE, message=FALSE , warning=FALSE>>=
+<<UMDA_permu_5, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 id <- which(remaining %in% new.element)
 remaining <- remaining [-id]
 new.solution <- c(new.solution , remaining)
@@ -562,99 +562,145 @@ Prozesu honi esker probabilitate marjinalak erabil daitezke permutazioak sortzek
 
 \section{Swarm Intelligence}\label{sec:swarm}
 
-Eboluzioaz gain, badago populazioetan oinarritzen diren algoritmoen artean beste intuizio edo inspirazio nagusia arrakasta handia lortu duena, \textit{swarm intelligence} deritzona. Naturan badaude hainbat espezie zeinen indibiduoen portaera, indibidualki, oso sinplea den baina, taldeka daudenean, ataza zailak burutzeko gai diren. Intsektuak dira, zalantzarik gabe, adibiderik ezagunena. Hauen artean inurriak, erleak eta termitak dira adibide aipagarrienak.
+Eboluzioaren bidez naturak indibiduen diseinuak \hgl{optimizatzeko} gai da; alabaina, hau ez da naturak erabiltzen duen estrategia bakarra. Optimizazio algoritmoak inspiratu dituen beste adibidea bat animalia sozialena da. Zenbait espezietan --intsektuak, batik bat-- banan-banan hartuta, indibiduoak oso izaki sinpleak dira baina, multzoka, ataza konplexuak burutzeko gai dira. Esate baterako, inurriek eta erleek elikagai-iturri onenak aukeratzeko gai dira eta, hauek agortzen direnean, ingurunea esploratzen duten indibiduen kopurua handi dezakete iturri berriak lortzeko; era berean, bizitzeko toki berriak bilatzean toki egokienak aukeratzeko gai dira.
 
-\subsection{Inurri Kolonien Algoritmoak}
+Erabaki guzti horiek ez dira era zentralizatuan hartzen --alegia, ez dago \hgl{nagusi} bat agintzen dunea--. Portaera hauek indibiduoen portaera sinpleen eta, batez ere, indibiduoen arteko komunikazioari esker agertzen dira. Beste era batean esanda, mekanismo sinplei esker kolonia batean dauden indibiduoak autoantolatzen dira.
 
-Inurriek, janaria topatzen dutenean, beraien koloniatik janarira biderik motzena topatzeko gaitasuna dute. Inurri bakar batek ezin du horrelakorik egin baina, taldeka, komunikazio mekanismo sinpleei esker ataza burutzeko gai dira. Erabiltzen den komunikabidea zeharkakoa da, darien molekula berezi bati esker: feromona. Inurri bakoitza mugitzen denean feromona-lorratz bat uzten du eta, atzetik datozen inurriak lorratz hori jarraitzeko gai dira. Geroz eta feromona gehiago, orduan eta probabilitate handiagoa datozen inurriak utzitako lorratza jarraitzeko. 
+Portaera hauek dira \eng{swarm intelligence} deritzon arloaren inspirazioa. Kontzpetua lehenengo aldiz robotika arloan proposatu zen \cite{beni1988}, baina laister optimizazio mundura hedatu zen. Izan ere, 90. hamarkadan inurri kolonien optimizazioa --\eng{Ant Colony Optimization}, ingelesez-- proposatu zen \cite{dorigo1992, dorigo1996}.
+
+Hurrengo bi ataletan arlo honetan dauden bi algoritmo ezagunenak aztertuko ditugu, inurri kolonien optimizazioa eta \eng{particle swarm optimization}.
+
+
+
+\subsection{\eng{Ant Colony Optimization}}
+
+Inurriek, janaria topatzen dutenean, beraien koloniatik janarira biderik motzena topatzeko gaitasuna dute. Inurri bakar batek ezin du horrelakorik egin baina, taldeka, komunikazio mekanismo sinpleei esker ataza burutzeko gai dira. Erabiltzen den komunikabidea zeharkakoa da, darien molekula mota berezi bati esker: feromonak. Inurriek mugitzen direnean beste inurriek jarrai dezaketen feromona-lorratz bat uzten dute; geroz eta feromona gehiago, orduan eta probabilitate handiagoa datozen inurriak utzitako lorratza jarraitzeko. 
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.75\linewidth]{./Irudiak/ants}
-\caption{Feromonaren erabileraren adibidea. Hasierako egoeran biderik motzena feromonaren bidez markatuta dago. Bidea mozte dugunean, inurriek eskumara edo ezkerrera joango dira, probabilitate berdinarekin feromonarik ez dagoelako. Eskumako bidea luzeagoa da eta, ondorioz, ezkerreko bidearekiko inurrien fluxua txikiagoa da. Denbora igaro ahala eskumako lorratza ahulduko da; ezkerrekoa, berriz, indartuko da. Honek inurrien erabakia baldintzatuko du, ezkerretik joateko joera handiago sortuz eta, ondorioz, bi bideen arteko diferentziak handituz. Denbora nahiko igarotzen denean eskumako lorratza guztiz galduko da; koloniak bide motzena topatu du}
+\caption{Feromonaren erabilera. Hasierako egoeran biderik motzena feromonaren bidez markatuta dago. Bidea mozten dugunean, inurriek, eskumara edo ezkerrera joango dira, probabilitate berdinarekin, feromonarik ez baitago ez ezkerrean ez eskuinean. Eskumako bidea luzeagoa da eta, ondorioz, ezkerreko bidearekiko inurri-fluxua txikiagoa da. Denbora igaro ahala, eskumako lorratza ahulduko da; ezkerrekoa, berriz, indartuko da. Honek inurrien erabakia baldintzatuko du, ezkerretik joateko joera handiago sortuz eta, ondorioz, bi bideen arteko diferentziak handituz. Denbora nahiko igarotzen denean eskumako lorratza guztiz galduko da eta inurriak bide motzetik bakarrik joango dira.}
 \label{fig:ants}
 \end{figure}
 
 
-Topatutako elikagai-iturriaren kalitatearen arabera, utzitako feromona kopurua ezberdina da; geroz eta kalitate handiagoa, orduan eta feromona gehiago. Kontutan hartuz feromona lurrunkorra dela, hau da, denborarekin baporatzen dela, koloniak komunikazio sistemari esker biderik motzena topatzeko gai dira. 
+Bestaldetik, inurri batek elikagai-iturri bat topatzen duenean, bidetik uzten duen feromona kopurua iturriaren kalitateari egokitzen du; geroz eta kalitate handiagoa, orduan eta feromona gehiago. Sistemaren funtzionamendua ulertzeko kontutan hartu behar dugu feromonak molekula lurrunkorrak direla, hots, denborarekin utzitako lorratzak galtzen direla.
 
-Mekanismoaren erabilera \ref{fig:ants} irudian ikus daiteke. Hasieran bide motzena feromona lorratzaren bidez markatuta dute inurriek. Bidea mozten dugunean, eskuman eta ezkerrean ez dago feromonarik eta, hortaz, inurri batzuk eskumatik eta beste batzuk ezkerretik joango dira, probabilitate berdinarekin. Ezkerreko bidea motzagoa denez, denbora berdinean ezkerretik inurri gehiago igaroko dira, ezkerreko bidean feromona gehiago utziz. Ondorioz, datozen inurriak ezkerretik joateko joera handiago izango dute, bide hori indartuz. Eskumako bidean lorratza apurka-apurka baporatuko da eta, denbora nahiko igarotzen bada, zeharo galduko da.
+Arau sinple hauek erabiliz inurriek elikagai-iturri onenak aukeratzeko gai dira; are gehiago, elikagai eta inurritegiaren arteko biderik motzena topa dezakete. Mekanismoaren funtzionamendua \ref{fig:ants} irudian ikus daiteke. Hasieran bide motzena feromona lorratzaren bidez markatuta dute inurriek. Bidea mozten badugu, eskuman eta ezkerrean ez dago feromonarik eta, hortaz, inurri batzuk eskumatik eta beste batzuk ezkerretik joango dira, probabilitate berdinarekin. Ezkerreko bidea motzagoa denez, denbora berdinean inurri gehiago igaroko dira, ezkerreko bidean feromona gehiago utziz. Ondorioz, datozen inurriak ezkerretik joateko joera handiago izango dute, bide hori indartuz. Eskumako bidean lorratza apurka-apurka baporatuko da eta, denbora nahiko igarotzen bada, zeharo galduko da.
 
-Intuizio hau optimizazio problemak ebazteko erabil daiteke. Ikus dezagun adibide bat.
+\eng{Ant Colony Optimization} (ACO) deritzon metaheuristika inurrien mekanismoa hartzen du intuiziotzat. Bere ingurunetik pasiatu beharrean, inurri artifizialak soluzio \hgl{sortzaileak} dira. Beraz, inurri artifizialek soluzioak sortuko dituzte, baina ez edonolakoak; soluzioak aurreko inurriek utzitako lorratzak jarraituz eraikitzen dira. 
 
-\subsection{Adibidea: \textit{Linear ordering problem}}
+Lorratzak feromona ereduen bidez adierazten dira eta bi eratan eguneratzen dira. Alde batetik, inurriek sortutako soluzioen kalitatea --hots, helburu funtzioaren balioa-- feromona gehitzeko erabiltzen da. Bestaldetik, iterazioz iterazio feromona kopuruak txikituko ditugu, molekularen baporazioa simulatuz.
 
-\textit{Linear Ordering Problem}, LOP, optimizazio problema klasiko bat da. Matrize karratu bat emanda, honen errenkadak eta zutabeak ordenatu behar dira, aldi berean, diagonaletik gora dauden elementuen batura minimizatzeko. Demagun ondoko matrizea daukagula:
+Beraz, bi gauza behar dira ACO algoritmo bat diseinatzeko: feromona eredu bat eta soluzioak sortzeko algoritmo bat. Diseinu sinpleena osagaietan oinarritzen den algoritmo eraikitzaile bat erabiltzea da. Ikus dezagun hau adibide baten bidez.
 
-\begin{align*}
-\begin{array}{l|llll}
-& Z_1 & Z_2 & Z_3 & Z_4\\
-\hline
-E_1 & 9 & 4 & 2 & 3\\
-E_2 & 2 & 4 & 6 & 1\\
-E_3 & 1 & 3 & 6 & 3 \\
-E_4 & 7 & 4 & 4 & 8 \\
-\end{array}
-\end{align*}
+Demagun MIS problema bat ebatzi nahi dugula. Problema honetarako soluzioak bektore bitarren bidez kodetzen ditugu eta, hortaz, bektorearen posizioak soluzioen osagaitzat har ditzakegu. Posizio bakoitzen bi balio posible daude, 0 edo 1. Inurri batek soluzio bat sortu behar duenenan, lehenik, bektorearen lehenengo posizioko balioa, 0 edo 1, aukeratu beharko du. Horretarako, feromona kopurua hartuko du aintzat, probabilitate handiago esleituz feromona gehiago duen balioari; behin lehenengo posizioko balioa finkaturik, bigarren posiziora pasatuko da eta, era antzerakoan, balio bat esleituko dio. Prozesua soluzio osoa sortu arte errepikatuko da.
 
-Edozein ordenazio emanda, matrizeen errenkadak eta zutabeak ordena daitezke, matrize berri bat sortuz. Esate baterako, 2. eta 3. zutabe/errenkada trukatzen baditugu, ondoko matrizea lortuko dugu:
+Beraz, gure adibidean feromona eredua matrize sinple baten bidez inplementa daiteke non zutabe bakoitzean bektorearen posizio bat izango dugun; matrizeak bi errenkada bakarrik izango ditu, posizio bakoitzeko 0 eta 1 balioek duten feromona kopurua gordetzeko. Feromona eredu mota hau \code{metaheuR} paketean inplementaturik dago, \code{VectorPheromone} klasean. Ereduaren erabilera argitzeko \eng{Maximum Dominating Set} (MDS) problema erabiliko dugu. Laburki, grafo bat emanda, nodoen azpimultzo bat menderatze-multzoa da --\eng{dominating set}, ingelesez-- baldin eta azpimulzoan ez dauden nodo guztiak gutxienez azpimultzoko nodo bati konektatuta badaude; MDS probleman, grafo bat emanik, kardinalitate minimoko menderatze-multzoa topatzean datza. \ref{fig:MDS} irudian problema honetarako hiru soluzio ikus daitezke.
 
-\begin{align*}
-\begin{array}{l|llll}
-& Z_1 & Z_3 & Z_2 & Z_4\\
-\hline
-E_1 & 9 & 2 & 4 & 3\\
-E_3 & 1 & 6 & 3 & 3\\
-E_2 & 2 & 6 & 4 & 1 \\
-E_4 & 7 & 4 & 4 & 8 \\
-\end{array}
-\end{align*}
 
-Ordenazio hau LOP-rako soluzio bat da, $[1324]$ permutazioaren bidez adieraziko duguna. Edozein permutazio problemarako soluzio bat izango da, zeinen ebaluazioa jarraian nabarmendua dauden elementuen batura den.
-
-\begin{align*}
-\begin{array}{l|llll}
-& Z_1 & Z_3 & Z_2 & Z_4\\
-\hline
-E_1 & 9 & \mathbf{2} & \mathbf{4} & \mathbf{3}\\
-E_3 & 1 & 6 & \mathbf{3} & \mathbf{3}\\
-E_2 & 2 & 6 & 4 & \mathbf{1} \\
-E_4 & 7 & 4 & 4 & 8 \\
-\end{array}
-\end{align*}
-
-\noindent hau da, kasu honetan 16. 
-
-Beraz, LOP-rako soluzioak permutazioak dira. $n$ nodoko grafo osoa hartzen badugu, non nodoak zenbatuta dauden, edozein ziklo Hamiltoniarra\footnote{Gogoratu ziklo bat Hamiltoniarra dela erpin guztietatik behin eta bakarrik behin pasatzen bada} permutazio bat da. \ref{fig:ant_builders} irudian adibideko permutazioari dagokion zikloa ikus daiteke.
-
-\begin{figure}
-\centering
-\includegraphics[width=0.75\linewidth]{./Irudiak/ant_builders}
-\caption{Soluzioen eraikuntza. Grafo osotik abiatuta, edozein permutazioa ziklo Hamiltoniar baten bidez adieraz daiteke. Inurrien portaera soluzioak eraikitzeko erabil daiteke, pausu bakoitzean inurria uneko erpinetik zein erpinera mugituko den erabakiz.}
-\label{fig:ant_builders}
+\begin{figure}[t]
+\subfigure[Soluzio hau ez da menderatze-multzoa]{
+\includegraphics[width=0.3\textwidth] {./Irudiak/MDS_not}
+}\qquad
+\subfigure[4 tamainako menderatze-multzoa]{
+\includegraphics[width=0.3\textwidth] {./Irudiak/MDS_4}
+}\qquad
+\subfigure[2 tamainako menderatze-multzoa]{
+\includegraphics[width=0.3\textwidth] {./Irudiak/MDS_2}
+}\\
+\caption{Irudiak MDS problemarako 3 soluzio jasotzen ditu --beltzez adierazita dauden nodoak--. Lehenengoa (ezkerrean dagoena), ez da bideragarria, soluzioan dagoen nodo bat soluzioan dauden nodoei konektaturik ez baitago. Bigarren soluzioa bideragarria da, baina ez optimoa. Azken soluzioa optimoa da, ez baitago 1 tamainako soluzio bideragarririk.}\label{fig:MDS}
 \end{figure}
 
-Grafoen bidezko permutazioen adierazpidea erabiliz, inurri \zkk artifizialak\skk\ erabil ditzakegu LOP-rako soluzioak eraikitzeko. Demagun 1. nodoan inurri bat kokatzen dugula. Inurriak ziklo bat osatzeko zein nodora mugituko den erabaki beharko du; hau da, 1. nodotik 2., 3. edo 4. nodora joango den erabaki beharko du. Demagun 3. nodora joaten dela, hurrengo urratsean 2. eta 4. nodoen artean bat aukeratu beharko du inurriak. 2. nodoa aukeratzen bada, zikloa osatzeko 4. nodora eta, handik 1. nodora joan beharko da. Prozesu hau jarraituz adibideko permutazioa eraiki dezakegu; \ref{fig:ant_builders} irudiak prozesua erakusten du.
 
-Inurri artifizialen bidez soluzioak eraiki daitezke baina, nola erabaki uneko nodotik nora abiatu?. Galdera honi erantzuteko naturan gertatzen denari erreparatuko diogu. Egiazko inurriek bidea ausaz aukeratzen dute, baina bide bat edo bestea aukeratzeko probabilitatea feromona kopuruarekiko proportzionala da. Era berean, grafoaren ertz bakoitzari feromona kopuru bat esleitzen badiogu, gure inurri artifizialak bidea erabakitzeko feromona erabili ahal izango du.
+<<ACO_MDS_1, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE , echo=-1>>=
+set.seed(666)
+n <- 10
+rnd.graph <- aging.ba.game (n , 0.5 , 0 , 2 , directed = FALSE)
+mdsp <- mds.problem(graph = rnd.graph)
+@
 
-Hortaz, uneoro ertz bakoitzean zenbat feromona dagoen gorde beharko dugu $F$ matrizean, non $f_{i,j}$ $i$ nodotik $j$ nodora joateari dagokion feromona kopurua den\footnote{Kontutan hartu naturan ez bezala, bidearen noranzkoa garrantzitsua izan daitekeela; hau da, ez da berdina $i$-tik $j$-ra edo $j$-tik $i$-ra joatea}. Feromona kopurua eguneratu barik, inurri-koloniak ez luke bide motzena topatuko. Era berean, gure problema ebazteko feromona matrizea eguneratu beharko dugu. Naturan bezala, feromona kopurua eguneratzeko bi pausu izango ditugu: lurrunketa eta feromona lagatzea. Hasieran matrizearen posizio guztien feromona kopurua berdina izango da; hortik aurrera inurriek erabilitako bideak kontutan hartu beharko ditugu feromona kopurua eguneratzeko. 
+Feromona eredua sortzeko matrizea hasieratu behar dugu. Ohikoena balio finko batekin hasieratzea da. Era honetan osagai guztiak balio berdina dute eta, beraz, guztien probabilitatea berdina izango da. Gogoratu gure adibidean matrizeak bi errenkada izan behar dituela, soluzioak bektore bitarrak baitira.
 
-Lurrunketa egiteko $F$ matrize posizio guztiak txikiagotuko ditugu, $f_{i,j} = \alpha f_{i,j}$ eginez, non $0<\alpha<1$ izango den. Lagatze prozesuari dagokionez, oso era sinplean egin daiteke, soluzio bakoitza sortzean erabilitako ertzei balio finko bat gehituz. Hau da, inurri bat soluzioa eraikitzeko 2. nodotik 3. nodora joaten bada, $f_{2,3}$ eguneratuko dugu balio finko bat $d$ gehituz. \ref{alg:ant} algoritmoan prozeduraren sasikodea ikus daiteke. Algoritmoa aplikatzeko zenbait funtzio beharko ditugu:
+<<ACO_MDS_2, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
+init.trail <- matrix (rep(1 , 2*n) , ncol = n)
+evaporation <- 0.9
+pheromones <- vectorPheromone(binary = TRUE , initial.trail = init.trail , 
+                              evaporation.factor = evaporation)
+pheromones@trail
+@
+
+Goiko kodean ikus daitekeen bezala, badago beste parametro bat finkatu behar dena, \code{evaporation.fractor}. Parametro horretan pasatzen den balioa lurrunketa faseetan erabiltzen da, matrizean dauden balio guztiak txikiagotzeko; baporazioa \code{evaporate} funtzioa erabiliz egiten da.
+
+<<ACO_MDS_3, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
+evaporate(pheromones)
+pheromones@trail
+evaporate(pheromones)
+pheromones@trail
+@
+
+Esan dugun bezala, inurriek feromona ereduak soluzioak eraikitzeko erabiltzen dute. Soluzioak \code{build.solution} funtzioaren bitartez egiten da.
+
+<<ACO_MDS_4, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
+build.solution(pheromones , 1)
+@
+
+Inurriek ingurunetik ibiltzen diren heinean feromona uzten dute eta, era berean, inurri artifizialek soluzioak eraikitzen dutenean feromona kopurua handitzen dute; ereduaren eguneraketa hau \code{update.trail} funtzioa erabiliz egiten da.
+
+<<ACO_MDS_5, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
+solution <- build.solution(pheromones , 1)[[1]]
+eval <- mdsp$evaluate(solution)
+eval
+update.trail(object = pheromones , solution = solution , value = eval)
+pheromones@trail
+@
+
+Ikus daitekeen bezala, zutabe bakoitzean errenkada bati soluzioaren helburu funtzioaren balioa gehitu zaio, hori baita inurriek utzitako lorratza. Elementu guzti hauek batzen baditugu, ACO sinple bat sor dezakegu. Lehenik, problema berri bat sortuko dugu.
+
+<<ACO_MDS_6, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE , echo = -1>>=
+set.seed(1)
+n <- 100
+rnd.graph <- aging.ba.game (n , 0.5 , 0 , 3 , directed = FALSE)
+mdsp <- mds.problem(graph = rnd.graph)
+init.trail <- matrix (rep(1 , 2*n) , ncol = n)
+pheromones <- vectorPheromone(binary = TRUE , initial.trail = init.trail , 
+                              evaporation.factor = evaporation)
+@
+
+Orain, 500 inurri simulatuko ditugu; bakoitzak soluzio bat sortuko du eta \hgl{bidetik} feromona utziko du. Inurri bakoitza simulatu ondoren feromona \hgl{lurrundu} egiten dugu.
+
+<<ACO_MDS_7, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
+num.ant <- 500
+sol.evaluations <- vector()
+for (ant in 1:num.ant){
+  solution <- mdsp$correct(build.solution(pheromones , 1)[[1]])
+  eval <- mdsp$evaluate(solution)
+  update.trail(pheromones , solution , eval)
+  evaporate(pheromones)
+  sol.evaluations <- c(sol.evaluations , eval)
+}
+@
+
+\begin{figure}
+\includegraphics[width=\textwidth]{./Irudiak/ACO_MDS_8-1}
+\caption{ACO sinplearen eboluzioa MDS problema batean.}\label{fig:simple_aco}
+\end{figure}
+
+<<ACO_MDS_8, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE , echo=FALSE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=15 , fig.height=5>>=
+plot(sol.evaluations , type="l" , xlab="Number of Artificial Ants" , ylab = "Solution evaluation")
+@
+
+\ref{fig:simple_aco} irudiak algoritmoaren eboluzioa erakusten du. Irudian ikus daiteke hasieran oso bariabilidade handia dagoela sortutako soluzioen helburu funtzioaren balioan. Alabaina, inurri kopurua handitzen den heinean bariabilidadea murrizten da eta, amaieran, prozedura soluzio bakar batera konbergitzen du. Edonola ere, soluzio hori ez da hasierakoak baino hobea. Kontua da, nahiz eta naturan horrela izan, optimizazioaren ikuspegitik inurri guztiek feromona eredua eguneratzea ez dela hurbilketarik onena; algoritmoa hobetzeko hautespen prozesu bat sartzea komenigarria da.
+
+Ikusi dugun algoritmo sinpleak ez du ondo funtzionatzen, inurri guztiek feromona eguneratzen dutelako. Hori dela eta, beste estrategia erabili ohi da. Inurriak banan-banan simulatu ordez, inurri-kolonia tamaina bat definitzen da eta iterazio bakoitzean inurritegiko inurri guztiek soluzio bat sortzen dute. Gero, bi estrategia ezberdin erabil daitezke:
 
 \begin{itemize}
-\item \texttt{initialize\_matrix} - Funtzio honek feromona matrizea hasieratzen du, posizio guztiei -- diagonala izan ezik -- balio finko bat esleituz
-\item  \texttt{build\_solution(pheromone\_matrix)} - \texttt{pheromone\_matrix} feromona matrizea erabiliz, funtzio honek pausuz pausu soluzio bat eraikitzen du. Lehen pausua nodo bat ausaz aukeratzea da. Gero, urrats bakoitzean uneko nodotik zein nodoetara joan gaitezkeen jakin behar dugu -- bisitatu barik daudenak, alegia --. Aukera guztietatik bat ausaz aukeratuko dugu; aukera bakoitzari dagokion probabilitatea feromona matrizean dauden balioak erabiliz kalkulatuko dugu.
-\item \texttt{evaporate(pheromone\_matrix)} - Funtzio honek feromona matrizea hartzen du eta posizio bakoitza eguneratzen du, 0 eta 1 tartean dagoen balio bat biderkatuz.
-\item \texttt{add\_pheromone (pheromone\_matrix,solution)} - Funtzio honek, soluzio bat emanda, soluzio hori eraikitzeko jarraitutako bidean dauden ertz guztiei balio finko bat gehitzen die.
+\item Iterazioko soluziorik onena erabili - Inurriek uneko iterazioan sortutako soluzioen artean onena aukeratzen da eta soluzio hori bakarrik erabiltzen da feromona eredua eguneratzeko. Kasu honetan helburu funtzioaren arabera egitea ez da beharrezkoa, bakarrik soluziorik onena erabiltzen baita eguneraketan. Hori dela eta, ohikoa da balio finko bat erabiltzea eguneraketan.
+\item Bilaketan topatutako soluziorik onena - Hainbat kasutan bilaketa areagotzea interesatuko zaigu. Kasu horietan, feromonaren eguneraketa bilaketan zehar topatu den soluziorik onena erabiliz egin daiteke. Aurreko puntuan bezala, eguneraketak ez dauka zergatik izan helburu funtzioaren balioarekiko proportzionala.
 \end{itemize}
 
-\subsection{ACO algoritmoak diseinatzen}
 
-Aurreko atalean LOP nola ebatz daitekeen ikusi dugu. Orokorrean, optimizazio problema bat ACO motako algoritmo baten bidez ebatzi nahi badugu, bi elementu nagusi beharko ditugu: soluzioak eraikitzeko prozedura bat\footnote{Hau dela eta, ACO algoritmoak erraz diseina daitezke ebatzi nahi dugun problema ebazteko algoritmo eraikitzaile onak existitzen badira} eta feromona eredu bat. Algoritmo eraikitzaileetan pausu bakoitzean zenbait aukera izaten ditugu; ACO bat diseinatzeko feromona ereduak aukera bakoitzaren feromona kopurua mantenduko du.
-
-
-\begin{ifalgorithm}[t]\label{alg:ant}
+\begin{ifalgorithm}[t]
 \begin{ifpseudo}{Inurri-kolonien algoritmoa}
 \item \In\ \texttt{build\_solution}, \texttt{evaporate}, \texttt{add\_pheromone }, \texttt{initalize\_matrix} eta \texttt{stop\_criterion} operadoreak
 \item \In\ \texttt{k\_size} koloniaren tamaina
@@ -671,25 +717,134 @@ Aurreko atalean LOP nola ebatz daitekeen ikusi dugu. Orokorrean, optimizazio pro
 \item \T{\texttt{pheromone\_matrix} = \texttt{evaporate(pheromone\_matrix)}}
 \item \Done
 \end{ifpseudo}
-\caption{Inurri-kolonien algoritmoaren sasikodea}
+\caption{Inurri-kolonien algoritmoaren sasikodea}\label{alg:ant}
 \end{ifalgorithm}
 
 
-
-Aurreko atalaren adibidean inurri guztiek era finkoan eguneratzen zuten feromona eredua; edonola era, aukera hau ez da bakarra. Ereduaren eguneraketa diseinatzean bi gauza hartu behar ditugu aintzat. Alde batetik, zein inurriak eguneratuko du eredua; bestetik, nola eredua nola eguneratu. Lehenengo puntuari dagokionez, hiru aukera ditugu:
-
-\begin{itemize}
-\item \textbf{Inurri guztiak} - Soluzio bat eraikitzen den bakoitzean, erabilitako elementuen feromona kopurua handitu.
-\item \textbf{Iterazioko soluziorik onena} - Behin koloniako inurri guztiek beraien soluzioak eraiki, guztietatik zein den onena identifikatu eta bakarrik soluzio hori eraikitzeko erabili diren elementuak eguneratu.
-\item \textbf{Algoritmoak topatutako soluziorik onena} - Bilaketa areagotu nahi badugu, iterazioko soluziorik onena erabili beharrean, aurreko iterazioetan eraiki den soluziorik onena erabil dezakegu.
-\end{itemize}
-
-Adibidean feromona lorratzak eguneratzean inurri guztien ekarpena berdina zen; alabaina, beste zenbait aukera ditugu:
+Aldaketa honekin oinarrizko ACO algoritmoaren sasikodea defini dezakegu (ikusi \ref{alg:ant} algoritmoa). \code{basic.aco} funtzioak Oinarrizko ACO-a inplementatzen du eta, hortaz, goiko problema ebazteko erabil dezakegu. Ohiko parametroaz gain, argumentu hauek zehaztu behar dira.
 
 \begin{itemize}
-\item \textbf{Soluzioaren ebaluazioaren arabera} - Naturan inurriak utzitako lorratzaren intentsitatea janari iturriaren kalitatearen araberakoa da; era berean, gure algoritmoan soluzioaren ebaluazioa erabil dezakegu soluzio onenen ekarpena handiagoa izan dadin.
-\item \textbf{Inurrien ranking-aren arabera} - Ebaluazio funtzioaren magnitudea problemaren eta instantziaren araberakoa da\footnote{TSP-an, adibidez, ez da berdina 10 herri Gipuzkoan izatea edo 100 herri Europan zehar banatuta}. Eskala arazo hauek saihesteko zuzenean ebaluazioa erabili beharrean, soluzioen ranking-a erabil dezakegu; era honetan soluziorik onenaren ekarpena azkenarena baino handiago izango da, baina lehenengo eta azkenaren soluzioen arteko diferentziak murriztuta egongo dira.
+\item \code{nants} - Zenbat inurri artifizial izango ditugu gure kolonian
+\item \code{pheromones} - Feromona eredua.
+\item \code{update.sol} - Nola eguneratuko dugu feromona eredua. Hiru aukera daude: \code{'best.it'}, iterazio bakoitzean sortutako soluziorik onena; \code{'best.all'}, bilaketan zehar lortutako soluziorik onena edo \code{'all'}, sortutako soluzio guztiak.
+\item \code{update.value} - Balio bat finkatzen bada, eguneraketa guztietan balio hori gehitzen da; \code{NULL} bada, helburu funtzioa erabiltzen da. Kontutan hartu problema batzuetan helburu funtzioak negatiboak direla, baina feromona eredu batzuetan balio positiboak eta negatiboak ezin dira nahastu, bestela arazoak egon daitezke probabilitateak kalkulatzean. Hori dela eta, helburu funtzioaren zeinua kontutan hartu behar da feromona eredua hasieratzeko.
 \end{itemize}
+
+<<ACO_MDS_10, cache=TRUE , prompt=TRUE, echo=-1 , message=FALSE , warning=FALSE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=15 , fig.height=5>>=
+set.seed(17)
+args <- list()
+args$evaluate         <- mdsp$evaluate
+args$nants            <- 5
+init.value            <- 1
+initial.trail <- matrix(rep(init.value , 2*n ) , nrow=2)
+evapor <- 0.9
+pher <- vectorPheromone(binary = TRUE , initial.trail = initial.trail , 
+                        evaporation.factor = evapor)
+args$pheromones       <- pher
+args$update.sol       <- 'best.it'
+args$update.value     <- init.value / 10
+args$non.valid        <- 'correct'
+args$valid            <- mdsp$is.valid
+args$correct          <- mdsp$correct
+
+args$resources        <- cresource(iterations = 100)
+args$verbose          <- FALSE
+
+results.aco <- do.call(basic.aco , args)
+plot.progress(results.aco) + labs(y="Average evaluation")
+@
+
+\begin{figure}
+\includegraphics[width=\textwidth]{./Irudiak/ACO_MDS_10-1}
+\caption{Oinarrizko ACO algoritmoaren eboluzioa MDS problema batean.}\label{fig:basic_aco}
+\end{figure}
+
+\ref{fig:basic_aco} irudiak oinarrizko ACO algoritmoaren progresioa jasotzen du. Algoritmo honek soluzio kopuru berdina sortu du, baina aurrekoa ez bezala, iterazioz iterazio soluzioa hobetuz doa. Grafikoan batazbesteko \eng{fitness}-ak bariabilidade handia duela ikus daiteke. Hau da oso kolonia txikia erabili dugulako --5 inurri bakarrik--. Balio hori handitzen badugu, prograsioa ez da hain zaratatsua izango --eta, ziurrenik, emaitzak hobeak izango dira--, baina ebaluazio gehiago beharko ditugu.
+
+ACO algoritmoen mamia soluzio eraikuntza da eta, hortaz, soluzioen osagaien definizioa oso garrantzitsua da; osagaiek problemaren natura kontutan hartzen ez badute, feromona ereduak ez du soluzioen informazioa behar den bezala jasoko. Hau agerian gelditzen da jarraian dagoen adibidean.
+
+Demagun LOP problema bat ebazteko ACO algoritmo bat erabili nahi dugula. Problema honetarako soluzioak permutazioen bidez kodetzen ditugunez, adierazpide honekin diharduen feromona eredu bat behar dugu. Soluzioen eraikuntzan permutazioak sortzeko behar diren aldaketak eginez gero, bektoreekin erabilitako eredua permutazioekin ere erabil dezakegu. Hau da, matrize karratu bat gordeko dugu non posizio bakoitzeko, balio bakoitzari dagokion feromona kopurua gordeko dugu. Gero, soluzioak osatzerakoan, urrats bakoitzean aukeraturik gabe dauden balioetatik bat aukertuko dugu, aukera guztien arteko feromona kopurua kontutan hartuz. Eredu honek UMDA-n ikusi genuen oso matrize antzerakoa erabiltzen du. 
+
+Dena dela, hau ez da aukera bakarra. TSP probleman ikusi genuen permutazioek grafo osoko ziklo Hamiltoniarrak adierazten dituztela. Hau da, $n$ nodoko grafo oso bat badugu, edozein permutazio $n$ nodoak behin eta bakarrik behi bisitatzen dituen ibilbide bat adierazten du. Beraz, permutazioak osatzeko nodoak lotzen dituzten ertzak erabil ditzakegu.
+
+Ideia hau erabiliz beste feromona eredu bat plantea dezakegu. Eredu honek ere matrize karratu bat erabiliko du, baina matrizearen interpretazioa --eta, hortaz, soluzio osaketa-- ezbedina da. Kasu honetan, matrizeak grafoaren ertzak adierazten ditu, alegia, $(i,j)$ posizioan $i$ nodotik $j$ nodora joateari lotutako feromona kopurua izango dugu. Adibidez, 3421 permutazioa badugu, soluzio honi dagozkion matrizeko posizioak dira $(3,4); (4,2)$ eta $(2,1)$ --problemaren arabera, $(1,3)$ posizioa ere erabiltzea komenigarria izan daiteke--.
+
+Bi eredu hauek \code{metaheuR} librutegian inplementaturik daude, \code{PermuPosPheromone} eta  \code{PermuLinkPheromone} objektuetan. Jarraian, bi eredu hauek LOP problema bat ebazteko erabiliko dugu eta emaitzak alderatuko ditugu.
+
+<<ACO_LOP, cache=TRUE , prompt=TRUE, echo=-1 , message=FALSE , warning=FALSE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=15 , fig.height=5>>=
+set.seed(1)
+n <- 100
+rnd.mat <- matrix(round(runif(n^2)*100) , n)
+lop <- lop.problem(matrix = rnd.mat)
+
+args <- list()
+args$evaluate         <- lop$evaluate
+args$nants            <- 15
+init.value            <- 1
+initial.trail         <- matrix(rep(init.value , n^2 ) , n)
+evapor                <- 0.9
+pher                  <- permuLinkPheromone(initial.trail = initial.trail , 
+                                            evaporation.factor = evapor)
+args$pheromones       <- pher
+args$update.sol       <- 'best.it'
+args$update.value     <- init.value / 10
+args$resources        <- cresource(iterations = 250)
+args$verbose          <- FALSE
+
+aco.links <- do.call(basic.aco , args)
+
+args$pheromones       <- permuPosPheromone(initial.trail , evapor)
+aco.pos <- do.call(basic.aco , args)
+
+plot.progress (list("Position" = aco.pos , "Link" = aco.links))
+@
+
+\begin{figure}
+\includegraphics[width=\textwidth]{./Irudiak/ACO_LOP-1}
+\caption{Oinarrizko ACO algoritmoaren eboluzioa LOP problema batean.}\label{fig:aco_lop}
+\end{figure}
+
+\ref{fig:aco_lop} irudiak experimentuaren emaitza erakusten du. Grafikan argi ikus daiteke noden arteko lotruak osagaitzat hartzen direnean, bilaketak ez du aurrera egiten. Osagaiak posizioak direnean, berriz, iterazioz iterazio soluzioa hobetzen da. Honen arrazoia sinplea da: LOP probleman posizio absolutuak dira garrantzitsuena, eta ez zein elementu dagoen zeinen ondoan.
+
+\begin{figure}
+\includegraphics[width=\textwidth]{./Irudiak/ACO_TSP-1}
+\caption{Oinarrizko ACO algoritmoaren eboluzioa TSP problema batean.}\label{fig:aco_tsp}
+\end{figure}
+
+TSP probleman justo kontrakoa gertatzen da, hau da, informazio garrantzitsuena da zein hiri dagoen zeinen ondoan. Hori dela eta, printzipioz, ertzetan oinarritzen den feromona ereduak soluzio hobeak lortuko ditu. Jarrain experimentu hori egingo dugu; emaitzak \ref{fig:aco_tsp} irudian daude.
+
+
+<<ACO_TSP, cache=TRUE , prompt=TRUE, echo=-1 , message=FALSE , warning=FALSE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=15 , fig.height=5>>=
+set.seed(1)
+url <- system.file("bays29.xml.zip" , package = "metaheuR")
+cost.matrix <- tsplib.parser(url)
+n <- ncol(cost.matrix)
+tsp <- tsp.problem(cmatrix = cost.matrix)
+
+args <- list()
+args$evaluate         <- tsp$evaluate
+args$nants            <- 15
+init.value            <- 1
+initial.trail         <- matrix(rep(init.value , n^2 ) , n)
+evapor                <- 0.9
+pher                  <- permuLinkPheromone(initial.trail = initial.trail , 
+                                            evaporation.factor = evapor)
+args$pheromones       <- pher
+args$update.sol       <- 'best.it'
+args$update.value     <- init.value / 10
+args$resources        <- cresource(iterations = 250)
+args$verbose          <- FALSE
+
+aco.links <- do.call(basic.aco , args)
+
+args$pheromones       <- permuPosPheromone(initial.trail , evapor)
+aco.pos <- do.call(basic.aco , args)
+
+plot.progress (list("Position" = aco.pos , "Link" = aco.links))
+@
+
+Orain arte ikusi ditugun adibide guztietan feromonak bakarrik erabiltzen dira soluzioak eraikitzerakoan. Oinarrizko algoritmoan horrela izan arren, problema konkretu bat ebatzi behar denean, posible bada, informazio heuristikoa sartu ohi da. Adibide gisa, TSPrako algoritmo eraikitzaile tipikoan hurrengo hiria hautatzeko hirien arteko distantzia erabiltzen da. Beraz, goiko adibidean hiri batetik bestera joateari dagokion feromona kopurua soilik erabili beharrean, bi hiri horien arteko distantzia ere kontutan har dezakegu.
+
 
 \subsection{Particle Swarm Optimization}
 
