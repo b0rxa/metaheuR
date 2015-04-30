@@ -35,4 +35,8 @@ Collate: Neighborhood.R
   selection.R
   crossover.R
   mutation.R
-  
+  Pheromone.R
+  VectorPheromone.R
+  PermuPosPheromone.R
+  PermuLinkPheromone.R
+  swarm.R

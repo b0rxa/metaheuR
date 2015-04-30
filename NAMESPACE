@@ -9,7 +9,10 @@ exportClasses(
   InsertNeighborhood,
   MHResult,
   MallowsModel,
-  UnivariateMarginals
+  UnivariateMarginals,
+  VectorPheromone,
+  PermuLinkPheromone,
+  PermuPosPheromone
 )
 
 exportMethods(
@@ -37,7 +40,10 @@ exportMethods(
   progress,
   plot.progress,
   plot.correlation,
-  simulate
+  simulate,
+  build.solution,
+  evaporate,
+  update.trail
 )
 
 export(
@@ -45,9 +51,12 @@ export(
   random.permutation,
   identity.permutation,
   tsp.problem,
+  qap.problem,
+  lop.problem,
   knapsack.problem,
   graph.coloring.problem,
   mis.problem,
+  mds.problem,
   cresource,
   swapNeighborhood ,
   basic.local.search,
@@ -79,5 +88,9 @@ export(
   order.crossover,
   basic.eda,
   mallowsModel,
-  univariateMarginals
+  univariateMarginals,
+  vectorPheromone,
+  permuLinkPheromone,
+  permuPosPheromone,
+  basic.aco
 )

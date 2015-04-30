@@ -65,7 +65,7 @@ graph.coloring.problem<-function(graph){
 }
 
 
-#' Graph coloring problem
+#' Maximum independent set
 #' 
 #' This function generates an evaluation, validity and correction functions associated  with a classical maximum independet set problem
 #' @param graph Graph where we have to find the maximum independent set (MIS)
@@ -97,6 +97,54 @@ mis.problem <- function (graph, penalization = 0){
       subg<-induced.subgraph(graph,V(graph)[solution])
       id <- which.max(degree(graph)*solution)
       solution[id] <- FALSE
+    }
+    solution
+  }
+  
+  plot.solution <- function (solution, node.size = 5){
+    V(graph)$color <- ifelse(1:length(V(graph))%in%which(solution), "black","white")
+    plot.igraph(graph , vertex.size = node.size , vertex.label = NA , edge.arrow.mode = "-")
+  }
+  
+  return(list(evaluate = evaluate , is.valid = is.valid , correct = correct , plot = plot.solution))
+}
+
+
+
+#' Minimum dominating set
+#' 
+#' This function generates an evaluation, validity and correction functions associated  with a classical minimum dominating problem
+#' @param graph Graph where we have to find the minimum dominating set (MDS)
+#' @return A list of functions to be used to solve a MDS problem. This includes the functions \code{evaluate}, for the evaluation of a solution, \code{is.valid}, to check whetehr a solution is valid or not, \code{correct}, to correct a non-valid solution and \code{plot} to graphically show the solution; all the functions have a single argument,  \code{solution}. The solutions passed to these functions has to be a logical vector indicating with \code{TRUE} which nodes are in the independent set.
+#' @details The evaluation function includes another parameter, \code{penalization}, which can be used to penalize non-valid solutions. The penalization terms is the number of nodes that are not connected to the nodes in the solution, and it is weighted with the factor passed in the \code{penalization} parameter. By default its value is 0.
+#' @examples
+#' 
+#' library("igraph")
+
+mds.problem <- function (graph, penalization = 0){
+  size <- length(V(graph))
+  edges <- get.edgelist(graph)
+  disconnected.nodes <- function (solution){
+    sol.nodes <- V(graph)[solution]
+    linked.nodes <- unlist(sapply(sol.nodes , FUN = function(x) unique(neighbors(graph,x))))
+    included.nodes <- unique(c(sol.nodes , linked.nodes))
+    return (V(graph)[!(V(graph) %in% included.nodes)])
+  }
+  evaluate <- function (solution){
+    disc <- disconnected.nodes(solution)
+    return (sum(solution) - penalization*length(disc))
+  }
+  
+  is.valid <- function (solution){
+    length(disconnected.nodes(solution)) == 0
+  }
+  
+  correct <- function (solution){
+    while(!is.valid(solution)){
+      disc <- disconnected.nodes(solution)
+      ## Add the first disconnected node and check the validity
+      id <- which(V(graph) %in% disc)[1]
+      solution[id] <- TRUE
     }
     solution
   }
