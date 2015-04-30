@@ -47,24 +47,23 @@ knit_theme$set("earendel")
 \maketitle
 
 \begin{abstract}
-Aurreko kapituluan soluzio bakarrean oinarritzen diren zenbait algoritmo ikusi ditugu. Algoritmo hauek oso portaera ezberdina izan arren, badute ezaugarri komuna: bilaketa prozesua soluzio batetik bestera mugitzen da, soluzioak banan-banan aztertuz. Beraz, oso algoritmo egokiak dira bilaketa espazioaren eskualdea interesgarriak arakatzeko --bilaketa areagotzeko, alegia--. Alabaina, hainbat kasutan emaitza honak lortzeko bilaketa dibertsifikatzea ere beharrezkoa izan liteke. Izan ere, bilaketa lokalean oinarrizen diren algoritmo batzuk dibertsifikatzeko zenbait estrategia darabilte; honen adibide nabarmena tabu bilaketaren epe-luzeko memoria da.
+Aurreko kapituluan soluzio bakarrean oinarritzen diren zenbait algoritmo ikusi ditugu. Algoritmo hauek oso portaera ezberdina izan arren, badute ezaugarri komun bat: bilaketa prozesua soluzio batetik bestera mugitzen da, soluzioak banan-banan aztertuz. Ezaugarri hau dela eta, algoritmo hauek oso algoritmo egokiak dira bilaketa espazioaren eskualde interesgarriak arakatzeko --bilaketa areagotzeko, alegia--. Alabaina, hainbat kasutan emaitza onak lortzeko bilaketa dibertsifikatzea ere beharrezkoa da. Hau honela izanik, bilaketa lokalean oinarritzen diren algoritmo batzuk dibertsifikatzeko zenbait estrategia darabilte, adibide nabarmenena tabu bilaketaren epe-luzeko memoria izanik.
 
-Kapitulu honetan soluzioak banan-banakako azterketa alde batera utzita, multzoka erabiltzeari ekingo diogu, horixe baita, hain juxtu, populazioetan oinarritzen diren algoritmoen filosofia. Une oro, soluzio bakar bat izan beharrean soluzio multzo bat izango dugu. Testu inguru batzuetan multzo horri \hgl{soluzio-populazio} deritzo eta, hortik, algoritmo hauen izena. Bilaketa prozesuan multzo hori aldatuz joango da, helburu funtzioaren gidapean.
+Kapitulu honetan soluzioen banan-banakako azterketa alde batera utzita, soluzio multzoak erabiltzeari ekingo diogu, horixe baita, hain justu, populazioetan oinarritzen diren algoritmoen filosofia. Algoritmoaren pausu bakoitzean, soluzio bakar bat izan beharrean, soluzio multzo bat izango dugu. Testuinguru batzuetan soluzio multzo honi \hgl{soluzio-populazioa} deritzo eta, hortik, algoritmo hauen izena. Algoritmo hauekin, bilaketa prozesuan zehar, soluzio multzo hori aldatuz joango da helburu funtzioaren gidaritzapean, gelditze irizpide bat bete arte.
 
-Bi dira, nagusiki, populazioetan oinarritzen diren algoritmoen hurbilketak: algoritmo ebolutiboak eta \eng{swarm intelligence}. Lehenengo kategoriako algoritmoek, teknika ezberdinak erabiliz, populazioa eboluzionarazten dute, geroz eta soluzio hobeak izan ditzan. Adibiderik ezagunena algoritmo genetikoak dira. Bigarren algoritmo mota, berriz, zenbait animalien portaeran oinarritzen da. Hauen arteko adibiderik ezagunenak, esate baterako, inurriek, janaria eta inurritegiaren arteko distantziarik motzena topatzeko darabilten mekanismoa imitatu egiten du.
+Oro har, populazioan oinarritutako algoritmoak bi multzotan banatu ditzakegu: algoritmo ebolutiboak eta \eng{swarm intelligence}-an oinarritutakoak. Lehenengo kategoriako algoritmoek, populazioa eboluzionarazten dute, teknika ezberdinak erabiliz, honek geroz eta soluzio hobeak izan ditzan. Adibiderik ezagunenak algoritmo genetikoak dira. Bigarren motako algoritmoak, berriz, zenbait animalien portaeran oinarritzen dira. Hauen arteko adibiderik ezagunenak, esate baterako, inurriek, janaria eta inurritegiaren arteko distantziarik motzena topatzeko darabilten mekanismoa imitatzen du.
 
-Kapitulua bi zatitan banaturik dago. Lehenengoan algoritmo ebolutioben eskema orokorra ikusi ondoren, algoritmo genetikoak \cite{holland1975} eta EDAk \cite{larranaga2002,lozano2006} aurkezten dira. Bigarren zatian \eng{swarm intelligence} \cite{blum2008} arloan proposaturiko bi algoritmo aztertuko dira.
+Kapitulua bi zatitan banaturik dago, bakoitza populazioan oinarritutako algoritmo mota bati eskeinita. Lehenengo zatian, algoritmo ebolutiboen eskema orokorra ikusi ondoren, algoritmo genetikoak \cite{holland1975} eta EDAk \cite{larranaga2002,lozano2006} aurkeztuko dira. Bigarren zatian ordea, \eng{swarm intelligence} \cite{blum2008} arloan proposaturiko bi algoritmo aztertuko dira.
 \end{abstract}
 
 
 \section{Algoritmo Ebolutiboak}\label{sec:ebolutiboak}
-1859. urtean Charles R. Darwin \eng{On the Origin of the Species by Means of Natural Selection, or the Preservation of Favoured Races in the Struggle for Life} liburua argitaratu zuen. Tituluak berak adierazten duen bezala, liburu honetan Darwinek hautespen naturalaren teoria aurkeztu zuen. 
+1859. urtean Charles R. Darwinek \eng{On the Origin of the Species by Means of Natural Selection, or the Preservation of Favoured Races in the Struggle for Life} liburua argitaratu zuen. Tituluak berak adierazten duen bezala, liburu honetan Darwinek hautespen naturalaren teoria aurkeztu zuen. 
 
-Eboluzioaren teoriak dioenez, belaunalditik belaunaldira zenbait mekanismoen bidez --mutazioak, esate baterako-- aldaketak sortzen dira. Aldaketa batzuei esker indibiduoak hobeto egokitzen dira beraien inguruneari eta, ondorioz, bizirik mantentzeko eta, batez ere, ugaltzeko probabilitateak handitzen dira. Era berean, noski, aldaketa batzuk kaltegarriak izan daitezke, bizitzeko aukerak murriztuz. Kontutan hartuz aipatutako aldaketak heredatu egiten direla, ezaugarri onak generazioz generazio pasatzen dira; kaltegarriak direnek, ostera, galtzeko joera izaten dute. Mekanismo honen bidez, espezieak beraien ingurunera egokitzeko gai dira.
+Eboluzioaren teoriak dioenez, belaunalditik belaunaldira zenbait mekanismoen bidez --mutazioak, esate baterako-- aldaketak ematen dira espezieetan. Aldaketa hauetako batzuei esker indibiduoak hobeto egokitzen dira haien ingurunera eta, ondorioz, bizirik mantentzeko eta, batez ere, ugaltzeko probabilitateak handitzen dira. Era berean, noski, aldaketa batzuk kaltegarriak izan daitezke, bizitzeko aukerak murriztuz. Kontutan hartuz aipatutako aldaketak heredatu egiten direla, ezaugarri onak generazioz generazio mantentzen dira; kaltegarriak direnek, ostera, galtzeko joera izaten dute. Prozesu honen bidez, espezieak haien ingurunera geroz eta hobeto egokitzeko gai dira.
 
-Hirurogeigarren hamarkadan ikertzaileek Darwinaren lana inspiraziotzat hartu zuten optimizazio metahuristikoak diseinatzeko; gaur egun konputazio zientziaren arlo oso bat da konputazio ebolutiboa. Atal honetan bi algoritmo mota aztertuko ditugu, algoritmo genetiko klasikoak \cite{holland1975} eta EDAk (\eng{Estimation of Distribution Algorithms}) \cite{larranaga2002, lozano2006}.
+Hirurogeigarren hamarkadan ikertzaileek Darwinen lana inspiraziotzat hartu zuten optimizazio metahuristikoak diseinatzeko eta geroztik, konputazio ebolutiboa konputazio zientzien arlo bereizia bilakatu da. Atal honetan bi algoritmo mota aztertuko ditugu, algoritmo genetiko klasikoak \cite{holland1975} eta EDAk (\eng{Estimation of Distribution Algorithms}) \cite{larranaga2002, lozano2006}.
 
-Algoritmo ebolutibotan bi dira giltzarri diren elementuak: hautespena eta soluzio berrien sorkuntza. Naturan bezala, soluzio onak aukeratuko ditugu hurrengo belaunaldiara pasatzeko. Soluzio txarrenak deusestatzen ditugunez, populazioa osatzeko soluzio berriak behark dira; sorkuntza prozesua aukeratu ditugu soluzioak hartzen ditu abia-puntutzat.
 
 \begin{figure}[t]
 \centering
@@ -74,23 +73,25 @@ Algoritmo ebolutibotan bi dira giltzarri diren elementuak: hautespena eta soluzi
 \end{figure}
 
 
-Diferentziak diferentzia, algoritmo ebolutiboen eskema orokorra defini daiteke (ikusi \ref{fig:alg.evol} irudia). Algoritmoaren sarrera-puntua hasierako populazioa izango da; populazio horretatik abiatuz, algoritmoa begizta nagusian sartzen da, non bi pausu tartekatzen dira. Lehenik, uneko populazioan dauden soluzioetatik batzuk aukeratzen dira. Ondoren, soluzio horiek erabiliz populazio berri bat sortzen da. Begizta nagusia etengabekoa denez, zanbait irizpide erabiltzen dira algoritmoa amaitutzat emateko.
+Diferentziak diferentzia, algoritmo ebolutibo guztiek \ref{fig:alg.evol} irudiko eskema orokorra jarraitzen dute. Eskema orokor honetan, bi dira giltzarri diren elementuak: soluzio berrien sorkuntza eta soluzioen hautespena. Algoritmoaren sarrera-puntua hasierako populazioa izango da; populazio horretatik abiatuz, algoritmoa begizta nagusian sartzen da, non bi pausu txandakatzen diren. Lehenik, uneko populazioko soluzioetatik abiatuz, soluzio berri multzo bat sortuko da. Ondoren, soluzio berri hauek eta uneko populazioko soluzioak kontutan hartuz, naturan bezala, hurrengo belaunaldiara pasatzeko soluzio onak aukeratuko ditugu, eta populazio berri bat sortuko dugu. Begizta nagusia etengabekoa denez, zenbait irizpide ezberdin proposatu dira algoritmoa amaitutzat emateko.
 
-Hurrengo ataletan eskema orokor hau nola gauzatzen den ikusiko dugu. Dena dela, zenbait pausu orokorrak diren legez, algoritmo konkretuak ikusi aurretik aztertuko ditugu. 
+Hurrengo atalean, algoritmo orokor honen urratsak sakonago aztertuko ditugu. Hasteko, algoritmo ebolutibo guztietan antzerakoak diren pausuak azalduko ditugu eta ondoren, bi algoritmo ezberdinen xehetasunetan jarriko dugu arreta. 
 
 \subsection{Urrats orokorrak}
 
-Badaude zenbait pausu algoritmo ezberdinetan oso antzerakoak direnak. Izan ere, ikusiko ditugun algoritmoen arteko diferentzia nagusia soluzio berrien osaketan datza. Atal honetan gaionontzeko urratsak aztertuko ditugu eta hurrengo ataletan soluzioen sorkuntzari ekingo diogu.
+Ondorengo ataletan ikusiko ditugun algoritmoen arteko diferentzia nagusia soluzio berrien sorkuntzan datza. Gaionontzeko urratsak era antzekoan burutzen dira algoritmo ezberdinetan eta horiei buruz hitz egingo dugu atal honetan.
 
 \subsubsection{Populazioaren hasieraketa}
 
-Hasierako populazioa da algoritmoaren abia-puntua eta, hortaz, bere sorkuntza oso pausu garrantzitsua da. Izan ere, askotan garrantzi gutxiegi ematen zaio pausu honi, nahiz eta oso eragin handia izan azken emaitzan.
+Nahiz eta askotan garrantzi gutxi eman, hasierako populazioa da algoritmoaren abia-puntua eta, hortaz, bere sorkuntza oso pausu garrantzitsua da, eragin handia izaten duelako algoritmoak lortutako azken emaitzan. 
 
-Algoritmoen xedea soluzio honak topatzea izanda, pentsa dezakegu hasierako populazio on bat sortzeko soluzio onak behar ditugula; alabaina, dibertsitatea soluzioen kalitatea bezain garrantzitsua da. Izan ere, oso soluzio antzerakoak baldin baditugu, onak izan arren, populazioaren eboluzioa oso zaila izango da eta algoritmoaren konbergentzia goiztiarra gertatuko da. 
+Algoritmoen xedea soluzio onak topatzea izanda, pentsa dezakegu hasierako populazio on bat soluzio onez osatuta egon behar dela; alabaina, dibertsitatea soluzioen kalitatea bezain garrantzitsua da. Nahiz eta onak izan, populazioa oso soluzio antzerakoez osatuta badago, populazioaren eboluzioa oso zaila izango da eta algoritmoak azkarregi konbergitu dezake optimoa ez den soluzio batera. 
 
 Hortaz, hasierako populazioa sortzean bi aspektu izan behar ditugu kontutan: kalitatea eta dibertsitatea. Kasu gehienetan ausazko hasieraketa erabiltzen da lehen populazioa sortzeko, hau da, ausazko soluzioak sortzen dira populazioa osatu arte. Estrategia hau erabiliz dibertsitate handiko populazioa sortuko dugu, baina kalitatea ez da handia izango. 
 
-Populazioa guztiz ausaz sortzen badugu dibertsitatea handia izan arren, badaude beste estrategia batzuk --sasiausazkoak direnak-- dibertstiatea maximizatzeko. Hori dela eta, proposatu dira beste prozedura batzuk populazioak sasi-ausaz sortzeko dibertsitatea maximizatuz. Esate baterako dibertsifikazio sekuentzialean soluzio berri bat onartzeko populazioan dauden soluzioekiko distantzia minimo batera egon behar da. Adibide moduan, demagun 10 tamainako populazio bat sortu nahi dugula non soluzioak 25 tamainako bektore bitarrak diren. Dibertsitatea bermatzeko beraien arteko Hamming distantzia minimoa 10 izan behar dela inposa dezakegu. Jarraian dagoen kodeak horrelako populazioak sortzen ditu:
+Ausazko laginketak lortutakoa baina dibertsitate handiagoa bermatu nahi badugu, --sasiausazko-- prozedura batzuk erabil ditzakegu. Hori dela eta, proposatu dira beste prozedura batzuk populazioak sasi-ausaz sortzeko dibertsitatea maximizatuz. Esate baterako, dibertsifikazio sekuentziala aplikatu dezakegu, zeinak soluzio berri bat onartzen duen soilik populazioan dauden soluzioekiko distantzia minimo batera badago. Adibide moduan, demagun 25 tamainako bektore bitarren 10 tamainako populazio bat sortu nahi dugula. Dibertsitatea bermatzeko populazioko soluzioen arteko Hamming distantzia minimoak 10-ekoa izan behar duela inposa dezakegu. 
+
+Jarraian dagoen kodeak horrelako populazioak sortzen ditu. Lehenik, Hamming distantzia neurtzeko eta ausazko bektore bitarrak sortzeko funtzioak sortzen ditugu:
 
 <<ham_dis , prompt=TRUE, echo=-1 , message=FALSE>>=
 set.seed(1)
@@ -104,7 +105,7 @@ rnd.binary <- function(n){
 }
 @
 
-Lehenik, Hamming distantzia neurtzeko eta ausazko bektore bitarrak sortzeko funtzioak sortzen ditugu. Gero, soluzioak asuaz sortzen ditugu eta, distantzia minimoko baldintza bete ezean, deusestatzen dira; prozedura nahi ditugun soluzio kopurua lortu arte exekutatzen da. 
+ Gero, soluzioak ausaz sortzen ditugu eta, distantzia minimoko baldintza bete ezean, deusestatu egiten ditugu; prozedura nahi ditugun soluzio kopurua lortu arte exekutatzen da. 
 
 <<seq_divers , prompt=TRUE, message=FALSE>>=
 sol.size <- 25
@@ -121,9 +122,9 @@ while (length(population) < pop.size){
 @
 
 
-Hau prozedura ez da bat ere eraginkorra, zenbait kasutan soluzio asko sortu beharko batitugu populazioa sortu arte. Beste alternatiba bat dibertsifikazio paraleloa da. Kasu honetan bilaketa espazioa zatitu egiten da eta azpi-espazio bakoitzetik ausazko soluzio bat erauzten da.
+Prozedura hau ez da batere eraginkorra, zenbait kasutan soluzio asko aztertu beharko baititugu populazioa osatu arte. Hala, beste alternatiba eraginkorrago bat dibertsifikazio paraleloa da. Kasu honetan bilaketa espazioa zatitu egiten da eta azpi-espazio bakoitzetik ausazko soluzio bat erauzten da.
 
-Orain arte dibertsitateari bakarrik erreparatu diogu. Hasierako popuazioaren kalitatea handitu nahi izanez gero, hasieraketa heuristikoak erabil daitezke. Hau lortzeko era sinple bat, GRASP algoritmoetan ausazko soluzioak sortzeko erabiltzen diren prozedurak erabiltzea da. Ikus dezagun adibide bat TSP problemarako; lehenik, Bavierako hirien problema kargatuko dugu.
+Orain arte dibertsitateari bakarrik erreparatu diogu. Aldiz, hasierako popuazioaren kalitatea hobetu nahi izanez gero, hasieraketa heuristikoak erabil daitezke. Hau lortzeko era sinple bat, GRASP algoritmoetan ausazko soluzioak sortzeko erabiltzen diren prozedurak erabiltzea da. Ondoko lerroetan Bavierako hirien TSP problemarako adibide bat ikus dezakegu. Lehenik, problema kargatuko dugu.
 
 <<heur_init_1 , prompt=TRUE, echo=-1 , message=FALSE , warning=FALSE>>=
 library("metaheuR")
