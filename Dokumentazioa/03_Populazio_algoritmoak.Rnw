@@ -849,7 +849,7 @@ Orain arte ikusi ditugun adibide guztietan feromonak bakarrik erabiltzen dira so
 
 \subsection{Particle Swarm Optimization}
 
-Intsektu sozialen portaera \textit{swarm} adimenaren adibide tipikoak dira, baina ez dira bakarrak; animali handiagotan ere inspirazioa bila daiteke. Esate baterako, txori-saldotan ehunaka indibiduo batera mugitzen dira beraien arteak talka egin gabe. Multzo horietan ez dago indibiduo bat taldea kontrolatzen duena, txori bakoitzak bere inguruneko txorien portaera aztertzen du, berea egokitzeko. Era horretan, arau sinple batzuk (txori batetik gertuegi banago, urrundu egiten naiz, adibidez) besterik ez dira behar sistema osoa antolatzeko.
+Intsektu sozialen portaera \textit{swarm} adimenaren adibide tipikoak dira, baina ez dira bakarrak; animali handiagotan ere inspirazioa bila daiteke. Esate baterako, txori-saldotan ehunaka indibiduo batera mugitzen dira beraien arteak talka egin gabe. Multzo horietan ez dago indibiduo bat taldea kontrolatzen duena; txori bakoitzak bere inguruneko txorien portaera aztertzen du, berea egokitzeko. Era horretan, arau sinple batzuk (txori batetik gertuegi banago, urrundu egiten naiz, adibidez) besterik ez dira behar sistema osoa antolatzeko.
 
 \begin{figure}[t]
 \centering
@@ -858,31 +858,36 @@ Intsektu sozialen portaera \textit{swarm} adimenaren adibide tipikoak dira, bain
 \end{figure}
 
 
-\textit{Particle Swarm Optimization} (PSO) algoritmoaren inspirazioa animali-talde hauen mugimenduak dira. Gure sisteman bilaketa espazioan mugitzen diren zenbait partikula izango ditugu; partikula bakoitzak kokapen eta abiadura konkretuak izango dituzte. Partikularen kokapenak berak partikulari dagokion soluzioa izango da; abiadurak, hurrengo iterazioan nora mugituko den esango digu. Ikus dezagun adibide sinple bat. \ref{fig:PSO} irudian bi dimentsioko bilaketa espazio bat adierazten da. Bertan, bost partikula ditugu; bakoitzak problemarako soluzio bat adierazten du. Adibidez, $p_1$ partikulak $X=x_1; Y=y_1$ soluzioa adierazten du.
+Animali talde hauen portaera inspiraziotzat hartuz, 1995ean Kennedy eta Eberhart \textit{Particle Swarm Optimization} (PSO) algoritmoa proposatu zuten \cite{kennedy1995}, optimizazio numerikoko problemak ebazteko\footnote{Hau da, atal honetan ikusiko dugun algoritmoak bektore errealekin dihardu. Edonola ere, problema konbinatorialak ebazteko PSO bertsiak aurki daitezke.}. Algoritmoaren ideia sinplea da oso; bilaketa espaziotik mugitzen diren partikulak erabiltzen direa bilaketa egiteko. Beraz, algoritmoaren izenak adierazten duen legez, hainbat partikula izango ditugu; partikula bakoitzaren posizioak problemarako soluzio bat adieraziko du. 
 
-PSO algoritmoan partikulek bilaketa espazioa aztertzen dute, posizio batetik bestera mugituz. Beraz, iterazio bakoitzean partikula guztien kokapena eguneratzen da, beraien abiadura erabiliz. Partikulen abiadurak finko mantentzen baditugu, partikula guztiak infinitura joango dira. Hori ez gertatzeko, iterazio bakoitzean abiadura ere eguneratu behar da; eguneraketa honetan datza, hain zuzen, algoritmoaren gakoa. PSO \textit{swarm intelligence}-ko algoritmo bat denez, indibiduoen arteko (partikulen arteko, kasu honetan) komunikazioa ezinbestekoa da. Komunikazio hau abiadura eguneratze-prozesuan erabiltzen da, partikula bakoitzak bere abiadura eguneratzeko ingurunean dauden partikulak aintzat hartuko baititu. 
+Uneoro partikula bakoitzak kokapen eta abiadura zehatz bat izango du, \ref{fig:PSO} irudian erakusten den bezala. Irudiko adibidean bilaketa espazioak bi aldagai besterik ez ditu ($X$ eta $Y$), eta sisteman 5 partikula daude, $P_1$-etik $P_5$-era.
 
-Beraz, algoritmoa aplikatzeko ingurune kontzeptua definitu behar dugu. PSO-n, ingurune kontzeptua ez da bilaketa lokalean erabiltzen den berdina, partikula bakoitzaren ingurunea aurrez aurretik ezarritakoa baita; ez du partikularen kokapenarekin zerikusirik, alegia. Partikula bakoitzaren ingurunea grafo baten bidez adieraz daiteke, non bi partikula konektatuta dauden baldin eta bakarrik baldin bata bestearen ingurunean badaude. Lehenengo hurbilketa grafo osoa erabiltzea da, hots, edozein partikularen ingurunean beste gainontzeko partikula guztiak egongo dira; grafo osoa erabili beharrean, beste zenbait topologia ere erabil daitezke (eraztunak, izarrak, toroideak, etab.).
+PSO algoritmoan partikulek bilaketa espazioa aztertzen dute, posizio batetik bestera mugituz. Beraz, iterazio bakoitzean partikula guztien kokapena eguneratzen da, beraien abiadura erabiliz. Partikulen abiadurak finko mantentzen baditugu, partikula guztiak infinitura joango dira. Hori ez gertatzeko, iterazio bakoitzean abiadura ere eguneratu behar da; eguneraketa honetan datza, hain zuzen, algoritmoaren gakoa. 
 
-Partikula baten abiadura eguneratzeko bi elementu erabiltzen dira. Alde batetik, partikula horrek bisitatu duen soluziorik onena, hau da, bere \zkk arrakasta pertsonala\skk. Soluzio honi ingelesez \textit{personal best} deritzo, eta $\mathbf{p}_i$ sinboloaren bidez adieraziko dugu. Bestaldetik, ingurunean dauden partikulen arrakasta ere kontutan hartzen da, partikularen ingurunean dauden beste partikulek lortu duten soluziorik onena, alegia. Soluzio honi ingelesez \textit{global best}\footnote{Ingurunea definitzeko grafo osoa erabiltzen ez bada, partikula baten ingurunean lortutako soluziorik onenari \textit{global best} baino \textit{local best} esaten zaio} deritzo, eta $\mathbf{p}_g$ sinboloaren bidez adieraziko dugu.
-
-Hau dena kontutan hartuta, $i$. partikulak $t$ iterazioan erabiliko duen abiadura aurreko iterazioan erabilitakoa ondoko ekuazioaren bidez kalkulatuko dugu:
+Lehen esan dugu algoritmoaren inspirazioa txori-maldoen portaera dela. Txori bakoitzak nora mugitu behar den erabakitzeko bere ingurunean dauden txoriei erreparetzen die. Era berean, algoritmoan partikula baten abiadura eguneratzean partikula horrek duen informazioa ez ezik, inguruneko partikulek duten informazioa ere erabiltzen da. Hain zuzen, $i$. partikularen abiadura eguneratzeko ondoko ekuazioa erabiltzen da:
 
 \begin{align*}
-\mathbf{v}_i(t) = \mathbf{v}_i(t-1) + \rho_1 C_1 [\mathbf{p}_i - \mathbf{x}_i(t-1)] + \rho_2 C_2 [\mathbf{p}_g - \mathbf{x}_i(t-1)]
+\mathbf{v}_i(t) = \mathbf{v}_i(t-1) +  C_1 \mathbf{\rho}_1 [\mathbf{p}_i - \mathbf{x}_i(t-1)] + C_2 \mathbf{\rho}_2 [\mathbf{p}_g - \mathbf{x}_i(t-1)]
 \end{align*}
 
-Ekuazioan bi konstante ditugu, $C_1$ eta $C_2$; balio hauek partikulak eta ingurunean topatutako soluzioen eragina kontrolatzeko erabiltze dira. Konstante hauetaz gain, bi ausazko aldagai ditugu, $\rho_1$ eta $\rho_2$. Bi aldagai hauek ausazko balioak hartzen dituzte $[0,1]$ tartean. 
+Ekuazio honetan hiru termin daude:
 
-Lortutako abiadura bektore bat da. Arazoak saihesteko, bektore horren modulua mugatuta dago, aurrez aurretik abiadura maximoa ezarriz. Kalkulatutako abiaduraren modulua handiagoa bada, balio maximora eramaten da.
+\begin{itemize}
+\item $\mathbf{v}_i(t-1)$ - Partikulak aurreko iterazioan zeukan abiadura; termino honek partikularen inertzia adirazten du.
+\item $C_1 {\mathbf \rho_1} [\mathbf{p}_i - \mathbf{x}_i(t-1)]$ - Termino honetan $\mathbf{p}_i$-k partikulak bilaketa prozesuan topatu duen soluziorik onena adierazten du --ingelesez \eng{personal best} deritzona--. Termino honek zati \hgl{kognitiboa} adierazten du, hots, partikulak berak jasotako informazioa. $C_1$ terminoaren eragina definitzeko konstante bat da eta $\mathbf{\rho}_1$ soluzioaren tamainako ausazko bektore bat da.
+\item $C_2 \mathbf{\rho}_2 [\mathbf{p}_g - \mathbf{x}_i(t-1)]$ - Termino honetan $\mathbf{p}_g$-k partikuluaren inguruan dauden partikulek bilaketa prozesuan topatu duten soluziorik onena adierazten du --ingelesez \eng{global best} deritzona--. Termino honek zati \hgl{soziala} adierazten du, hots, beste partikulek jasotako informazioa. $C_2$ terminoaren eragina definitzeko konstante bat da eta $\mathbf{\rho}_2$ soluzioaren tamainako ausazko bektore bat da.
+\end{itemize}
+
+
+Ekuazioaren azken terminoak partikulen arteko elkarekintzak simulatzen ditu. Horretarako, partikuelen ingurune-egitura definitu behar da. Alabaina, ingurune kontzeptua ez da bilaketa lokalean erabiltzen den berdina, partikula bakoitzaren ingurunea aurrez aurretik ezarritakoa baita; ez du partikularen kokapenarekin zerikusirik, alegia. Partikula bakoitzaren ingurunea grafo baten bidez adieraz daiteke, non bi partikula konektatuta dauden baldin eta bakarrik baldin bata bestearen ingurunean badaude. Lehenengo hurbilketa grafo osoa erabiltzea da, hots, edozein partikularen ingurunean beste gainontzeko partikula guztiak egongo dira; grafo osoa erabili beharrean, beste zenbait topologia ere erabil daitezke (eraztunak, izarrak, toroideak, etab.).
+
+Goian dagoen ekuazioa erabiltzen bada, abiadurak dibergitzeko joera izango du, alegia, abiaduraren modulua gero eta handiagoa izango da. Arazo hau ekiditeko kalkulatutako abiadurari muga bat ezartzen zaio.
 
 Behin uneko iterazioaren abiadura kalkulatuta, abiadura partikularen kokapena eguneratzeko erabiltzen da:
 
 \begin{align*}
 \mathbf{x}_i(t) = \mathbf{x}_i(t-1) + \mathbf{v}_i(t-1)
 \end{align*}
-
-Iterazio bakoitzean lortutako soluzioak ebaluatu eta, beharrezkoa bada, partikulen \textit{personal} eta \textit{global best} eguneratu behar dira. Pasu guzti hauek \ref{alg:pso} algoritmoan biltzen dira.
 
 
 \begin{ifalgorithm}[t]\label{alg:pso}
@@ -918,16 +923,56 @@ Iterazio bakoitzean lortutako soluzioak ebaluatu eta, beharrezkoa bada, partikul
 \end{ifalgorithm}
 
 
+Iterazio bakoitzean lortutako soluzioak ebaluatu eta, beharrezkoa bada, partikulen \eng{personal} ($\mathbf{p}_i$) eta \eng{global best} ($\mathbf{p}_g$) eguneratu behar dira. Pasu guzti hauek \ref{alg:pso} algoritmoan biltzen dira.
 
 
-%\subsection{Oinarrizko Egiturak}
-%\subsubsection{Soluzioen errepresentazioa: Indibiduoak}
-%\subsubsection{Populazioaren hasieraketa}
-%\subsubsection{Aukeraketa irizpideak}
-%Roulette-Wheel, Tournament, Rank-Based Selection...
-%\subsubsection{Soluzioen berrien sorrera prozedurak}
-%Algoritmoaren menpekoa, GAk mutation and crossover, EDAk learn a model, and sample solutions.
-%\subsubsection{Gelditze Irizpideak}
+Algoritmo hau \code{metaheuR} paketeko \code{basic.pso} funtzioan inplementaturk dago. Erabilera erakusteko, optimizazio numerikoan \eng{benchmark} gisa erabiltzen den Rosenbrock funtzioa erabiliko dugu; problema sortzeko \code{rosenbrock.problem} funtzioa erabili behar dugu.
+
+
+<<PSO_1, cache=TRUE , echo = -1 , prompt=TRUE, message=FALSE , warning=FALSE>>=
+set.seed(1)
+n <- 10
+eval <- rosenbrock.problem(size = n)$evaluate
+@
+
+Algoritmoa aplikatzeko partikula kopurua, hasierako kokapenak eta abiadurak, abiadura maximoa, \eng{personal best} koefizientea eta \eng{global best} koefizientea ezarri behar ditugu:
+
+<<PSO_2, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
+nparticles <- 100
+ipos <- lapply(1:nparticles , FUN = function (i) runif(n))
+args <- list()
+args$initial.positions  <- ipos 
+args$initial.velocity   <- 0
+args$max.velocity       <- 5
+args$c.personal         <- 2
+args$c.best             <- 4
+@
+
+Horrez gain, helburu funtzioa eta baliabide konputazionalak ere finaktu behar ditugu.
+
+<<PSO_3, cache=TRUE , prompt=TRUE , echo = -1 , message=FALSE , warning=FALSE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=7 , fig.height=4>>=
+args$verbose    <- FALSE
+args$evaluate   <- eval
+args$resources  <- cresource(time=10)
+
+res.pso <- do.call(basic.pso , args)
+
+plot.progress(res.pso , x = 'iterations' , y = 'best') + labs(y="Best Solution")
+plot.progress(res.pso , x = 'iterations' ) + labs(y="Average Solution")
+@
+
+\ref{fig:Rosenbrock} irudiak bilaketaren progresioa erakusten du. Ezkereko grafikoan partikulen batazbesteko ebaluazioa erakusten da, iterazioz iterazio; eskubikoak, berriz, bilaketan zehar topatutako soluziorik onenaren \eng{fitness}-aren progresioa erakusten du. Beste algoritmoetan ez bezala, partikulen helburu funtzioaren balioek ez dute konbergitzen; hala eta gusitz ere, bilaketak aurrera egiten du eta, azkenean, optimotik oso hurbil gelditzen da --Rosenbrock funtzioaren balio minimoa 0 da--.
+
+
+\begin{figure}[t]
+\subfigure[Batazbesteko soluzioaren progresioa]{
+\includegraphics[width=0.45\textwidth] {./Irudiak/PSO_3-2}
+}\qquad
+\subfigure[Soluzio onenaren progresioa]{
+\includegraphics[width=0.45\textwidth] {./Irudiak/PSO_3-1}
+}\\
+\caption{PSO algoritmoaren progresioa Rosenbrock probleman}\label{fig:Rosenbrock}
+\end{figure}
 
 
 \bibliographystyle{plain}
