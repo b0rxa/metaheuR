@@ -57,6 +57,7 @@ export(
   graph.coloring.problem,
   mis.problem,
   mds.problem,
+  rosenbrock.problem,
   cresource,
   swapNeighborhood ,
   basic.local.search,
@@ -92,5 +93,6 @@ export(
   vectorPheromone,
   permuLinkPheromone,
   permuPosPheromone,
-  basic.aco
+  basic.aco,
+  basic.pso
 )

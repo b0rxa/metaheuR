@@ -60,7 +60,7 @@ create.new.solutions <- function (pheromones , needed.solutions , non.valid , va
 basic.aco<-function (evaluate , nants , pheromones , update.sol = 'best.it', update.value = NULL , do.log = TRUE , verbose = TRUE , non.valid='ignore', valid=function(solution){TRUE} , correct=function(solution){solution}, resources = cresource() , ...){
   
   if (!is.null(update.value) && update.value <= 0) stop("The value to update the solution has to be a positive value")
-    
+  
   ## Initialization
   t0 <- Sys.time()
   
@@ -118,9 +118,9 @@ basic.aco<-function (evaluate , nants , pheromones , update.sol = 'best.it', upd
              })
            })
     
-
+    
     add.consumed(resources, t = as.numeric(Sys.time() - t0) , ev = nants , it = 1)
-
+    
     ## Logging
     if (do.log)
       log <- rbind(log , data.frame(Iterations = consumed.iterations(resources) ,
@@ -138,6 +138,147 @@ basic.aco<-function (evaluate , nants , pheromones , update.sol = 'best.it', upd
                              pheromones = deparse(substitute(pheromones)),
                              update.sol = update.sol,
                              update.value = update.value),
+           optima = list (best.solution) , 
+           evaluation = best.evaluation , 
+           resources = resources ,
+           log = log)
+}
+
+
+random.speed <- function (dimension , initial.velocity){
+  speed <- runif(dimension)
+  speed <- speed / sum(speed)
+  return(speed * initial.velocity)
+}
+
+
+#' @title Basic PSO
+#'
+#' @export
+#' @family Swarm Intelligence
+#' @description This function implements a basic version of the PSO algorithm
+#' @param evaluate Function of a single parameter. Given a solution, the function returns its evaluation as a real number. 
+#' @param initial.positions A list of solutions representing the initial positions of the particles
+#' @param initial.velocity A list containing the intial velocities of the particles
+#' @param max.velocity Maximum velocity allowed to a particle
+#' @param c.personal Coefficient for the personal best solution (i.e., the cognitive component)
+#' @param c.best Coefficient for the global best solution (i.e., the social component)
+#' @param do.log Logic value to indicate whether the progress shoul be tracked or not
+#' @param verbose Logic value to indicate whether the function should print information about the search
+#' @param non.valid Action to be performed when a non valid solution is considered. The options are \code{'ignore'}, meaning that the solution is considered anyway, \code{'discard'}, meaning that the solution is not considered and \code{'correct'}, meaning that the solution has to be corrected. This parameter has to be set only when there can be non valid solutions
+#' @param valid A function that, given a solution, determines whether it is valid or not
+#' @param correct A function that, given a non valid solution, corrects it. This optional parameter has to be set only with the \code{'correct'} option
+#' @param resources Object of class \code{\linkS4class{CResource}} representing the available computational resources for the search. Bear in mind that there is no other stop criterion beyond a limited amount of resources. Therefore, you should set, at least, a limit to the total time, evaluations or iterations
+#' @param ... Special argument to pass additional parameters to the functions used in the search
+#' @return The function returns an object of class \code{\linkS4class{MHResult}} with all the information about the search
+#' @details This basic version of the PSO only works with numeric problems and, thus, the solutions have to be numeric vectors.
+#' 
+#' @seealso \code{\link{tournament.selection}}
+
+basic.pso<-function (evaluate , initial.positions , initial.velocity , max.velocity , c.personal , c.best ,  do.log = TRUE , verbose = TRUE , non.valid='ignore', valid=function(solution){TRUE} , correct=function(solution){solution}, resources = cresource() , ...){
+  
+  if (initial.velocity < 0) stop("The initial speed has to be a positive value")
+  if (max.velocity < 0) stop("The max speed has to be a value greater than zero")
+  if (c.best<0 | c.personal <0) stop("Both c.best and c.personal have to be positive values")
+  
+  initial.velocity <- max(initial.velocity , max.velocity)
+  
+  ## Initialization
+  t0 <- Sys.time()
+  current.positions <- initial.positions
+  personal.best <- current.positions
+  nparticles <- length(initial.positions)
+  current.evaluation <- sapply(initial.positions , FUN = evaluate)
+  personal.evaluation <- current.evaluation
+  current.speeds <- lapply (1:nparticles , FUN = function(i) random.speed(length(current.positions[[1]]) , initial.velocity))
+  
+  add.consumed(resources, t = as.numeric(Sys.time() - t0) , ev = nparticles)
+  
+  best.evaluation <- min(current.evaluation)
+  best.solution <- current.positions[[which.min(current.evaluation)]]
+  sol.length <- length(best.solution)
+  
+  log <- NULL
+  if (do.log)
+    log <- data.frame(Iterations = consumed.iterations(resources) ,
+                      Evaluations = consumed.evaluations(resources) ,
+                      Time = consumed.time (resources) , 
+                      Current_sol = mean(current.evaluation) ,
+                      Current_sd = sd(current.evaluation) , 
+                      Best_sol = best.evaluation)
+  
+  ## Main Loop
+  iteration <- 0
+  while(!is.finished(resources)){
+    iteration <- iteration + 1
+    if (verbose) cat(paste("Running iteration " , iteration , 
+                           ". Current average solution = " , signif(mean(current.evaluation) , 3), 
+                           " +- " , signif(sd(current.evaluation) , 3) , 
+                           ". Best solution = " , best.evaluation, "\n" , sep=""))
+    
+    t0 <- Sys.time()
+    ## First we have to update the speeds. For that, generate a random number for the personal best and another one for the global best
+    rnd.personal <- runif(sol.length)
+    rnd.best <- runif(sol.length)
+    
+    current.speeds <- lapply(1:nparticles , FUN = function (i) {
+      new.speed <- current.speeds [[i]] + rnd.personal *c.personal*(personal.best[[i]] - current.positions[[i]]) + rnd.best*c.best*(best.solution - current.positions[[i]])
+      if (sum(sqrt(new.speed^2)) > max.velocity) new.speed <- new.speed / max.velocity
+      return(new.speed)
+    })
+    
+  
+    ## Now, we update the position. 
+    if (non.valid == 'correct'){
+      current.positions <- lapply (1:nparticles , FUN = function(i) {
+        pos <- current.positions[[i]] + current.speeds[[i]] 
+        if (!valid(pos)) pos<-correct(pos)
+        return (pos)
+        })      
+    }else if(non.valid == 'ignore'){
+      current.positions <- lapply (1:nparticles , FUN = function(i) current.positions[[i]] + current.speeds[[i]] )
+    }else{
+      stop("basic.pso only accpets two ways of handling non valid solutions, ignoring the fact that they are not valid or correcting them")
+    }
+
+    
+    ## Update the global and personal bests
+    current.evaluation <- sapply(current.positions , FUN = evaluate)
+    
+    if(min(current.evaluation) < best.evaluation){
+      best.evaluation <- min(current.evaluation)
+      best.solution <- current.positions[[which.min(current.evaluation)]]
+    }
+
+    lapply (1:nparticles , FUN = function (i){
+      if (current.evaluation[[i]] < personal.evaluation[[i]]){
+       personal.best[[i]] <<- current.positions[[i]]
+       personal.evaluation[[i]] <<- current.evaluation[[i]]
+      }
+    })
+    
+    
+    add.consumed(resources, t = as.numeric(Sys.time() - t0) , ev = nparticles , it = 1)
+    
+    ## Logging
+    if (do.log)
+      log <- rbind(log , data.frame(Iterations = consumed.iterations(resources) ,
+                                    Evaluations = consumed.evaluations(resources) ,
+                                    Time = consumed.time (resources) , 
+                                    Current_sol = mean(current.evaluation) ,
+                                    Current_sd = sd(current.evaluation) , 
+                                    Best_sol = best.evaluation))
+    
+  }  
+  ## Build the output
+  mhresult(algorithm = "Basic PSO" ,
+           description = paste("Basic PSO guided by " , deparse(substitute(evaluate))) ,
+           parameters = list(nparticles = nparticles,
+                             initial.solutions = deparse(substitute(initial.positions)),
+                             initial.velocity = initial.velocity,
+                             max.velocity = max.velocity,
+                             c.personal = c.personal,
+                             c.best = c.best),
            optima = list (best.solution) , 
            evaluation = best.evaluation , 
            resources = resources ,

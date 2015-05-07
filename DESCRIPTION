@@ -16,6 +16,7 @@ Collate: Neighborhood.R
   UnivariateMarginals.R
   MallowsModel.R
   permutation_problems.R
+  continuous_problems.R
   subset_problems.R
   graph_problems.R
   FlipNeighborhood.R
