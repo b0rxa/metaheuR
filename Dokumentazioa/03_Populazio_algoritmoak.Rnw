@@ -14,6 +14,7 @@
 \newcommand{\hgl}[1]{\zkk #1\skk\ }
 
 \begin{document}
+%\SweaveOpts{concordance=TRUE}
 \ikasturtea{2014/2015}
 \irakasgaia{Bilaketa Heuristikoak}
 \title{BHLN: Populazioan oinarritutako algoritmoak}
@@ -132,7 +133,7 @@ url <- system.file("bays29.xml.zip" , package = "metaheuR")
 cost.matrix <- tsplib.parser(url)
 @
 
-Orain, \code{tsp.greedy} funtzioan oinarrituta ausazko soluzio onak sortzeko funtzio bat definitzen dugu.
+Orain, \code{tsp.greedy} funtzioan oinarrituta, ausazko soluzio onak sortzeko funtzio bat definitzen dugu.
 
 <<heur_init_2 , prompt=TRUE, message=FALSE, cache=TRUE>>=
 rnd.sol <- function(cl.size = 5){
@@ -140,14 +141,14 @@ rnd.sol <- function(cl.size = 5){
 }
 @
 
-\code{tsp.greedy} funtzioak TSP-rako algoritmo eraikitzaile bat inplementatzen du; pausu bakoitzean, uneko hiritik zein hirira mugituko garen erabakitzen da. Hiria aukeratzeko gertuen dauden \code{cl.size} hirietatik --5, gure kasuan-- bat ausaz aukeratzen da. Populazioa sortzeko funtzio hau erabiliko dugu.
+Aurreko kapituluetan azaldu bezala, \code{tsp.greedy} funtzioak TSP-rako algoritmo eraikitzaile bat inplementatzen du; pausu bakoitzean, uneko hiritik zein hirira mugituko garen erabakitzen da, gertuen dauden \code{cl.size} hirietatik --5, gure kasuan-- bat ausaz aukeratuz. Honetan oinarrituz, populazioa sortzeko funtzio hau erabiliko dugu.
 
 <<heur_init_3 , prompt=TRUE, message=FALSE, cache=TRUE>>=
 pop.size <- 25
 population <- lapply (1:pop.size , FUN = function(x) rnd.sol())
 @
 
-Hautagaien zerrenda problemaren tamainaraino handitzen badugu, pausu bakoitzean aukera guztietatik bat ausaz hartuko dugu, hots, guztiz ausazkoak diren soluzioak sortuko ditugu. Hau eginda populazioaren kalitatea goiko kodearekin lortutakoa baino txarragoa izango da:
+Hautagaien zerrendaren tamainari (\code{cl.size}) problemaren tamainaren balioa ezartzen badiogu, pausu bakoitzean, aukera guztietatik bat ausaz hartuko dugu, hots, guztiz ausazkoak diren soluzioak sortuko ditugu. Azken aukera honekin, populazioaren kalitatea goiko kodearekin lortutakoa baino okerragoa izango da:
 
 <<heur_init_4 , prompt=TRUE, message=FALSE, cache=TRUE>>=
 rnd.population <- lapply (1:pop.size , 
@@ -158,7 +159,7 @@ eval.rnd <- unlist(lapply(rnd.population , FUN = tsp$evaluate))
 @
 
 
-Bi populazioen ebaluazioak \eng{boxplot} baten bidez aldera dezakegu.
+Bi populazioen ebaluazioak \eng{boxplot} baten bidez aldera ditzakegu:
 
 <<plot_heur_vs_rnd , echo = -1, cache=TRUE , warning=FALSE, prompt=TRUE , cache=TRUE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=8 , fig.height=4>>=
 library("ggplot2")
@@ -173,20 +174,18 @@ ggplot(df , aes(x = Method , y = Evaluation)) + geom_boxplot()
 \caption{Ausazko hasieraketa eta hasieraketa heuristikoaren arteko konparaketa. Y ardatzak metodo bakoitzarekin sortutako soluzioen \eng{fitness}-a adierazten du.}\label{fig:heur_vs_rnd_init_pop}
 \end{figure}
 
-\ref{fig:heur_vs_rnd_init_pop} irudiak lortutako emaitzak erakusten ditu; argi eta garbi ikus daiteke heuristikoa erabiliz sortutako soluzioak hobeak direla.
+\ref{fig:heur_vs_rnd_init_pop} irudiak lortutako emaitzak erakusten ditu. Helburua minimizazioa dela kontutan hartuz, argi eta garbi ikus daiteke heuristikoa erabiliz sortutako soluzioak hobeak direla.
 
-Soluzioak sortzeko metodoak ez ezik, populazioaren tamainak ere badu eragin handia azken emaitzan. Izan ere, populazioaren tamaina egokitu behar den oso parametro garrantzitsua izango da. Populazioak txikiegiak badira, dibertsitatea mantentzea oso zaila izango da eta, hortaz, belaunaldi gutxitan algoritmoa konbergituko da. Beste aldetik, populazioa handiegia bada, konbergentzia abiadura motelduko da baina kostu konputazionala handituko da; hurrengo atalean adibide baten bidez ikusiko dugu hau. Ez dago irizpide finkorik tamaina ezartzeko, problema bakoitzeko egokitu beharko da. Edonola ere, irizpide orokor gisa esan dezakegu populazio azkar konbergitzen badu --hots, soluzioen arteko distantzia azkar txikitzen bada--, konponbidea populazioare tamaina handitzea izan daitekeela. 
+Soluzioak sortzeko metodoak ez ezik, populazioaren tamainak ere badu eragin handia azken emaitzan, eta  egokitu beharreko oso parametro garrantzitsua da. Algoritmoak darabiltzan populazioak txikiegiak badira, dibertsitatea mantentzea oso zaila izango da eta, hortaz, belaunaldi gutxitan algoritmoak konbergitu egingo du, ziurrenik optimoa ez den soluzio batera. Beste aldetik, populazioak handiegiak badira, konbergentzia abiadura motelagoa izango da baina, ondorioz, kostu konputazionala ere handiagoa bilakatuko da; hurrengo atalean adibide baten bidez ikusiko dugu hau. Honenbestez, ez dago irizpide finkorik populazioen tamaina ezartzeko eta problema bakoitzerako balio egoki bat bilatu beharko da. Edonola ere, irizpide orokor gisa esan dezakegu populazioak azkar konbergitzen badu --hots, soluzioen arteko distantzia azkar txikitzen bada--, soluzio hobeak lortzeko modua populazioaren tamaina handitzea izan daitekeela. 
 
 
 \subsubsection{Hautespena}
 
-Algoritmo ebolutibotan populazioaren murriztea urrats garrantzitsua da, populazioaren eboluzioa kontrolatzen duen prozesua baita. Orokorrean, populazioan dauden soluziorik onenak hautatzea interesatuko zaigu eta hori da, hain zuzen, gehien erabiltzen den hautespena; bakarrik soluziorik onenak aukeratzen dituenez, hautespen honi \zkk elitista\skk\ deritzo. Soluzio onak aukeratzea garrantzitsua da baina, dibertsitatea mantentzearren, tarteka soluzio txarrak ere sartzea komenigarria izan daiteke. Hau zuzenea egiterik egon arren, badaude beste hautespen metodoak era probabilistikoan egiten dutenak.
+Algoritmo ebolutibotan populazioko soluzio batzuen aukeraketa urrats garrantzitsua da, populazioaren eboluzioa kontrolatzen duen prozesua baita. Orokorrean, populazioan dauden soluziorik onenak hautatzea da gehien erabiltzen den hautespen irizpidea: hautespen \zkk elitista\skk\. Alabaina, soluzio onak aukeratzea garrantzitsua bada ere, dibertsitatea mantentzearren, tarteka soluzio txarrak sartzea ere komenigarria izaten da. Hau zuzenean egin daiteke, baina badaude aukeraketa metodo egokiago batzuk soluzio txarrak estrategia probabilistikoak erabiliz aukeratzen dituztenak.
 
-Erruleta-hautespena,  (\textit{Roulette Wheel selection}, ingelesez) deritzon estrategian soluzioak erruleta batean kokatzen dira; soluzio bakoitzari dagokion erruletaren zatia bere ebaluazioarekiko proportzionala izango da. \ref{fig:roulette} irudian ikus daitekeen bezala, erruleta jaurtitzen den bakoitzean indibiduo bat hautatzen da; hautatua izateko probabilitatea erruleta zatiaren tamaina eta, hortaz, indibiduoen ebaluazioarekiko proportzionala da. 
+Erruleta-hautespena,  (\textit{Roulette Wheel selection}, ingelesez) deritzon estrategian soluzioak erruleta batean kokatzen dira; soluzio bakoitzari, bere ebaluazioarekiko proportzionala den, erruletaren zati bat esleituko zaio. Hau honela, \ref{fig:roulette} irudian ikus daitekeen bezala, erruleta jaurtitzen den bakoitzean indibiduo bat hautatzen da. Hautatua izateko probabilitatea erruleta zatiaren tamaina eta, hortaz, indibiduoen ebaluazioarekiko proportzionala da. Indibiduo bat baino gehiago aukeratu behar baldin badugu, behar adina erruleta jaurtiketa egin ditzakegu. 
 
-Indibiduo bat baino gehiago aukeratu behar baldin badugu, behar ditugun erruletaren jaurtiketak egin ditzakegu. Alabaina, honek alborapenak sor ditzake; efektu hau saihesteko erruletan puntu bakar bat markatu beharrean (gezia, \ref{fig:roulette} irudian), behar ditugun puntuak finkatu ahal ditugu. Era honetan, jaurtiketa bakar batekin nahikoa da behar ditugun indibiduo guztiak hautatzeko. Teknika hau populazioa murrizteko zein indibiduoak gurutzatzeko hautespenean erabil daiteke.
-
-\eng{Fitness}aren magnitudea problema eta, are gehiago, instantzien araberakoa da. Hori dela eta, probabilitateak zuzenean helburu funtzioaren balioarekiko proportzionalak badira, oso distribuzio radikalak izan ditzakegu. Arazo hau ekiditeko, helburu funtzioaren balioa zuzenean erabili beharrean soluzioen ranking-a erabili ahal da.
+Azkenik, esan beharra dago, \eng{fitness}aren magnitudea problema eta, batez ere, instantzien araberakoa dela. Hori dela eta, erruleta banatzeko probabilitateak zuzenean helburu funtzioaren balioak erabiliz kalkulatzen badira, oso distribuzio erradikalak izan ditzakegu. Arazo hau ekiditeko, helburu funtzioaren balioa zuzenean erabili beharrean soluzioen ranking-a erabiltzea posible da.
 
 \begin{figure}[t]
 \centering
@@ -195,29 +194,28 @@ Indibiduo bat baino gehiago aukeratu behar baldin badugu, behar ditugun erruleta
 \label{fig:roulette}
 \end{figure}
 
-Beste hautespen probabilistiko bat Lehiaketa-hautespena da. Estrategia honetan hautespena bi pausutan egiten da. Lehenengo urratsean indibiduo guztietatik azpi-multzo bat aukeratzen da, guztiz ausaz (ebaluazioa kontutan hartu barik). Ondoren, aukeratu ditugun indibiduoetatik onena hautatzen dugu. Azpi-multzoa ausaz aukeratzen denez, bertan oso soluzio txarrak leudeke eta, hortaz, nahiz eta onena hautatu, soluzioa txarra izan daiteke.
-
+Beste hautespen probabilistiko mota bat Lehiaketa-hautespena da. Estrategia honekin soluzioen aukeraketa bi pausutan egiten da. Lehenengo urratsean indibiduo guztietatik azpi-multzo bat aukeratzen da, guztiz ausaz (ebaluazioa kontutan hartu barik). Ondoren, azpi-multzo honetatik soluziorik onena hautatzen dugu. Azpi-multzoen eraketa guztiz ausaz egiten denez, hauetako batzuk, oso soluzio txarrez osatuta egon daitezke. Kasu hauetan, nahiz eta onena aukeratu, populazio berrirako gordeko dugun soluzioa ez da ona izango eta, honenbestez, soluzio on eta txarren aukeraketa baimentzen du hautespen metodo honek. 
 
 \subsubsection{Gelditze Irizpideak}
 
-Lehen apiatu bezala, algoritmo ebolutioben begizta nagusia amaigabea da eta, beraz, algoritmoa gelditzeko irizpideren bat ezarri behar dugu, bilaketari amaiera emateko. Hurbilketarik sinpleena irizpide estatikoak erabiltzea da, hala nola, denbora maximoa ezartzea, ebaluazioak mugatzea, etab.
+Lehen apiatu bezala, algoritmo ebolutiboen begizta nagusia amaigabea da eta, beraz, gelditzeko irizpideren bat ezarri behar dugu, bilaketak amaiera izan dezan. Hurbilketarik sinpleena irizpide estatikoak erabiltzea da, hala nola, denbora maximoa ezartzea, ebaluazioak mugatzea, etab.
 
-Gelditzeko irizpideak dinamikoak ere izan daitezke, eboluzioaren prozesuari erreparatzen badiogu. Balunaldiz balaundi populazioan dauden soluzioak geroz eta hobeak dira eta, aldi berean, populazioaren dibertsitatea murrizten da. Beste era batean esanda, populazioko soluzioek soluzio bakar batera konbergitzeko joera dute.
+Bestalde, gelditzeko irizpide dinamikoak, hau da, eboluzioaren prozesuari erreparatzen diotenak ere erabili daitezke. Balunaldiz belaunaldi populazioan dauden soluzioak geroz eta hobeak dira eta, aldi berean, populazioaren dibertsitatea murrizten da, soluzio batera konbergitzeko joerarekin. Hau hala izanik, populazioaren dibertsitatea gelditze irizpide dinamikoak eraikitzeko erabil daiteke.
 
-Hori gertatzen denean eboluzioa moteltzen denez, popluzaioaren dibertsitatea gelditzeko irizpide gisa erabili ahal da. Dibertsitatea soluzioei zein beraien \eng{fitness}-ari erreparatuz neur daiteke. Esate baterako, soluzioen arteko distatzia neurtzerik badago, indibiduoen arteko bataz besteko distantzia minimo bat ezar dezakegu.
+Dibertsitatea soluzioei zein beraien \eng{fitness}-ari erreparatuz neur daiteke. Esate baterako, soluzioen arteko distatzia neurtzerik badago, indibiduoen arteko bataz besteko distantzia minimo bat ezar dezakegu gelditze irizpide gisa.
 
 \subsubsection{Algoritmo Genetikoak}
 
-Atal honetan algoritmo genetikotan \cite{holland1975} soluzio berriak algoritmo genetikoetan nola sortzen diren ikusiko dugu. Algoritmo hauek naturan espeziekin gertatzen dena imitatzen dute. Era honetan, zenbait paralelismo ezar daitezke:
+Atal honetan algoritmo genetikoetan \cite{holland1975} soluzio berriak nola sortzen diren ikusiko dugu. Algoritmo genetikoak naturan espezieen eboluzioarekin gertatzen dena imitatzen dute eta, beraz, fenomeno honekin zenbait paralelismo ezar daitezke:
 
 \begin{itemize}
-\item Espezieen indibiduoak = Problemaren soluzioak
+\item Espezie bateko indibiduoak = Problemaren soluzioak
 \item Indibiduoen egokitasuna --\eng{fitness}-a, alegia-- = Soluzioaren ebaluazioa
-\item Espeziearen populazioa = Soluzio multzoa
+\item Espeziearen populazioa = Soluzio multzoa/populazioa
 \item Ugalketa = Soluzio berrien sorkuntza
 \end{itemize}
 
-Beraz, algoritmo genetikoetan soluzio berriak sortzeko indibiduen ugalketan oinarrituko gara.  Ugalketa prozesuaren xedea zenbait indibiduo emanda --bi, normalean--, indibiduo gehiago sortzea da. Ohikoena prozesu hau bi pausutan banatzea da: soluzioen gurutzaketa eta mutazioa. Lehenaren helburua \hgl{guraso}-soluzioek duten ezaugarriak soluzio berriei pasatzea da. Bigarrenarena, berriz, sortutako soluzioetan ezaugarri berriak sartzea da. Jarraian soluzioak maneiatzeko bi operadore hauek aztertuko ditugu.
+Beraz, algoritmo genetikoetan soluzio berriak sortzeko estrategiak diseinatzean indibiduen ugalketa prozesuan oinarrituko gara.  Ugalketa prozesuaren xedea zenbait indibiduo emanda --bi, normalean--, indibiduo berriak sortzea da. Ohikoena prozesu hau bi pausutan banatzea da: soluzioen gurutzaketa eta mutazioa. Lehenaren helburua \hgl{guraso}-soluzioek dituzten ezaugarriak soluzio berriei pasatzea da, espezieen gurutzaketan jazotzen den bezala. Bigarrenarena, berriz, sortutako soluzio berriei ezaugarri berriak eranstea da. Jarraian soluzioak maneiatzeko bi operadore hauek aztertuko ditugu.
 
 \begin{figure}[tb]
 \centering
@@ -228,11 +226,11 @@ Beraz, algoritmo genetikoetan soluzio berriak sortzeko indibiduen ugalketan oina
 
 \subsubsection{Gurutzaketa} 
 
-Bi soluzio --edo gehiago-- gurutzatzen ditugunean euren propietateak sortutako soluzioei transmititzea da gure helburua. Hori lortzeko, soluzioei operadore mota berezi bat aplikatuko diegu, \hgl{gurutze-operadorea} --\eng{crossover}, ingelesez--. Operadore honek soluzioen kodeketarekin dihardu eta, beraz, operadorea hautatzean soluzioak nola adieratzen dugun aintzat hartu beharko dugu. 
+Bi soluzio --edo gehiago-- gurutzatzen ditugunean euren propietateak sortutako soluzio berriei transmititzea da helburua. Optimizazio arloan, soluzioen arteko gurutzaketak \hgl{gurutzaketa-operadore}-en --\eng{crossover}, ingelesez-- bidez egiten dira. Operadore hauek soluzioen kodeketarekin dihardute eta, beraz, gurutzatze operadore zehatz bat hautatzean soluzioak nola adieratzen ditugun aintzat hartu beharko dugu. 
 
-Badaude zenbait operadore kodeketa klasikoekin erabil daitezkeenak. Ezagunena puntu bakarreko gurutzatzea -- \eng{one-point crossover}, ingelesez -- deritzona da. Demagun soluzioak bektoreen bidez kodetzen ditugula. Bi soluzio, $s_1$ eta $s_2$ parametro gisa hartuz, operadore honek beste bi soluzio berri sortzen ditu. Horretarako, lehenik eta behin, ausazko posizio bat $i$ aukeratu behar da. Gero, lehenengo soluzio berria $s_1$ soluziotik lehenengo $i$ elementuak eta $s_2$ soluziotik beste gainontzekoak kopiatuz sortuko dugu. Era berean, bigarren soluzio berria $s_2$-tik lehenengo elementuak eta besteak $s_1$-etik kopiatuz sortuko dugu.  \ref{fig:point_crossover} irudiaren ezkerraldean adibide bat ikus daiteke. Irudiak ideia nola orokor daitekeen ere erakusten du, puntu bakar bat erabili beharrean bi, hiru, etab. puntu erabiliz.
+Badaude kodeketa klasikoekin erabil daitezkeen zenbait oinarrizko gurutzaketa operadore. Ezagunena puntu bakarreko gurutzaketa -- \eng{one-point crossover}, ingelesez -- deritzona da. Demagun soluzioak bektoreen bidez kodetzen ditugula. Bi soluzio, $s_1$ eta $s_2$ hartuz, operadore honek beste bi soluzio berri sortzen ditu. Horretarako, lehenik eta behin, ausazko posizio bat, $i$, aukeratu behar da. Hau egin ahala, lehenengo soluzio berria $s_1$ soluziotik lehenengo $i$ elementuak eta $s_2$ soluziotik gainontzekoak ($i+1$-tik aurrerakoak) kopiatuz sortuko dugu. Era berean, bigarren soluzio berria $s_2$-tik lehenengo $i$ elementuak eta $s_1$-etik $i+1$ posiziotik aurrerako elementuak kopiatuz sortuko dugu.  \ref{fig:point_crossover} irudiaren ezkerraldean \eng{one-point crossover} operazioaren aplikazioaren adibide bat ikus daiteke. Gainera, eskuineko irudiak operadore hau nola orokortu daitekeen erakusten du, puntu bakar bat erabili beharrean bi, hiru, etab. puntu erabiliz. 
 
-Operadore hau \code{metaheuR} liburutegian inplementaturik dago, \code{k.point.crossover} funtzioan. Ikus ditzagun adibide batzuk:
+Azken operadore orokorrago honi, \eng{k-point crossover} deritzo eta \code{metaheuR} liburutegiko \code{k.point.crossover} funtzioan inplementaturik dago. Ikus ditzagun bere erabileraren adibide batzuk:
 
 <<k_point_cross , prompt=TRUE, echo=-1 , message=FALSE, cache=TRUE>>=
 set.seed(666)
@@ -245,11 +243,11 @@ k.point.crossover(A.sol , B.sol , 5)
 k.point.crossover(A.sol , B.sol , 20)
 @
 
-Azken adibidean ikus daitekeen bezala, $n$ tamainako bektore bat izanik gehienez $n-1$ puntu erabil ditzakegu operadore honetan; edonola ere, balio handiagoa erabiltzen badugu funtzioak abisu bat emango du eta parametroa bere balio maximoan ezarriko du. Balio maximoarekin jatorrizko soluzioen elementuak tartekatuko dira; operadore honi \eng{uniform crossover} deritzo.
+Azken adibidean ikus daitekeen bezala, $n$ tamainako bektore bat izanik, gehienez $n-1$ puntuko gurutzaketa aplikatu dezakegu; edonola ere, balio handiago bat aukeratzen badugu funtzioak abisu bat emango du eta puntu kopuruaren parametroa bere balio maximoan ezarriko du. Balio maximoa aukeratuz gero, jatorrizko \hgl{guraso} soluzioen elementuak tartekatuta agertuko dira soluzio berrietan; operadore honi \eng{uniform crossover} deritzo.
 
-Erabiliko dugun puntu kopurua eragin handia izan dezake algoritmoaren performantzian eta, hortaz, egokitu behar den algoritmoaren parametrotzat hartu beharko genuke. 
+Erabiliko dugun puntu kopuruak eragin handia izan dezake algoritmoaren performantzian eta, hortaz, egokitu beharreko algoritmoaren parametroa da. 
 
-Ikusitako operadorea nahiko orokorra da, ia edozen bektoreari aplikatu ahal baitzaio. Hala eta guztiz ere, kodeketa batzuetan operadore bereziak erabil daitezke\cite{gwiazda2006}. Esate baterako, bektore errealak baldin baditugu, bi bektore harturik era ezberdinetan konbina daitezke; adibidez, bataz bestekoa kalkulatuz. Ikus dezagun operadore hau nola inplementa daitekeen R-n:
+\eng{k-point crossover} operadorea nahiko orokorra da, ia edozen bektoreari aplikatu ahal baitzaio. Hala eta guztiz ere, kodeketa batzuetan beste operadore espezifikoagoak erabiltzea egokiagoa izan daiteke\cite{gwiazda2006}. Esate baterako, soluzioak bektore errealen bidez kodetuta badaude, bi soluzio era ezberdin askotan konbina daitezke; adibidez, bataz bestekoa kalkulatuz. Ikus dezagun operadore hau nola inplementa daitekeen R-n:
 
 <<mean_cross , prompt=TRUE, message=FALSE, cache=TRUE>>=
 mean.crossover <- function (sol1 , sol2){
@@ -264,9 +262,10 @@ s2
 mean.crossover(s1 , s2)
 @
 
-Permutazioak ere bektoreak dira baina, kasu honetan, \eng{k point crossover} operadorea ezin da erabili, permutazioetan ditugun murrizketak direla eta. Hortaz, permutazioak gurutatzeko operadore bereziak behar ditugu. Aukera asko izan arren \cite{talbi2009}, hemen puntu bakarreko gurutzatze operadorearen baliokidea ikusiko dugu. Lehenik eta behin, ikus dezagun zergatik puntu bakarreko operadorea ezin da zuzenean aplikatu permutazioei. Izan bitez bi permutazio, $s_1 = 12345678$ eta $s_2=87654321$, eta gurutzatze puntu bat, $i=3$. Lehenengo soluzio berria lortzeko $s_1$ soluziotik lehendabiziko hiru posizioak kopiatuko ditugu, hau da, $123$, eta besteak $s_2$-tik, hots, $54321$. Hortaz, lortutako soluzioa $s^\prime = 12354321$ izango zen baina, zoritxarrez, hau ez da permutazio bat.
+Permutazioak ere bektoreak dira baina, bete beharreko murrizketak direla eta, \eng{k-point crossover} operadorea ezin da erabili kodeketa mota honekin.  Ikus dezagun hau argiago ikusten lagunduko digun adibide bat. Izan bitez bi permutazio, $s_1 = 12345678$ eta $s_2=87654321$, eta gurutzatze puntu bat, $i=3$. Lehenengo soluzio berria lortzeko $s_1$ soluziotik lehendabiziko hiru posizioak kopiatuko ditugu, hau da, $123$, eta besteak $s_2$-tik, hots, $54321$. Hortaz, lortutako soluzioa $s^\prime = 12354321$ izango zen baina, zoritxarrez, hau ez da permutazio bat. Hortaz, permutazioak gurutatzeko operadore bereziak behar ditugu. 
 
-Nola saihestu daiteke arazo hau? Soluzio sinple bat hauxe da: lehenengo posizioak zuzenean soluzio batetik kopiatzea; besteak zuzenean beste soluziotik kopiatu beharrean, ordena bakarrik erabiliko dugu. Hau da, soluzio berria sortzeko $s_1$-etik lehenengo 3 elementuak kopiatuko ditugu, $123$, eta falta direnak, $45678$, $s_2$-an agertzen den ordenean kopiatuko ditugu, hots, $87654$. Emaitza, beraz, $s^\prime = 12387654$ izango da eta beraz, orain bai, permutazio bat lortu dugu. Era berean, beste soluzio berri bat sor daiteke $s_2$-tik lehenengo hiru posizioak kopiatuz ($876$) eta beste gainontzeko guztiak $s_1$-an duten ordenean kopiatuz ($12345$); beste soluzioa, beraz, $87612345$ izango da. Operadore honi \hgl{Order crossover} deritzo eta \code{metaheuR} liburutegian inplementaturik dago, \code{order.crossover} funtzioan \footnote{Funtzio honetan inplementatuta dagoena \eng{2-point crossover} operadorea da. Hau da, bi puntu erabiltzen dira eta, soluzioak eraikitzeko, bi puntuen artean dagoena soluzio batetik kopiatu ondore, beste gainontzeko elementuak beste soluzioan duden ordenean erabiltzen dira.}.
+Aukera asko izan arren \cite{talbi2009}, hemen puntu bakarreko gurutzatze operadorearen baliokidea ikusiko dugu. Puntu bateko gurutzaketan bezala, hasteko, puntu bat aukeratuko dugu ausaz, $i$. Ondoren, lehenengo soluzio berria sortzeko, \hgl{guraso} soluzio baten lehenengo $i$ posizioetako balioak zuzenean kopiatuko ditugu; gainontzeko balioak zuzenean beste \hgl{guraso} soluziotik kopiatu beharrean, ordena bakarrik hartuko dugu kontutan. Hau da, aurreko adibidera itzuliz, soluzio berria sortzeko $s_1$-etik lehenengo 3 elementuak zuzenean kopiatuko ditugu, $123$, eta falta direnak, $45678$, $s_2$-an agertzen diren ordenean kopiatuko ditugu, hots, $87654$. Emaitza, beraz, $s^\prime = 12387654$ izango da eta, kasu honetan bai, permutazio bat. Era berean, bigarren soluzio berri bat sor daiteke $s_2$-tik lehenengo hiru posizioak kopiatuz ($876$) eta gainontzekoak $s_1$-n agertzen diren ordenean kopiatuz ($12345$); beste soluzioa, beraz, $87612345$ izango da. Operadore honi \hgl{Order crossover} deritzo eta \code{metaheuR} liburutegian \code{order.crossover} funtzioan \footnote{Funtzio honetan inplementatuta dagoena \eng{2-point crossover} operadorea da. Hau da, bi puntu erabiltzen dira eta, soluzioak eraikitzeko, bi puntuen artean dagoen soluzio zatia soluzio batetik zuzenean kopiatu ondoren, gainontzeko elementuak beste \hgl{guraso} soluzioan agertzen diren ordenean ezartzen dira.}.
+ inplementaturik dago. 
 
 <<order_cross , prompt=TRUE, message=FALSE , echo=-1 , warning=FALSE, cache=TRUE>>=
 set.seed(5)
@@ -282,13 +281,13 @@ as.numeric(new.solutions[[2]])
 
 \subsubsection{Mutazioa} 
 
-Naturan bezala, gure populazioa eboluzionatzeko dibertsitatea garrantzitsua da. Hori dela eta, behin soluzio berriak lortuta gurutzatze-operadorearen bidez, soluzio hauetan ausazko aldaketak eragin ohi da; aldaketa hauek mutazio operadorearen bidez sortzen dira. 
+Naturan bezala, gure populazioak eboluzionatu ahal izateko dibertsitatea garrantzitsua da. Hori dela eta, behin gurutzatze-operadorearen bidez soluzio berriak lortuta, hauetan ausazko aldaketak eragin ohi dira mutazio operadorearen bidez. 
 
-Mutazioaren kontzeptua ILS algoritmoko perturbazioaren antzerakoa da; izan ere, operadore berdinak erabil daitezke. Esate baterako, permutazio bat mutatzeko ausazko trukaketak erabil ditzakegu. ILS-an bezala, algoritmoa diseinatzean erabaki behar dugu zenbat aldaketak sortuko ditugun -- adibidean, zenbat posizio trukatuko ditugun --.
-
-Mutazio operadorea aukeratzean --eta baita diseinatzean ere-- hainbat gauza hartu behar dira kontuan. Hasteko, soluzioen bideragarritasuna mantentzea garrantzitsua da, hau da, mutazio operadorea bideragarria den soluzio bati aplikatuz gero, emaitzak soluzio bideragarria izan behako luke. Bestaldetik, bilaketa prozesua soluzio bideragarrien espazio osoa arakatzeko gaitasuna izan beharko luke eta hori bermatzeko mutazio operadoreak edozein soluzio sortzeko gai izan behar du. Hau da, edozein soluzio hartuta mutazio operadorearen bidez beste edozein soluzioa sortzeak posible izan beharko luke. Amaitzeko, lokaltasuna ere mantendu behar da --alegia, mutazioak eragindako aldaketa txikia izan behar da--, bestela gurasoengandik heredatutako ezaugarriak galdu egingo dira.
+Mutazioaren kontzeptua ILS algoritmoko perturbazioaren antzerakoa da eta kasu horretan bezalaxe, operadore ezberdinak erabil daitezke mutazioa burutzeko. Hala nola, ILS-an bezala, algoritmoa diseinatzean erabaki behar dugu zenbateko aldaketak eragingo ditugun soluzioetan. Esate baterako, permutazio bat mutatzeko ausazko trukaketak erabil ditzakegu baina zenbat posizio trukatuko ditugun aldez aurretik erabaki beharko dugu.
 
 Mutazio operadorea era probabilistikoan aplikatzen da; hau da, ez zaie soluzio guztiei aplikatzen. Hortaz, mutazioari lotutako bi parametro izango ditugu: mutazio probabilitatea eta mutazioaren magnitudea.
+
+Mutazio operadorea aukeratzean --eta baita diseinatzean ere-- hainbat gauza hartu behar dira kontuan. Hasteko, soluzioen bideragarritasuna mantentzea garrantzitsua da, hau da, mutazio operadorea bideragarria den soluzio bati aplikatuz gero, emaitzak soluzio bideragarria izan behar du. Bestalde, bilaketa prozesuak soluzio bideragarrien espazio osoa arakatzeko gaitasuna izan behar du eta, hori bermatzeko, mutazio operadoreak edozein soluzio sortzeko gai izan behar du. Hau da, edozein soluzio hartuta, mutazio operadorearen bidez beste edozein soluzio sortzea posible izan behar du. Amaitzeko, lokaltasuna ere mantendu behar da --hau da, mutazioak eragindako aldaketa txikia izan behar da--, gurasoengandik heredatutako ezaugarriak galdu ez daitezen.
 
 
 \begin{ifalgorithm}[t]
@@ -315,7 +314,7 @@ Mutazio operadorea era probabilistikoan aplikatzen da; hau da, ez zaie soluzio g
 \caption{Algoritmo genetikoen sasikodea}\label{alg:algoritmo_genetikoak}
 \end{ifalgorithm}
 
-Algoritmo genetiko orokorra \ref{alg:algoritmo_genetikoak} irudian ikus daiteke. Algoritmoan dagoen sasikodea \code{basic.genetic.algorithm} funtzioan inplementaturik dago. Ikus dezagun nola erabil daitekeen funtzio hau \eng{graph coloring} problema bat ebazteko. Lehenik, ausazko grafo bat sortuko dugu problemaren instantzia sortzeko.
+Honenbestez, algoritmo genetiko orokorra \ref{alg:algoritmo_genetikoak} irudian ikus daiteke eta sasikode hay \code{metaheuR} paketeko \code{basic.genetic.algorithm} funtzioan inplementaturik dago. Ikus dezagun funtzio honen erabilpenaren adibide bat \eng{graph coloring} problemaren instantzia bat ebazteko. Lehenik, ausazko grafo bat sortuko dugu problemaren instantzia sortzeko.
 
 <<ga_graph_col_1 , prompt=TRUE, message=FALSE , echo=-2 , warning=FALSE, cache=TRUE>>=
 library(igraph)
@@ -326,7 +325,7 @@ rnd.graph <- aging.ba.game(n = n , pa.exp = 2 ,
 gcp <- graph.coloring.problem (graph = rnd.graph)
 @
 
-Orain zenbait elementu definitu behar ditugu. Lehenengoa, hasierako populazioa izango da. Populazioa sortzeko bere tamaina ezarri behar dugu. Hau algoritmoaren parametro garrantzitsu bat denez, bi balio erabiliko ditugu, emaitzak alderatzeko: $n$ eta $10n$. Soluzioak ausaz sortuko ditugu eta, gero, bideragarriak ez badira, zuzenduko ditugu.
+Orain zenbait elementu definitu behar ditugu. Lehenengoa, hasierako populazioa izango da eta, sortu ahal izateko, lehenik, bere tamaina ezarri behar dugu. Hau algoritmoaren parametro garrantzitsu bat denez, bi balio ezberdinekin probatuko dugu, emaitzak alderatzeko: $n$ eta $10n$. Behin hasierako populazioaren tamaina definituta bertako soluzioak ausaz sortuko ditugu eta, bideragarriak ez badira, zuzenduko egingo ditugu \code{gcp} objektuaren \code{correct} funtzioa erabiliz.
 
 <<ga_graph_col_2 , prompt=TRUE, message=FALSE , warning=FALSE, cache=TRUE>>=
 n.pop.small <- n
@@ -344,10 +343,10 @@ pop.big   <- lapply(1:n.pop.big , FUN = rnd.sol)
 Hasierako populazioaz gain, ondoko parametro hauek ezarri behar ditugu:
 
 \begin{itemize}
-\item Hautespen operadoreak - Hurrengo belaunaldira pasatuko diren soluzioak aukeratzeko hautespen elitista erabiliko dugu, populazio erdia aukeratuz; zein soluzio gurutzatuko diren aukeratzeko, berriz, lehiaketa hautespena erabiliko dugu.
-\item Mutazioa - Soluzioak mutatzeko \code{factor.mutation} soluzio erabiliko dugu. Funtzio honek zenbait posizio ausaz aukeratzen ditu eta bere balioak ausaz aldatzen ditu. Funtzioak parametro bat du, \code{ratio}, zeinek aldatuko diren posizioen ratioa adierazten duen. Gure kasuan 0.1 balioa erabiliko dugu, alegia, \%10 posizio aldatuko dira mutazioa aplikatzen denean. Zein probabilitatearekin mutatuko ditugun soluzioak ere finkatu behar da, \code{mutation.rate} parametroaren bidez; gure kasuan probabilitatea bat zati populazioaren tamaina izango da.
-\item Gurutzaketa - Soluzioak gurutzatzeko \eng{k point crossover} erabiliko, $k = 2$ finkatuz. 
-\item Beste parametro batzuk - Algoritmo genetikoaren parametroaz gain, beste bi parametro finaktuko ditugu, \code{non.valid = 'discard'}, bideraezina diren soluzioak baztertu behar direla adierazteko, eta \code{resources}, gelditze irizpidea finkatzeko ($5n^2$ ebaluazio kopuru maximoa erabiliko dugu).
+\item Hautespen operadoreak - Hurrengo belaunaldira zuzenean pasatuko diren soluzioak aukeratzeko hautespen elitista erabiliko dugu, populazio erdia aukeratuz; zein soluzio gurutzatuko diren aukeratzeko, berriz, lehiaketa hautespena erabiliko dugu.
+\item Mutazioa - Soluzioak mutatzeko \code{factor.mutation} funtzioa erabiliko dugu. Funtzio honek zenbait posizio ausaz aukeratzen ditu eta bertako balioak ausaz aldatzen ditu. Funtzioak parametro bat du, \code{ratio}, aldatuko diren posizioen ratioa adierazten duena. Gure kasuan 0.1 balioa erabiliko dugu, alegia, posizioen \%10-a aldatuko da mutazioa aplikatzen denean. Soluzioak zein probabilitatearekin mutatuko ditugun soluzioak ere aurrez finkatu behar da, \code{mutation.rate} parametroaren bidez. Gure kasuan, probabilitatea bat zati populazioaren tamaina izango da.
+\item Gurutzaketa - Soluzioak gurutzatzeko \eng{k-point crossover} operadorea erabiliko dugu, $k = 2$ finkatuz. 
+\item Beste parametro batzuk - Algoritmo genetikoaren parametroaz gain, beste bi parametro finkatuko ditugu, \code{non.valid = 'discard'}, bideraezina diren soluzioak baztertu behar direla adierazteko, eta \code{resources}, gelditze irizpidea finkatzeko ($5n^2$ ebaluazio kopuru maximoa erabiliko dugu).
 \end{itemize}
 
 \begin{figure}[t]
@@ -357,10 +356,10 @@ Hasierako populazioaz gain, ondoko parametro hauek ezarri behar ditugu:
 \subfigure[Lortutako soluzioa]{
 \includegraphics[width=0.30\textwidth] {./Irudiak/ga_graph_col_4-1}
 }\\
-\caption{Algoritmo genetikoaren progresioa \eng{graph coloring} problema batean, bi poulazio tamaina ezberdin erabiliz. Ezkerrean, populazio tamaina handiarekin lortutako soluzioa ikus daiteke.}\label{fig:ga_progress}
+\caption{Definitutako algoritmo genetikoaren progresioa \eng{graph coloring} problemaren instantzia batean batean, bi populazio tamaina ezberdin erabiliz. Ezkerrean, tamaina handiko populazioarekin lortutako soluzioa ikus daiteke.}\label{fig:ga_progress}
 \end{figure}
 
-Jarraian parametro hauek erabiliz algoritmo genetikoa exekutatzeko kodea dago.
+Jarraian parametro hauek erabiliz algoritmo genetikoa exekutatzeko kodea ikus dezakegu.
 
 
 <<ga_graph_col_3, prompt=TRUE, cache=TRUE, message=FALSE , warning=FALSE , results='hide' , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=10 , fig.height=5>>=
@@ -395,17 +394,17 @@ gcp$plot(best.big,node.size=15,label.cex=0.75)
 @
 
 
-\ref{fig:ga_progress} irduian bi populazio erabiliz bilaketaren progresioa ikus daiteke. Populazioa txikia denean algoritmoak oso azkar konbergitzen du 19 kolore darabiltzan soluzio batera. Populazioko soluzio gehienak oso antzerakoak direnean soluzio berriak sortzeko bide bakarra mutazioa da, baina prozesu hori oso motela denez, grafikan ikus daiteke soluzioen bataz besteko \eng{fitness}a ez dela aldatzen. 
+\ref{fig:ga_progress} irudian bi populazio tamaina ezberdin erabiliz bilaketaren progresioa ikus daiteke. Populazioa txikia denean algoritmoak oso azkar konbergitzen du 19 kolore darabiltzan soluzio batera. Populazioko soluzio gehienak oso antzerakoak direnean soluzio berriak sortzeko bide bakarra mutazioa da, baina prozesu hori oso motela denez, grafikan ikus daiteke soluzioen bataz besteko \eng{fitness}a ez dela aldatzen. 
 
-Populazioaren tamaina handitzen dugunean konbergentzia zailagoa da eta grafikan ikus daiteke helbur funtzioaren balioaren eboluzioa motelagoa izan arren, lortutako soluzioa hobea dela.
+Populazioaren tamaina handitzen dugunean konbergentzia zailagoa da eta grafikan ikus daiteke helburu funtzioaren balioaren eboluzioa motelagoa izan arren, lortutako soluzioa hobea dela.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.75\textwidth] {./Irudiak/ga_mut_rate-1}
-\caption{Mutazioaren probabilitatearen eragina algoritmo genetikoaren emaitzan. Irudian ikus daitekeen bezala, soluziorik onenak ematen duen balioa 0.5 inguruan dagoena da (zehazki, 0.6). }\label{fig:ga_mutrate}
+\caption{Mutazio probabilitatearen eragina algoritmo genetikoaren azken emaitzan. Irudian ikus daitekeen bezala, soluziorik onena ematen duen mutazio probabilitatearen balioa 0.5 inguruan dago (zehazki, 0.6). }\label{fig:ga_mutrate}
 \end{figure}
 
-Populazioaren tamaina ez ezik, beste hainbat parametro eragin handia izan dezakete algoritmoaren emaitzan; esate baterako, mutazioaren probabilitatea. Adibide gisa, popluazio tamaina txikia erabiliz mutazio probabilitate ezberdinak erabiliko ditugu, eta, ondoren, bakoitzarekin lortutako emaitzak alderatuko ditugu.
+Populazioaren tamaina ez ezik, beste hainbat parametrok ere eragin handia izan dezakete algoritmoaren emaitzan; esate baterako, mutazioaren probabilitatea. Adibide gisa, populazio tamaina txikia erabiliz mutazio probabilitate ezberdinak probatuko ditugu, eta, bakoitzarekin lortutako emaitzak alderatuko ditugu.
 
 <<ga_mut_rate, prompt=TRUE, cache=TRUE, echo=-1, message=FALSE , warning=FALSE , results='hide' , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=10 , fig.height=5>>=
 set.seed(10)
@@ -428,17 +427,19 @@ ggplot(df , aes(x=Mutation_rate , y = Fitness)) + geom_line() + geom_point(size 
 @
 
 
-\ref{fig:ga_mutrate} irudian konparaketaren emaitzak ikus daitezke. Grafikoan agerian dago probabilitate txikiegiak zein handiegiak kaltegarriak direla bilaketarako; izan ere, probabilitate egokiena 0.5 ingurukoa da. Edonola ere, kontutan hartu behar da probabilitate txikien kasuan emaitzak txarrak direla konbergentzia goiztiarra dugulak baina, probabilitate handiekin berrriz, arazoa justo kontrakoa izan daiteke, alegia, jarri dugun muga dela eta populazioa konbergitzen duela. Hau egiaztatzeko, errepika dezakezu goiko experimentua ebaluazio kopuru maximoa handituz.
+\ref{fig:ga_mutrate} irudian lortutako emaitzak ikus daitezke. Grafikoak agerian uzten du mutazio probabilitate txikiegiak zein handiegiak ezartzea kaltegarria dela bilaketa prozesuarenzat, probabilitate egokiena 0.5 ingurukoa izanik. Jokabide honen zergatia bilatzen badugu, konturatzen gara probabilitate txikien kasuan emaitzak txarrak direla, populazioaren dibertsitatea txikia delako eta, ondorioz, konbergentzia goiztiarra ematen delako. Probabilitate handiekin berriz, arazoa justo kontrakoa izan daiteke, alegia, bilaketa ia ausazkoa dela eta beraz konbergentzia oso zaila dela. Hau egiaztatzeko, goiko experimentua errepika dezakezu ebaluazio kopuru maximoa handituz.
 
 \subsection{Estimation of Distribution Algorithms}
 
-Algoritmo genetikoetan uneko populazioa indibiduo berriak sortzeko erabiltzen da. Prozesu honetan, naturan inspiratutako operadoreen bidez burutzen dena, populazioan dauden ezaugarriak mantentzea espero dugu. Edonola ere, prozesua korapilatsua izan daiteke. Hori dela eta, zenbait ikertzaile ideia hau hartu eta ikuspen matematikotik birformulatu zuten; gurutzatze-operadoreak eta mutazioa erabili beharrean, eredu probabilistikoak erabiltzea proposatu zuten, populazioaren \hgl{esentzia} kapturatzeko helburuarekin. Hauxe da, EDA -- \eng{Estimation of Distribution Algorithms} -- algoritmotan erabiltzen den ideia.
+Algoritmo genetikoetan uneko populazioa indibiduo berriak sortzeko erabiltzen da, naturan inspiratutako gurutzatze eta mutazio operadoreak aplikatuz.  Prozesu honen bitartez, populazioan dauden ezaugarriak mantentzea espero dugu. 
 
-Algoritmo genetikoen eta EDA motako algoritmoen artean dagoen diferentzia bakarra indibiduo berriak sortzean dago. Gurutzatzea eta mutazioa erabili beharrean, uneko populazioa eredu probabilistiko bat \hgl{ikasteko} erabiltzen da. Ondoren, eredu hori laginduko dugu nahi ditugun indibiduo adina sortzeko.
+Zenbait ikertzailek ideia hau hartu eta ikuspuntu matematikotik birformulatu zuten. Honela, gurutzatze eta mutazioa erabili beharrean, eredu probabilistikoak erabiltzea proposatu zuten, populazioaren \hgl{esentzia} jasotzeko helburuarekin. Hauxe da, EDA -- \eng{Estimation of Distribution Algorithms} -- algoritmoen ideia nagusia. 
+
+Algoritmo genetikoen eta EDA motako algoritmoen artean dagoen diferentzia bakarra indibiduo berriak sortzeko erabiltzen den estrategia da. Gurutzaketa eta mutazioa erabili beharrean, uneko populazioa eredu probabilistiko bat doitzeko erabiltzen da. Ondoren, eredu hori laginduko dugu behar adina indibiduo sortzeko.
 
 EDA algoritmoen gakoa, beraz, eredu probabilistikoa da. Ildo honetan, esan beharra dago eredua soluzioen kodeketari lotuta dagoela, soluzio adierazpide bakoitzari probabilitate bat esleitu beharko diolako. 
 
-Konplexutasun ezberdineko eredu probabilistikoen erabilera proposatu da literaturan, baina badago hurbilketa sinple bat oso hedatua dagoena: UMDA -- \eng{Univariate Marginal Distribution Algorithm} --. Kasu honetan soluzioaren osagaiak -- bektore bat bada, bere posizioak -- independenteak direla suposatuko dugu eta, hortaz, osagai bakoitzari dagokion probabilitate marjinala estimatu beharko dugu. Gero, indibiduoak sortzean osagaiak banan-banan aukeratuko ditugu probabilitate hauek kontutan hartuz. 
+Konplexutasun ezberdineko eredu probabilistikoen erabilera proposatu da literaturan, baina badago hurbilketa sinple bat oso hedatua dagoena: UMDA -- \eng{Univariate Marginal Distribution Algorithm} --. Kasu honetan soluzioaren osagaiak -- bektore bat bada, bere posizioak -- independenteak direla suposatuko dugu eta, hortaz, osagai bakoitzari dagokion probabilitate marjinala estimatuko dugu. Gero, indibiduoak sortzean soluzioaren osagaiak banan-banan aukeratuko ditugu probabilitate hauek jarraituz. 
 
 Probabilitate marjinalak maneiatzeko \code{metaheuR} paketeko \code{UnivariateMarginals} objektua erabil dezakegu. Bere erabilera ikusteko, populazio txiki bat sortuko dugu eta probabilitate marginalak kalkulatuko ditugu. 
 
@@ -457,15 +458,15 @@ do.call(rbind , population)
 model@prob.table
 @
 
-Sortutako soluzioek 10 elementu dituzte eta populazioak 5 soluzio ditu. Lehenengo elementuari erreparatzen badiogu, 5 soluzioetatik lehenengo biak 1 balioa, laugarrenak 2 balioa eta beste biak 3 balioa dute. Hortaz, elementu horretarako 1 eta 3 balioen probabilitatea 0.4 izango da --$\frac{2}{5}$, alegia-- eta 2 balioaren probabilitatea 0.2 izango da, marginaleen taulan ikus daitekeen bezala.
+Sortutako soluzioek 10 elementu dituzte (10 posizioko bektore kategorikoak dira) eta populazioak 5 soluzio ditu. Lehenengo elementu edo posizioari erreparatzen badiogu, 5 soluzioetatik lehenengo biak 1 balioa dute, laugarrenak 2 balioa eta beste biak 3 balioa. Hortaz, elementu horretarako, 1 eta 3 balioen probabilitatea 0.4 izango da --$\frac{2}{5}$, alegia-- eta 2 balioaren probabilitatea 0.2 izango da, marginaleen taulan ikus daitekeen bezala.
 
-Ikasitako eredu probabilistikoa soluzio berriak sortzeko erabil daiteke, posizioz posizio balioak dagokion marginala laginduz; laginketa \code{simulate} funtzioaren bitartez egiten da.
+Ikasitako eredu probabilistikoa soluzio berriak sortzeko erabil daiteke, posizioz-posizio dagokion marginala laginduz; laginketa \code{simulate} funtzioaren bidez egiten da.
 
 <<UMDA_3, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 simulate(model , nsim = 2)
 @
 
-UMDA erabiliz aurreko ataleko problema ebatz dezakgu. Horretarako, bakarrik hautespen operadoreak eta ereduak ikasteko funtzioak zehaztu behar ditugu --betiko parametroz gain--.
+UMDA \code{basic.eda} funtzioaren bidez exekutatu dezakegu eta, segidan, aurreko ataleko problema ebazteko erabiliko dugu. Horretarako, bakarrik hautespen operadoreak eta ereduak ikasteko funtzioak zehaztu behar ditugu --algoritmo genetikoekin komunak diren parametroez gain--.
 
 <<umda_gc, echo = -1, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE , results='hide' , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=10 , fig.height=5>>=
 set.seed(2)
@@ -489,14 +490,14 @@ plot.progress(umda , size = 1.1) +
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.75\textwidth] {./Irudiak/umda_gc-1}
-\caption{UMDA algoritmoaren progresioa \eng{graph coloring} adibidean. Marra jarraituak populazioko soluzioen bataz-besteko \eng{fitness}a adierazten du; marra etenek, berriz, desbiderazio estandarra adierazten dute. Ikus daiteke populazioak konbergitzen duen heinean soluzioen \eng{fitness}aren bariabilidadea txikiagotzen dela.}\label{fig:umda}
+\caption{UMDA algoritmoaren progresioa \eng{graph coloring} problemaren istantzia batean aplikatuta. Marra jarraituak populazioko soluzioen bataz-besteko \eng{fitness}a adierazten du; marra etenek, berriz, desbiderazio estandarra adierazten dute. Ikus daiteke populazioak konbergitzen duen heinean soluzioen \eng{fitness}aren aldakortasuna murrizten dela.}\label{fig:umda}
 \end{figure}
 
-Bilaketaren progresioa \ref{fig:umda} irudian erakusten da. Marra etenek populazioan dauden soluzioen \eng{fitness}aren desbiderazioa erakusten dute. Eboluzioak aurrera egiten duen heinean, populazioaren dibertsitatea murrizten da eta hau desbiderazioaren txikiagotzean islatzen da; bilaketak 11 kolore darabiltzan soluzio batera konbergitzen du.
+Bilaketaren progresioa \ref{fig:umda} irudian erakusten da. Marra etenek populazioan dauden soluzioen \eng{fitness}aren desbiderapena erakusten dute eta marra jarraikiak, ordea, populazioko soluzioen fitness-aren batez-bestekoa. Populazioak eboluzionatu ahala, populazioaren dibertsitatea murrizten dela ikus dezakegu desbiderapenaren murrizketan erreparatuz. Amaieran, bilaketak 11 kolore darabiltzan soluzio batera konbergitzen du.
 
-Marjinalak zuzenean edozein bektoreekin erabil daitezke; alabaina, balio errealak baditugu, marjinalak zein probabilitate distribuzioarekin modelatuko ditugun erabaki beharko dugu --distribuzio normala, adibidez--. Dena dela, soluzioek murrizketak dituztenean gauzak konplika daitezke; honen adibidea permutazioak dira. 
+Marjinalak kalkulatzeko estrategia ia edozein bektore motarekin erabil daitezke zuzenean; alabaina, balio errealak baditugu, marjinalak zein probabilitate distribuzioarekin modelatuko ditugun erabaki beharko dugu aurrez. Aukera ezberdin asko daude baina ohiko distribuzio bat distribuzio normala da. Gainera, soluzioek murrizketak dituztenean, permutazioetan kasu, gauzak konplikatu egiten dira. 
 
-Permutazio multzo bat badugu, posible da marjinalak estimatzea, baina eredua lagintzen dugunean ez ditugu permutazioak lortuko, balio errepikatuak ager baitaitezke. Hona hemen adibide bat:
+Permutazio multzo bat izanik, posible da marjinalak bektore kategorikoekin bezala estimatzea baina, ondoren, eredua lagintzen dugunean ez ditugu halabeharrez permutazioak lortuko, balio errepikatuak ager baitaitezke. Hona hemen adibide bat:
 
 <<UMDA_permu_1, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 n <- 5
@@ -506,7 +507,7 @@ perm.umda <- univariateMarginals(perm.pop)
 simulate(perm.umda)
 @
 
-Arazo hau sahiesteko, soluzio berriak lagintzean permutazioetan ditugun murrizketak aintzat hartu behar dira. Beraz, laginketa prozesuan lehenengo elementua ausaz aukeratuko dugu, marjinala erabiliz. 
+Arazo hau sahiesteko, soluzio berriak lagintzean, permutazioak dakarzten murrizketak aintzat hartu behar dira. Honela, laginketa prozesuan lehenengo elementua ausaz aukeratuko dugu, zuzenean marjinala erabiliz. 
 
 <<UMDA_permu_2, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE , echo=-1>>=
 set.seed(10)
@@ -517,7 +518,7 @@ new.element <- sample(remaining , size = 1 , prob = probabilities)
 new.solution <- new.element
 @
 
-Orain, bigarren elementua aukeratu aurretik, lehenengo posizioan egongo den elementua kendu behar dugu aukeretatik eta marjinalak eguneratu behar ditugu --erabili dugun elementuaren probabilitatea kendu eta normalizatu, gelditzen diren elementuen probabilitateen batura 1 izan dezan--:
+Ondoren, bigarren elementua aukeratu aurretik, lehenengo posiziorako aukeratu dugun elementua kendu beharko dugu aukera posibleetatik eta marjinalak honen arabera eguneratu--erabili dugun elementuaren probabilitatea kendu eta normalizatu, gelditzen diren elementuen probabilitateen batura 1 izan dadin--:
 
 <<UMDA_permu_3, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 id <- which(remaining %in% new.element)
@@ -529,7 +530,7 @@ new.element <- sample(remaining , size = 1 , prob = probabilities)
 new.solution <- c(new.solution , new.element)
 @
 
-Prozesua 3. eta 4. elementuak erauzteko errepika dezakegu.
+Estrategia berbera aplikatzen dugu 3. eta 4. elementuak erauzteko.
 
 <<UMDA_permu_4, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 id <- which(remaining %in% new.element)
@@ -549,7 +550,7 @@ new.element <- sample(remaining , size = 1 , prob = probabilities)
 new.solution <- c(new.solution , new.element)
 @
 
-Amaitzeko, permutazioaren azken elementua gelditzen den elementu bakarra izango da.
+Amaitzeko, permutazioaren azken elementua definitzeko, soberan geratzen den  elementua aukeratuko dugu zuzenean.
 
 <<UMDA_permu_5, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 id <- which(remaining %in% new.element)
@@ -558,7 +559,7 @@ new.solution <- c(new.solution , remaining)
 new.solution
 @
 
-Prozesu honi esker probabilitate marjinalak erabil daitezke permutazioak sortzeko, baina arazo bat dauka; eredua lagintzen dugun bakoitzean probabilitateak aldatzen ditugu eta, hortaz, lagintzen duguna ez da populaziotik ikasi duguna. Beste era batean esanda, populaziotik ateratako \hgl{esentzia} gal genezake. Hau ez gertatzeko, permutazio espazioetan definitutako probabilitate distribuzioak erabil ditzakegu; esate baterako, Mallows eredua, \code{metaheuR} paketean dagoen \code{MallowsModel} objektuak inplementatzen duena.
+Prozesu honekin probabilitate marjinalak erabil daitezke permutazioak sortzeko baina arazo bat dauka: eredua lagintzen dugun bakoitzean probabilitateak aldatzen ditugu eta, hortaz, lagintzen duguna ez da zehazki populaziotik ikasi dugun eredua. Beste era batean esanda, populaziotik ateratako \hgl{esentzia} galdu dezakegu. Hau ez gertatzeko, permutazio espazioetan definitutako probabilitate distribuzioak erabil ditzakegu; esate baterako, Mallows eredua, \code{metaheuR} paketean dagoen \code{MallowsModel} objektuak inplementatzen duena.
 
 
 \section{Swarm Intelligence}\label{sec:swarm}
