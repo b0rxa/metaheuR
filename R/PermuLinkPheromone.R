@@ -48,7 +48,7 @@ setMethod(
   signature = "PermuLinkPheromone",
   definition = function (object , ...){
     objectGlobalName <- deparse(substitute(object))
-    object@trail <- object@trail * object@evaporation.factor
+    object@trail <- object@trail * (1- object@evaporation.factor)
     assign(objectGlobalName,object,envir=parent.frame())     
   })
 

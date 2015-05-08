@@ -161,7 +161,7 @@ eval.rnd <- unlist(lapply(rnd.population , FUN = tsp$evaluate))
 
 Bi populazioen ebaluazioak \eng{boxplot} baten bidez aldera ditzakegu:
 
-<<plot_heur_vs_rnd , echo = -1, cache=TRUE , warning=FALSE, prompt=TRUE , cache=TRUE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=8 , fig.height=4>>=
+<<plot_heur_vs_rnd, echo = -1, cache=TRUE , warning=FALSE, prompt=TRUE , cache=TRUE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=8 , fig.height=4>>=
 library("ggplot2")
 df <- rbind (data.frame (Method = "Heuristic" , Evaluation = eval.heur) , 
              data.frame (Method = "Random" , Evaluation = eval.rnd))
@@ -566,9 +566,9 @@ Prozesu honekin probabilitate marjinalak erabil daitezke permutazioak sortzeko b
 
 Eboluzioaren bidez naturak indibiduen diseinuak \hgl{optimizatzeko} gai da; alabaina, hau ez da naturak erabiltzen duen estrategia bakarra. Optimizazio algoritmoak inspiratu dituen beste adibidea bat animalia sozialena da. Zenbait espezietan --intsektuak, batik bat-- banan-banan hartuta, indibiduoak oso izaki sinpleak dira baina, multzoka, ataza konplexuak burutzeko gai dira. Esate baterako, inurriek eta erleek elikagai-iturri onenak aukeratzeko gai dira eta, hauek agortzen direnean, ingurunea esploratzen duten indibiduen kopurua handi dezakete iturri berriak lortzeko; era berean, bizitzeko toki berriak bilatzean toki egokienak aukeratzeko gai dira.
 
-Erabaki guzti horiek ez dira era zentralizatuan hartzen --alegia, ez dago \hgl{nagusi} bat agintzen dunea--. Portaera hauek indibiduoen portaera sinpleen eta, batez ere, indibiduoen arteko komunikazioari esker agertzen dira. Beste era batean esanda, mekanismo sinplei esker kolonia batean dauden indibiduoak autoantolatzen dira.
+Erabaki guzti horiek ez dira era zentralizatuan hartzen --alegia, ez dago agintzen duen \hgl{nagusi}\negthickspace{}rik --. Portaera hauek indibiduoen arau sinplei eta, batez ere, indibiduoen arteko komunikazioari esker agertzen dira. Beste era batean esanda, mekanismo sinplei esker kolonia batean dauden indibiduoak autoantolatzeko gai dira.
 
-Portaera hauek dira \eng{swarm intelligence} deritzon arloaren inspirazioa. Kontzpetua lehenengo aldiz robotika arloan proposatu zen \cite{beni1988}, baina laister optimizazio mundura hedatu zen. Izan ere, 90. hamarkadan inurri kolonien optimizazioa --\eng{Ant Colony Optimization}, ingelesez-- proposatu zen \cite{dorigo1992, dorigo1996}.
+Portaera hauek dira \eng{swarm intelligence} deritzon arloaren inspirazioa. Kontzpetua lehenengo aldiz 1988. urtean robotika arloan proposatu zen \cite{beni1988}, baina laister optimizazio mundura hedatu zen. Izan ere, 90. hamarkadan inurri kolonien optimizazioa --\eng{Ant Colony Optimization}, ingelesez-- proposatu zen \cite{dorigo1992, dorigo1996}.
 
 Hurrengo bi ataletan arlo honetan dauden bi algoritmo ezagunenak aztertuko ditugu, inurri kolonien optimizazioa eta \eng{particle swarm optimization}.
 
@@ -576,7 +576,9 @@ Hurrengo bi ataletan arlo honetan dauden bi algoritmo ezagunenak aztertuko ditug
 
 \subsection{\eng{Ant Colony Optimization}}
 
-Inurriek, janaria topatzen dutenean, beraien koloniatik janarira biderik motzena topatzeko gaitasuna dute. Inurri bakar batek ezin du horrelakorik egin baina, taldeka, komunikazio mekanismo sinpleei esker ataza burutzeko gai dira. Erabiltzen den komunikabidea zeharkakoa da, darien molekula mota berezi bati esker: feromonak. Inurriek mugitzen direnean beste inurriek jarrai dezaketen feromona-lorratz bat uzten dute; geroz eta feromona gehiago, orduan eta probabilitate handiagoa datozen inurriak utzitako lorratza jarraitzeko. 
+Inurriek, janaria topatzen dutenean, beraien koloniatik janarira biderik motzena topatzeko gaitasuna dute. Inurri bakar batek ezin du horrelakorik egin baina, taldeka, komunikazio mekanismo sinpleei esker ataza burutzeko gai dira. Erabiltzen den komunikabidea zeharkakoa da, darien molekula mota berezi bati esker: feromonak. 
+
+Inurriek mugitzen direnean beste inurriek jarrai dezaketen feromona-lorratz bat uzten dute; geroz eta feromona gehiago, orduan eta probabilitate handiagoa datozen inurriak utzitako lorratza jarraitzeko. 
 
 \begin{figure}[t]
 \centering
@@ -586,23 +588,23 @@ Inurriek, janaria topatzen dutenean, beraien koloniatik janarira biderik motzena
 \end{figure}
 
 
-Bestaldetik, inurri batek elikagai-iturri bat topatzen duenean, bidetik uzten duen feromona kopurua iturriaren kalitateari egokitzen du; geroz eta kalitate handiagoa, orduan eta feromona gehiago. Sistemaren funtzionamendua ulertzeko kontutan hartu behar dugu feromonak molekula lurrunkorrak direla, hots, denborarekin utzitako lorratzak galtzen direla.
+Bestaldetik, inurri batek elikagai-iturri bat topatzen duenean, bidetik uzten duen feromona kopurua iturriaren kalitateari egokitzen du; geroz eta kalitate handiagoa, orduan eta feromona gehiago. Horrez gain, feromona lurrunkorra da, alegia, denborarekin baporatu egiten da.
 
-Arau sinple hauek erabiliz inurriek elikagai-iturri onenak aukeratzeko gai dira; are gehiago, elikagai eta inurritegiaren arteko biderik motzena topa dezakete. Mekanismoaren funtzionamendua \ref{fig:ants} irudian ikus daiteke. Hasieran bide motzena feromona lorratzaren bidez markatuta dute inurriek. Bidea mozten badugu, eskuman eta ezkerrean ez dago feromonarik eta, hortaz, inurri batzuk eskumatik eta beste batzuk ezkerretik joango dira, probabilitate berdinarekin. Ezkerreko bidea motzagoa denez, denbora berdinean inurri gehiago igaroko dira, ezkerreko bidean feromona gehiago utziz. Ondorioz, datozen inurriak ezkerretik joateko joera handiago izango dute, bide hori indartuz. Eskumako bidean lorratza apurka-apurka baporatuko da eta, denbora nahiko igarotzen bada, zeharo galduko da.
+Arau sinple hauek erabiliz inurriek elikagai-iturri onenak aukeratzeko gai dira; are gehiago, elikagai eta inurritegiaren arteko biderik motzena topa dezakete. Mekanismoaren funtzionamendua \ref{fig:ants} irudian ikus daiteke. Hasieran bide motzena feromona lorratzaren bidez markatuta dute inurriek. Bidea mozten badugu, eskuman eta ezkerrean ez dago feromonarik eta, hortaz, inurri batzuk eskumatik eta beste batzuk ezkerretik joango dira, probabilitate berdinarekin. Ezkerreko bidea motzagoa denez, denbora berdinean inurri gehiago igaroko dira, ezkerreko bidean feromona gehiago utziz. Ondorioz, datozen inurriak ezkerretik joateko joera handiago izango dute, bide hori indartuz. Eskumako bidean lorratza apurka-apurka baporatuko da eta, denbora nahiko igarotzen bada, zeharo galduko da. 
 
-\eng{Ant Colony Optimization} (ACO) deritzon metaheuristika inurrien mekanismoa hartzen du intuiziotzat. Bere ingurunetik pasiatu beharrean, inurri artifizialak soluzio \hgl{sortzaileak} dira. Beraz, inurri artifizialek soluzioak sortuko dituzte, baina ez edonolakoak; soluzioak aurreko inurriek utzitako lorratzak jarraituz eraikitzen dira. 
+Laburbilduz, inurriek ez dituzte bi bideak konparatzen baina, ala eta guztiz ere, bide motza bakarrik erabiltzea lortzen dute. \eng{Ant Colony Optimization} (ACO) deritzon metaheuristika inurrien mekanismoa hartzen du intuiziotzat. Bere ingurunetik pasiatu beharrean, inurri artifizialak soluzio \hgl{sortzaileak} dira. Beraz, inurri artifizialek soluzioak sortuko dituzte, baina ez edonolakoak; soluzioak aurreko inurriek utzitako lorratzak jarraituz eraikitzen dira. 
 
 Lorratzak feromona ereduen bidez adierazten dira eta bi eratan eguneratzen dira. Alde batetik, inurriek sortutako soluzioen kalitatea --hots, helburu funtzioaren balioa-- feromona gehitzeko erabiltzen da. Bestaldetik, iterazioz iterazio feromona kopuruak txikituko ditugu, molekularen baporazioa simulatuz.
 
 Beraz, bi gauza behar dira ACO algoritmo bat diseinatzeko: feromona eredu bat eta soluzioak sortzeko algoritmo bat. Diseinu sinpleena osagaietan oinarritzen den algoritmo eraikitzaile bat erabiltzea da. Ikus dezagun hau adibide baten bidez.
 
-Demagun MIS problema bat ebatzi nahi dugula. Problema honetarako soluzioak bektore bitarren bidez kodetzen ditugu eta, hortaz, bektorearen posizioak soluzioen osagaitzat har ditzakegu. Posizio bakoitzen bi balio posible daude, 0 edo 1. Inurri batek soluzio bat sortu behar duenenan, lehenik, bektorearen lehenengo posizioko balioa, 0 edo 1, aukeratu beharko du. Horretarako, feromona kopurua hartuko du aintzat, probabilitate handiago esleituz feromona gehiago duen balioari; behin lehenengo posizioko balioa finkaturik, bigarren posiziora pasatuko da eta, era antzerakoan, balio bat esleituko dio. Prozesua soluzio osoa sortu arte errepikatuko da.
+Demagun MIS problema ebatzi nahi dugula. Problema honetarako soluzioak bektore bitarren bidez kodetzen ditugu eta, hortaz, bektorearen posizioak soluzioen osagaitzat har ditzakegu. Posizio bakoitzen bi balio posible daude, 0 edo 1. Inurri batek soluzio bat sortu behar duenenan, lehenik, bektorearen lehenengo posizioko balioa, 0 edo 1, aukeratu beharko du. Horretarako, feromona kopurua hartuko du aintzat, probabilitate handiago esleituz feromona gehiago duen balioari; behin lehenengo posizioko balioa finkaturik, bigarren posiziora pasatuko da eta, era berean, balio bat probabilistikoki esleituko dio. Prozesua soluzio osoa sortu arte errepikatuko da.
 
-Beraz, gure adibidean feromona eredua matrize sinple baten bidez inplementa daiteke non zutabe bakoitzean bektorearen posizio bat izango dugun; matrizeak bi errenkada bakarrik izango ditu, posizio bakoitzeko 0 eta 1 balioek duten feromona kopurua gordetzeko. Feromona eredu mota hau \code{metaheuR} paketean inplementaturik dago, \code{VectorPheromone} klasean. Ereduaren erabilera argitzeko \eng{Maximum Dominating Set} (MDS) problema erabiliko dugu. Laburki, grafo bat emanda, nodoen azpimultzo bat menderatze-multzoa da --\eng{dominating set}, ingelesez-- baldin eta azpimulzoan ez dauden nodo guztiak gutxienez azpimultzoko nodo bati konektatuta badaude; MDS probleman, grafo bat emanik, kardinalitate minimoko menderatze-multzoa topatzean datza. \ref{fig:MDS} irudian problema honetarako hiru soluzio ikus daitezke.
+Beraz, gure adibidean feromona eredua matrize sinple baten bidez inplementa daiteke non zutabe bakoitzean bektorearen posizio bat izango dugun; matrizeak bi errenkada bakarrik izango ditu, posizio bakoitzeko 0 eta 1 balioek duten feromona kopurua gordetzeko. Feromona eredu mota hau \code{metaheuR} paketean inplementaturik dago, \code{VectorPheromone} klasean. Ereduaren erabilera argitzeko MIS problema erabili beharrean antzerakoa den beste problema bat azalduko dugu: \eng{Minimum Dominating Set} (MDS). Laburki, grafo bat emanda, nodoen azpimultzo bat menderatze-multzoa da --\eng{dominating set}, ingelesez-- baldin eta azpimulzoan ez dauden nodo guztiak, gutxienez, azpimultzoko nodo bati konektatuta badaude; MDS problema, grafo bat emanik, kardinalitate minimoko menderatze-multzoa topatzean datza. \ref{fig:MDS} irudian problema honetarako hiru soluzio ikus daitezke. Lehenik, ausazko grafo bat erakiko dugu MDS problemaren instantzia bat definitzeko.
 
 
 \begin{figure}[t]
-\subfigure[Soluzio hau ez da menderatze-multzoa]{
+\subfigure[Soluzio hau bideraezina da, menderatze-multzoa ez baita]{
 \includegraphics[width=0.3\textwidth] {./Irudiak/MDS_not}
 }\qquad
 \subfigure[4 tamainako menderatze-multzoa]{
@@ -611,7 +613,7 @@ Beraz, gure adibidean feromona eredua matrize sinple baten bidez inplementa dait
 \subfigure[2 tamainako menderatze-multzoa]{
 \includegraphics[width=0.3\textwidth] {./Irudiak/MDS_2}
 }\\
-\caption{Irudiak MDS problemarako 3 soluzio jasotzen ditu --beltzez adierazita dauden nodoak--. Lehenengoa (ezkerrean dagoena), ez da bideragarria, soluzioan dagoen nodo bat soluzioan dauden nodoei konektaturik ez baitago. Bigarren soluzioa bideragarria da, baina ez optimoa. Azken soluzioa optimoa da, ez baitago 1 tamainako soluzio bideragarririk.}\label{fig:MDS}
+\caption{Irudiak MDS problemarako 3 soluzio jasotzen ditu --beltzez adierazita dauden nodoak--. Lehenengoa (ezkerrean dagoena), ez da bideragarria, soluzioan ez dagoen nodo bat soluzioan dauden nodoei konektaturik ez baitago. Bigarren soluzioa bideragarria da, baina ez optimoa. Azken soluzioa optimoa da, ez baitago 1 tamainako soluzio bideragarririk.}\label{fig:MDS}
 \end{figure}
 
 
@@ -622,11 +624,11 @@ rnd.graph <- aging.ba.game (n , 0.5 , 0 , 2 , directed = FALSE)
 mdsp <- mds.problem(graph = rnd.graph)
 @
 
-Feromona eredua sortzeko matrizea hasieratu behar dugu. Ohikoena balio finko batekin hasieratzea da. Era honetan osagai guztiak balio berdina dute eta, beraz, guztien probabilitatea berdina izango da. Gogoratu gure adibidean matrizeak bi errenkada izan behar dituela, soluzioak bektore bitarrak baitira.
+Feromona eredua eraikitzeko matrizea hasieratu behar dugu. Ohikoena balio finko batekin hasieratzea da. Era honetan osagai guztiak balio berdina dute eta, beraz, guztien probabilitatea berdina izango da. Gogoratu gure adibidean matrizeak bi errenkada izan behar dituela, soluzioak bektore bitarrak baitira.
 
 <<ACO_MDS_2, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 init.trail <- matrix (rep(1 , 2*n) , ncol = n)
-evaporation <- 0.9
+evaporation <- 0.1
 pheromones <- vectorPheromone(binary = TRUE , initial.trail = init.trail , 
                               evaporation.factor = evaporation)
 pheromones@trail
@@ -657,7 +659,7 @@ update.trail(object = pheromones , solution = solution , value = eval)
 pheromones@trail
 @
 
-Ikus daitekeen bezala, zutabe bakoitzean errenkada bati soluzioaren helburu funtzioaren balioa gehitu zaio, hori baita inurriek utzitako lorratza. Elementu guzti hauek batzen baditugu, ACO sinple bat sor dezakegu. Lehenik, problema berri bat sortuko dugu.
+Ikus daitekeen bezala, zutabe bakoitzean errenkada bati soluzioaren helburu funtzioaren balioa gehitu zaio, hori baita inurriek utzitako lorratza. Elementu guzti hauek batzen baditugu, ACO sinple bat sor dezakegu. Lehenik, problema berri bat --handiagoa-- sortuko dugu.
 
 <<ACO_MDS_6, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE , echo = -1>>=
 set.seed(1)
@@ -692,12 +694,12 @@ for (ant in 1:num.ant){
 plot(sol.evaluations , type="l" , xlab="Number of Artificial Ants" , ylab = "Solution evaluation")
 @
 
-\ref{fig:simple_aco} irudiak algoritmoaren eboluzioa erakusten du. Irudian ikus daiteke hasieran oso bariabilidade handia dagoela sortutako soluzioen helburu funtzioaren balioan. Alabaina, inurri kopurua handitzen den heinean bariabilidadea murrizten da eta, amaieran, prozedura soluzio bakar batera konbergitzen du. Edonola ere, soluzio hori ez da hasierakoak baino hobea. Kontua da, nahiz eta naturan horrela izan, optimizazioaren ikuspegitik inurri guztiek feromona eredua eguneratzea ez dela hurbilketarik onena; algoritmoa hobetzeko hautespen prozesu bat sartzea komenigarria da.
+\ref{fig:simple_aco} irudiak algoritmoaren eboluzioa erakusten du. Irudian, hasieran sortutako soluzioen helburu funtzioaren balioek oso bariabilidade handia daukatela ikus daiteke. Alabaina, inurri kopurua handitzen den heinean bariabilidadea murrizten da eta, amaieran, prozedura soluzio bakar batera konbergitzen du. Edonola ere, soluzio hori ez da hasierakoak baino hobea. Kontua da, nahiz eta naturan horrela izan, optimizazioaren ikuspegitik inurri guztiek feromona eredua eguneratzea ez dela hurbilketarik onena; algoritmoa hobetzeko hautespen prozesu bat sartzea komenigarria da.
 
-Ikusi dugun algoritmo sinpleak ez du ondo funtzionatzen, inurri guztiek feromona eguneratzen dutelako. Hori dela eta, beste estrategia erabili ohi da. Inurriak banan-banan simulatu ordez, inurri-kolonia tamaina bat definitzen da eta iterazio bakoitzean inurritegiko inurri guztiek soluzio bat sortzen dute. Gero, bi estrategia ezberdin erabil daitezke:
+Ikusi dugun algoritmo sinpleak ez du ondo funtzionatzen, inurri guztiek feromona eguneratzen dutelako. Hori dela eta, beste estrategia erabili ohi da. Inurriak banan-banan simulatu ordez, inurri-kolonia tamaina bat definitzen da eta, iterazio bakoitzean, inurritegiko inurri guztiek soluzio bat sortzen dute. Gero, bi estrategia ezberdin erabil daitezke:
 
 \begin{itemize}
-\item Iterazioko soluziorik onena erabili - Inurriek uneko iterazioan sortutako soluzioen artean onena aukeratzen da eta soluzio hori bakarrik erabiltzen da feromona eredua eguneratzeko. Kasu honetan helburu funtzioaren arabera egitea ez da beharrezkoa, bakarrik soluziorik onena erabiltzen baita eguneraketan. Hori dela eta, ohikoa da balio finko bat erabiltzea eguneraketan.
+\item Iterazioko soluziorik onena erabili - Inurriek uneko iterazioan sortutako soluzioen artean onena aukeratzen da eta soluzio hori bakarrik erabiltzen da feromona eredua eguneratzeko. Kasu honetan helburu funtzioaren arabera egitea ez da beharrezkoa, bakarrik soluziorik onena erabiltzen baita eguneraketan. Hori dela eta, ohikoa da balio finko bat erabiltzea, helburu funtzioaren ordez.
 \item Bilaketan topatutako soluziorik onena - Hainbat kasutan bilaketa areagotzea interesatuko zaigu. Kasu horietan, feromonaren eguneraketa bilaketan zehar topatu den soluziorik onena erabiliz egin daiteke. Aurreko puntuan bezala, eguneraketak ez dauka zergatik izan helburu funtzioaren balioarekiko proportzionala.
 \end{itemize}
 
@@ -723,7 +725,7 @@ Ikusi dugun algoritmo sinpleak ez du ondo funtzionatzen, inurri guztiek feromona
 \end{ifalgorithm}
 
 
-Aldaketa honekin oinarrizko ACO algoritmoaren sasikodea defini dezakegu (ikusi \ref{alg:ant} algoritmoa). \code{basic.aco} funtzioak Oinarrizko ACO-a inplementatzen du eta, hortaz, goiko problema ebazteko erabil dezakegu. Ohiko parametroaz gain, argumentu hauek zehaztu behar dira.
+Aldaketa honekin oinarrizko ACO algoritmoaren sasikodea defini dezakegu (ikusi \ref{alg:ant} algoritmoa). \code{basic.aco} funtzioak Oinarrizko ACO-a inplementatzen du eta, hortaz, lehen sortutako MDS problema ebazteko erabil dezakegu. Ohiko parametroaz gain, \code{basic.aco} argumentu hauek zehaztu behar dira.
 
 \begin{itemize}
 \item \code{nants} - Zenbat inurri artifizial izango ditugu gure kolonian
@@ -739,7 +741,7 @@ args$evaluate         <- mdsp$evaluate
 args$nants            <- 5
 init.value            <- 1
 initial.trail <- matrix(rep(init.value , 2*n ) , nrow=2)
-evapor <- 0.9
+evapor <- 0.1
 pher <- vectorPheromone(binary = TRUE , initial.trail = initial.trail , 
                         evaporation.factor = evapor)
 args$pheromones       <- pher
@@ -761,17 +763,17 @@ plot.progress(results.aco) + labs(y="Average evaluation")
 \caption{Oinarrizko ACO algoritmoaren eboluzioa MDS problema batean.}\label{fig:basic_aco}
 \end{figure}
 
-\ref{fig:basic_aco} irudiak oinarrizko ACO algoritmoaren progresioa jasotzen du. Algoritmo honek soluzio kopuru berdina sortu du, baina aurrekoa ez bezala, iterazioz iterazio soluzioa hobetuz doa. Grafikoan batazbesteko \eng{fitness}-ak bariabilidade handia duela ikus daiteke. Hau da oso kolonia txikia erabili dugulako --5 inurri bakarrik--. Balio hori handitzen badugu, prograsioa ez da hain zaratatsua izango --eta, ziurrenik, emaitzak hobeak izango dira--, baina ebaluazio gehiago beharko ditugu.
+\ref{fig:basic_aco} irudiak oinarrizko ACO algoritmoaren progresioa irudikatzen du. Algoritmo honek, lehen inplementatu dugun ACO sinpleak aztertzen duen soluzio kopuru berdina sortzen du baina, aurrekoa ez bezala, iterazioz iterazio soluzioa hobetuz doa. Grafikoan batazbesteko \eng{fitness}-ak bariabilidade handia duela ikus daiteke. Hau oso kolonia txikia erabili dugulako da --5 inurri bakarrik--. Balio hori handitzen badugu, prograsioa ez da hain zaratatsua izango --eta, ziurrenik, emaitzak hobeak izango dira--, baina ebaluazio gehiago beharko ditugu.
 
 ACO algoritmoen mamia soluzio eraikuntza da eta, hortaz, soluzioen osagaien definizioa oso garrantzitsua da; osagaiek problemaren natura kontutan hartzen ez badute, feromona ereduak ez du soluzioen informazioa behar den bezala jasoko. Hau agerian gelditzen da jarraian dagoen adibidean.
 
-Demagun LOP problema bat ebazteko ACO algoritmo bat erabili nahi dugula. Problema honetarako soluzioak permutazioen bidez kodetzen ditugunez, adierazpide honekin diharduen feromona eredu bat behar dugu. Soluzioen eraikuntzan permutazioak sortzeko behar diren aldaketak eginez gero, bektoreekin erabilitako eredua permutazioekin ere erabil dezakegu. Hau da, matrize karratu bat gordeko dugu non posizio bakoitzeko, balio bakoitzari dagokion feromona kopurua gordeko dugu. Gero, soluzioak osatzerakoan, urrats bakoitzean aukeraturik gabe dauden balioetatik bat aukertuko dugu, aukera guztien arteko feromona kopurua kontutan hartuz. Eredu honek UMDA-n ikusi genuen oso matrize antzerakoa erabiltzen du. 
+Demagun LOP problema bat ebazteko ACO algoritmo bat erabili nahi dugula. Problema honetarako soluzioak permutazioen bidez kodetzen ditugunez, adierazpide honekin diharduen feromona eredu bat behar dugu. Bektoreekin erabilitako eredua bera erabil dezakegu, soluzioen eraikuntzan permutazioak sortzeko behar diren aldaketak egiten baditugu betiere. Hau da, matrize karratu bat gordeko dugu non posizio bakoitzeko, balio bakoitzari dagokion feromona kopurua gordeko dugu. Gero, soluzioak osatzerakoan, urrats bakoitzean aukeraturik gabe dauden balioetatik bat aukertuko dugu, aukera guztien arteko feromona kopurua kontutan hartuz. Eredu honek UMDA-n ikusi genuen oso matrize antzerakoa erabiltzen du. 
 
 Dena dela, hau ez da aukera bakarra. TSP probleman ikusi genuen permutazioek grafo osoko ziklo Hamiltoniarrak adierazten dituztela. Hau da, $n$ nodoko grafo oso bat badugu, edozein permutazio $n$ nodoak behin eta bakarrik behi bisitatzen dituen ibilbide bat adierazten du. Beraz, permutazioak osatzeko nodoak lotzen dituzten ertzak erabil ditzakegu.
 
-Ideia hau erabiliz beste feromona eredu bat plantea dezakegu. Eredu honek ere matrize karratu bat erabiliko du, baina matrizearen interpretazioa --eta, hortaz, soluzio osaketa-- ezbedina da. Kasu honetan, matrizeak grafoaren ertzak adierazten ditu, alegia, $(i,j)$ posizioan $i$ nodotik $j$ nodora joateari lotutako feromona kopurua izango dugu. Adibidez, 3421 permutazioa badugu, soluzio honi dagozkion matrizeko posizioak dira $(3,4); (4,2)$ eta $(2,1)$ --problemaren arabera, $(1,3)$ posizioa ere erabiltzea komenigarria izan daiteke--.
+Ideia hau erabiliz beste feromona eredu bat plantea dezakegu. Eredu honek ere matrize karratu bat erabiliko du, baina matrizearen interpretazioa --eta, hortaz, soluzio osaketa-- ezbedina da. Kasu honetan, matrizeak grafoaren ertzak adierazten ditu, alegia, $(i,j)$ posizioan $i$ nodotik $j$ nodora joateari dagokion feromona kopurua izango dugu. Adibidez, 3421 permutazioa badugu, soluzio honi dagozkion matrizeko posizioak $(3,4); (4,2)$ eta $(2,1)$ dira --problemaren arabera, $(1,3)$ posizioa ere erabiltzea interesgarria izan daiteke, baina guk ez dugu aintzat hartuko gure adibidean--.
 
-Bi eredu hauek \code{metaheuR} librutegian inplementaturik daude, \code{PermuPosPheromone} eta  \code{PermuLinkPheromone} objektuetan. Jarraian, bi eredu hauek LOP problema bat ebazteko erabiliko dugu eta emaitzak alderatuko ditugu.
+Bi eredu hauek \code{metaheuR} librutegian inplementaturik daude, \code{PermuPosPheromone} eta  \code{PermuLinkPheromone} objektuetan. Jarraian, bi eredu hauek LOP problema bat ebazteko erabiliko ditugu eta emaitzak alderatuko ditugu.
 
 <<ACO_LOP, cache=TRUE , prompt=TRUE, echo=-1 , message=FALSE , warning=FALSE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=15 , fig.height=5>>=
 set.seed(1)
@@ -813,7 +815,7 @@ plot.progress (list("Position" = aco.pos , "Link" = aco.links))
 \caption{Oinarrizko ACO algoritmoaren eboluzioa TSP problema batean.}\label{fig:aco_tsp}
 \end{figure}
 
-TSP probleman justo kontrakoa gertatzen da, hau da, informazio garrantzitsuena da zein hiri dagoen zeinen ondoan. Hori dela eta, printzipioz, ertzetan oinarritzen den feromona ereduak soluzio hobeak lortuko ditu. Jarrain experimentu hori egingo dugu; emaitzak \ref{fig:aco_tsp} irudian daude.
+TSP problematan, berriz, ertzetan oinarrintzen den ereduak ondo adieraztzen du problemaren informazioa, alegia, zein hiritik zein hirira joan behar dugun. Jarrain experimentu hori egingo dugu; emaitzak \ref{fig:aco_tsp} irudian daude.
 
 
 <<ACO_TSP, cache=TRUE , prompt=TRUE, echo=-1 , message=FALSE , warning=FALSE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=15 , fig.height=5>>=
@@ -845,12 +847,14 @@ aco.pos <- do.call(basic.aco , args)
 plot.progress (list("Position" = aco.pos , "Link" = aco.links))
 @
 
-Orain arte ikusi ditugun adibide guztietan feromonak bakarrik erabiltzen dira soluzioak eraikitzerakoan. Oinarrizko algoritmoan horrela izan arren, problema konkretu bat ebatzi behar denean, posible bada, informazio heuristikoa sartu ohi da. Adibide gisa, TSPrako algoritmo eraikitzaile tipikoan hurrengo hiria hautatzeko hirien arteko distantzia erabiltzen da. Beraz, goiko adibidean hiri batetik bestera joateari dagokion feromona kopurua soilik erabili beharrean, bi hiri horien arteko distantzia ere kontutan har dezakegu.
+Ikus daitekeen bezala, TSP-aren kasuan bi ereduak problemaren informazioa gordetzeko gai dira eta, hortaz, bilaketak bi kasuetan aurrera egiten du.
+
+Orain arte ikusi ditugun adibide guztietan feromonak bakarrik erabiltzen dira soluzioak eraikitzerakoan. Oinarrizko algoritmoan horrela izan arren, problema konkretu bat ebatzi behar denean, posible bada, informazio heuristikoa ere sartu ohi da. Adibide gisa, TSPrako algoritmo eraikitzaile tipikoan hurrengo hiria hautatzeko hirien arteko distantzia erabiltzen da. Beraz, goiko adibidean hiri batetik bestera joateari dagokion feromona kopurua soilik erabili beharrean, osagaien probabilitiatea kalkulatzerakoan hirien arteko distantzia ere kontutan har dezakegu.
 
 
 \subsection{Particle Swarm Optimization}
 
-Intsektu sozialen portaera \textit{swarm} adimenaren adibide tipikoak dira, baina ez dira bakarrak; animali handiagotan ere inspirazioa bila daiteke. Esate baterako, txori-saldotan ehunaka indibiduo batera mugitzen dira beraien arteak talka egin gabe. Multzo horietan ez dago indibiduo bat taldea kontrolatzen duena; txori bakoitzak bere inguruneko txorien portaera aztertzen du, berea egokitzeko. Era horretan, arau sinple batzuk (txori batetik gertuegi banago, urrundu egiten naiz, adibidez) besterik ez dira behar sistema osoa antolatzeko.
+Intsektu sozialen portaera \textit{swarm} adimenaren adibide tipikoa da, baina ez da bakarra; animali handiagotan ere inspirazioa bila daiteke. Esate baterako, txori-saldotan ehunaka indibiduo batera mugitzen dira beraien arteak talka egin gabe. Multzo horietan ez dago indibiduo bat taldea kontrolatzen duena; txori bakoitzak bere inguruneko txorien portaera aztertzen du, berea egokitzeko. Era horretan, arau sinple batzuk\footnote{txori batetik gertuegi banago, urrundu egiten naiz, adibidez} besterik ez dira behar sistema osoa antolatzeko.
 
 \begin{figure}[t]
 \centering
@@ -859,30 +863,30 @@ Intsektu sozialen portaera \textit{swarm} adimenaren adibide tipikoak dira, bain
 \end{figure}
 
 
-Animali talde hauen portaera inspiraziotzat hartuz, 1995ean Kennedy eta Eberhart \textit{Particle Swarm Optimization} (PSO) algoritmoa proposatu zuten \cite{kennedy1995}, optimizazio numerikoko problemak ebazteko\footnote{Hau da, atal honetan ikusiko dugun algoritmoak bektore errealekin dihardu. Edonola ere, problema konbinatorialak ebazteko PSO bertsiak aurki daitezke.}. Algoritmoaren ideia sinplea da oso; bilaketa espaziotik mugitzen diren partikulak erabiltzen direa bilaketa egiteko. Beraz, algoritmoaren izenak adierazten duen legez, hainbat partikula izango ditugu; partikula bakoitzaren posizioak problemarako soluzio bat adieraziko du. 
+Animali talde hauen portaera inspiraziotzat hartuz, 1995ean Kennedy eta Eberhart \textit{Particle Swarm Optimization} (PSO) algoritmoa proposatu zuten \cite{kennedy1995}, optimizazio numerikoko problemak ebazteko\footnote{Hau da, atal honetan ikusiko dugun algoritmoak bektore errealekin dihardu. Edonola ere, problema konbinatorialak ebazteko PSO bertsioak ere aurki daitezke.}. Algoritmoaren ideia sinplea da oso; bilaketa espaziotik mugitzen diren partikulak erabiltzen dira bilaketa gauzatzeko. Beraz, algoritmoaren izenak adierazten duen legez, hainbat partikula izango ditugu, partikula bakoitzaren posizioak problemarako soluzio bat adierazten duena. 
 
 Uneoro partikula bakoitzak kokapen eta abiadura zehatz bat izango du, \ref{fig:PSO} irudian erakusten den bezala. Irudiko adibidean bilaketa espazioak bi aldagai besterik ez ditu ($X$ eta $Y$), eta sisteman 5 partikula daude, $P_1$-etik $P_5$-era.
 
 PSO algoritmoan partikulek bilaketa espazioa aztertzen dute, posizio batetik bestera mugituz. Beraz, iterazio bakoitzean partikula guztien kokapena eguneratzen da, beraien abiadura erabiliz. Partikulen abiadurak finko mantentzen baditugu, partikula guztiak infinitura joango dira. Hori ez gertatzeko, iterazio bakoitzean abiadura ere eguneratu behar da; eguneraketa honetan datza, hain zuzen, algoritmoaren gakoa. 
 
-Lehen esan dugu algoritmoaren inspirazioa txori-maldoen portaera dela. Txori bakoitzak nora mugitu behar den erabakitzeko bere ingurunean dauden txoriei erreparetzen die. Era berean, algoritmoan partikula baten abiadura eguneratzean partikula horrek duen informazioa ez ezik, inguruneko partikulek duten informazioa ere erabiltzen da. Hain zuzen, $i$. partikularen abiadura eguneratzeko ondoko ekuazioa erabiltzen da:
+Lehen aipatu bezala, algoritmoaren inspirazioa txori-maldoen portaera da. Txori bakoitzak nora mugitu behar den erabakitzeko bere ingurunean dauden txoriei erreparetzen die. Era berean, algoritmoan partikula baten abiadura eguneratzean partikula horrek duen informazioa ez ezik, inguruneko partikulek duten informazioa ere erabiltzen da. Hain zuzen, $i$. partikularen abiadura eguneratzeko ondoko ekuazioa erabiltzen da:
 
 \begin{align*}
 \mathbf{v}_i(t) = \mathbf{v}_i(t-1) +  C_1 \mathbf{\rho}_1 [\mathbf{p}_i - \mathbf{x}_i(t-1)] + C_2 \mathbf{\rho}_2 [\mathbf{p}_g - \mathbf{x}_i(t-1)]
 \end{align*}
 
-Ekuazio honetan hiru termin daude:
+Ekuazio honetan hiru termino daude:
 
 \begin{itemize}
 \item $\mathbf{v}_i(t-1)$ - Partikulak aurreko iterazioan zeukan abiadura; termino honek partikularen inertzia adirazten du.
-\item $C_1 {\mathbf \rho_1} [\mathbf{p}_i - \mathbf{x}_i(t-1)]$ - Termino honetan $\mathbf{p}_i$-k partikulak bilaketa prozesuan topatu duen soluziorik onena adierazten du --ingelesez \eng{personal best} deritzona--. Termino honek zati \hgl{kognitiboa} adierazten du, hots, partikulak berak jasotako informazioa. $C_1$ terminoaren eragina definitzeko konstante bat da eta $\mathbf{\rho}_1$ soluzioaren tamainako ausazko bektore bat da.
-\item $C_2 \mathbf{\rho}_2 [\mathbf{p}_g - \mathbf{x}_i(t-1)]$ - Termino honetan $\mathbf{p}_g$-k partikuluaren inguruan dauden partikulek bilaketa prozesuan topatu duten soluziorik onena adierazten du --ingelesez \eng{global best} deritzona--. Termino honek zati \hgl{soziala} adierazten du, hots, beste partikulek jasotako informazioa. $C_2$ terminoaren eragina definitzeko konstante bat da eta $\mathbf{\rho}_2$ soluzioaren tamainako ausazko bektore bat da.
+\item $C_1 {\mathbf \rho_1} [\mathbf{p}_i - \mathbf{x}_i(t-1)]$ - Termino honetan $\mathbf{p}_i$-k partikulak bilaketa prozesuan topatu duen soluziorik onena adierazten du --ingelesez \eng{personal best} deritzona--. Termino honek eguneraketaren alderdi \hgl{kognitiboa}adierazten du, hots, partikulak berak jasotako informazioa. $C_1$ konstantea terminoaren eragina definitzeko erabiltzen da eta $\mathbf{\rho}_1$ soluzioaren tamainako ausazko bektore bat da.
+\item $C_2 \mathbf{\rho}_2 [\mathbf{p}_g - \mathbf{x}_i(t-1)]$ - Termino honetan $\mathbf{p}_g$-k partikuluaren inguruan dauden partikulek bilaketa prozesuan topatu duten soluziorik onena adierazten du --ingelesez \eng{global best} deritzona--. Termino honekeguneraketaren alderdi \hgl{soziala} adierazten du, hots, beste partikulek jasotako informazioa. $C_2$ konstantea terminoaren eragina definitzeko erabiltzen da eta $\mathbf{\rho}_2$ soluzioaren tamainako ausazko bektore bat da.
 \end{itemize}
 
 
 Ekuazioaren azken terminoak partikulen arteko elkarekintzak simulatzen ditu. Horretarako, partikuelen ingurune-egitura definitu behar da. Alabaina, ingurune kontzeptua ez da bilaketa lokalean erabiltzen den berdina, partikula bakoitzaren ingurunea aurrez aurretik ezarritakoa baita; ez du partikularen kokapenarekin zerikusirik, alegia. Partikula bakoitzaren ingurunea grafo baten bidez adieraz daiteke, non bi partikula konektatuta dauden baldin eta bakarrik baldin bata bestearen ingurunean badaude. Lehenengo hurbilketa grafo osoa erabiltzea da, hots, edozein partikularen ingurunean beste gainontzeko partikula guztiak egongo dira; grafo osoa erabili beharrean, beste zenbait topologia ere erabil daitezke (eraztunak, izarrak, toroideak, etab.).
 
-Goian dagoen ekuazioa erabiltzen bada, abiadurak dibergitzeko joera izango du, alegia, abiaduraren modulua gero eta handiagoa izango da. Arazo hau ekiditeko kalkulatutako abiadurari muga bat ezartzen zaio.
+Goian dagoen ekuazioa zuzenean erabiltzen bada, abiadurak dibergitzeko joera izango du, alegia, abiaduraren modulua gero eta handiagoa izango da. Arazo hau ekiditeko kalkulatutako abiadurari muga bat ezartzen zaio.
 
 Behin uneko iterazioaren abiadura kalkulatuta, abiadura partikularen kokapena eguneratzeko erabiltzen da:
 
@@ -924,7 +928,7 @@ Behin uneko iterazioaren abiadura kalkulatuta, abiadura partikularen kokapena eg
 \end{ifalgorithm}
 
 
-Iterazio bakoitzean lortutako soluzioak ebaluatu eta, beharrezkoa bada, partikulen \eng{personal} ($\mathbf{p}_i$) eta \eng{global best} ($\mathbf{p}_g$) eguneratu behar dira. Pasu guzti hauek \ref{alg:pso} algoritmoan biltzen dira.
+Iterazio bakoitzean lortutako soluzio --hots, posizio-- berriak ebaluatu eta, beharrezkoa bada, partikulen \eng{personal} ($\mathbf{p}_i$) eta \eng{global best} ($\mathbf{p}_g$) eguneratu behar dira. Urrats guzti hauek \ref{alg:pso} algoritmoan biltzen dira.
 
 
 Algoritmo hau \code{metaheuR} paketeko \code{basic.pso} funtzioan inplementaturk dago. Erabilera erakusteko, optimizazio numerikoan \eng{benchmark} gisa erabiltzen den Rosenbrock funtzioa erabiliko dugu; problema sortzeko \code{rosenbrock.problem} funtzioa erabili behar dugu.
