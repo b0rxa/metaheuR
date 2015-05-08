@@ -961,7 +961,7 @@ plot.progress(res.pso , x = 'iterations' , y = 'best') + labs(y="Best Solution")
 plot.progress(res.pso , x = 'iterations' ) + labs(y="Average Solution")
 @
 
-\ref{fig:Rosenbrock} irudiak bilaketaren progresioa erakusten du. Ezkereko grafikoan partikulen batazbesteko ebaluazioa erakusten da, iterazioz iterazio; eskubikoak, berriz, bilaketan zehar topatutako soluziorik onenaren \eng{fitness}-aren progresioa erakusten du. Beste algoritmoetan ez bezala, partikulen helburu funtzioaren balioek ez dute konbergitzen; hala eta gusitz ere, bilaketak aurrera egiten du eta, azkenean, optimotik oso hurbil gelditzen da --Rosenbrock funtzioaren balio minimoa 0 da--.
+\ref{fig:Rosenbrock} irudiak bilaketaren progresioa erakusten du. Ezkereko grafikoan partikulen batazbesteko ebaluazioa erakusten da, iterazioz iterazio; eskubikoak, berriz, bilaketan zehar topatutako soluziorik onenaren \eng{fitness}-aren progresioa erakusten du. Beste algoritmoetan ez bezala, partikulen helburu funtzioaren balioek ez dute konbergitzen; hala eta gustiz ere, bilaketak aurrera egiten du eta, azkenean, optimotik oso hurbil gelditzen da --Rosenbrock funtzioaren balio minimoa 0 da--.
 
 
 \begin{figure}[t]
