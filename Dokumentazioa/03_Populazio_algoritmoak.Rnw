@@ -96,12 +96,12 @@ Jarraian dagoen kodeak horrelako populazioak sortzen ditu. Lehenik, Hamming dist
 
 <<ham_dis , prompt=TRUE, echo=-1 , message=FALSE , cache=TRUE>>=
 set.seed(1)
-hamm.distance <- function (v1 , v2){
-  d <- sum(v1!=v2)
+hammDistance <- function (v1, v2) {
+  d <- sum(v1 != v2)
   return(d)
 }
 
-rnd.binary <- function(n){
+createRndBinary <- function(n) {
   return (runif(n) > 0.5)
 }
 @
@@ -112,14 +112,17 @@ rnd.binary <- function(n){
 sol.size <- 25
 pop.size <- 10
 min.distance <- 10
-population <- list(rnd.binary (sol.size))
-while (length(population) < pop.size){
-  new.sol <- rnd.binary(sol.size)
-  distances <- lapply(population , FUN = function(x) hamm.distance (x,new.sol))  
-  if (min(unlist(distances)) <= min.distance)
+population <- list(createRndBinary(sol.size))
+while (length(population) < pop.size) {
+  new.sol <- createRndBinary(sol.size)
+  distances <- lapply(population, 
+                      FUN=function(x) {
+                        return(hammDistance (x, new.sol))
+                      })  
+  if (min(unlist(distances)) <= min.distance) {
     population[[length(population) + 1]] <- new.sol
+  }
 }
-
 @
 
 
@@ -129,33 +132,38 @@ Orain arte dibertsitateari bakarrik erreparatu diogu. Aldiz, hasierako popuazioa
 
 <<heur_init_1 , prompt=TRUE, echo=-1 , message=FALSE , warning=FALSE, cache=TRUE>>=
 library("metaheuR")
-url <- system.file("bays29.xml.zip" , package = "metaheuR")
-cost.matrix <- tsplib.parser(url)
+url <- system.file("bays29.xml.zip", package="metaheuR")
+cost.matrix <- tsplibParser(url)
 @
 
-Orain, \code{tsp.greedy} funtzioan oinarrituta, ausazko soluzio onak sortzeko funtzio bat definitzen dugu.
+Orain, \code{tspGreedy} funtzioan oinarrituta, ausazko soluzio onak sortzeko funtzio bat definitzen dugu.
 
 <<heur_init_2 , prompt=TRUE, message=FALSE, cache=TRUE>>=
-rnd.sol <- function(cl.size = 5){
-  tsp.greedy(cmatrix = cost.matrix , cl.size = cl.size)
+createRndSolution <- function(cl.size=5) {
+  tspGreedy(cmatrix=cost.matrix, cl.size=cl.size)
 }
 @
 
-Aurreko kapituluetan azaldu bezala, \code{tsp.greedy} funtzioak TSP-rako algoritmo eraikitzaile bat inplementatzen du; pausu bakoitzean, uneko hiritik zein hirira mugituko garen erabakitzen da, gertuen dauden \code{cl.size} hirietatik --5, gure kasuan-- bat ausaz aukeratuz. Honetan oinarrituz, populazioa sortzeko funtzio hau erabiliko dugu.
+Aurreko kapituluetan azaldu bezala, \code{tspGreedy} funtzioak TSP-rako algoritmo eraikitzaile bat inplementatzen du; pausu bakoitzean, uneko hiritik zein hirira mugituko garen erabakitzen da, gertuen dauden \code{cl.size} hirietatik --5, gure kasuan-- bat ausaz aukeratuz. Honetan oinarrituz, populazioa sortzeko funtzio hau erabiliko dugu.
 
 <<heur_init_3 , prompt=TRUE, message=FALSE, cache=TRUE>>=
 pop.size <- 25
-population <- lapply (1:pop.size , FUN = function(x) rnd.sol())
+population <- lapply(1:pop.size, 
+                     FUN=function(x) {
+                       return(createRndSolution())
+                     })
 @
 
 Hautagaien zerrendaren tamainari (\code{cl.size}) problemaren tamainaren balioa ezartzen badiogu, pausu bakoitzean, aukera guztietatik bat ausaz hartuko dugu, hots, guztiz ausazkoak diren soluzioak sortuko ditugu. Azken aukera honekin, populazioaren kalitatea goiko kodearekin lortutakoa baino okerragoa izango da:
 
 <<heur_init_4 , prompt=TRUE, message=FALSE, cache=TRUE>>=
-rnd.population <- lapply (1:pop.size , 
-                          FUN = function(x) rnd.sol(cl.size = ncol(cost.matrix)))
-tsp <- tsp.problem(cost.matrix)
-eval.heur <- unlist(lapply(population , FUN = tsp$evaluate))
-eval.rnd <- unlist(lapply(rnd.population , FUN = tsp$evaluate))
+rnd.population <- lapply (1:pop.size, 
+                          FUN=function(x) {
+                            return(createRndSolution(cl.size=ncol(cost.matrix)))
+                          })
+tsp <- tspProblem(cost.matrix)
+eval.heur <- unlist(lapply(population, FUN=tsp$evaluate))
+eval.rnd <- unlist(lapply(rnd.population, FUN=tsp$evaluate))
 @
 
 
@@ -163,9 +171,9 @@ Bi populazioen ebaluazioak \eng{boxplot} baten bidez aldera ditzakegu:
 
 <<plot_heur_vs_rnd, echo = -1, cache=TRUE , warning=FALSE, prompt=TRUE , cache=TRUE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=8 , fig.height=4>>=
 library("ggplot2")
-df <- rbind (data.frame (Method = "Heuristic" , Evaluation = eval.heur) , 
-             data.frame (Method = "Random" , Evaluation = eval.rnd))
-ggplot(df , aes(x = Method , y = Evaluation)) + geom_boxplot()
+df <- rbind(data.frame(Method="Heuristic", Evaluation=eval.heur),
+            data.frame(Method="Random", Evaluation=eval.rnd))
+ggplot(df, aes(x=Method, y=Evaluation)) + geom_boxplot()
 @
 
 \begin{figure}[t]
@@ -230,17 +238,17 @@ Bi soluzio --edo gehiago-- gurutzatzen ditugunean euren propietateak sortutako s
 
 Badaude kodeketa klasikoekin erabil daitezkeen zenbait oinarrizko gurutzaketa operadore. Ezagunena puntu bakarreko gurutzaketa -- \eng{one-point crossover}, ingelesez -- deritzona da. Demagun soluzioak bektoreen bidez kodetzen ditugula. Bi soluzio, $s_1$ eta $s_2$ hartuz, operadore honek beste bi soluzio berri sortzen ditu. Horretarako, lehenik eta behin, ausazko posizio bat, $i$, aukeratu behar da. Hau egin ahala, lehenengo soluzio berria $s_1$ soluziotik lehenengo $i$ elementuak eta $s_2$ soluziotik gainontzekoak ($i+1$-tik aurrerakoak) kopiatuz sortuko dugu. Era berean, bigarren soluzio berria $s_2$-tik lehenengo $i$ elementuak eta $s_1$-etik $i+1$ posiziotik aurrerako elementuak kopiatuz sortuko dugu.  \ref{fig:point_crossover} irudiaren ezkerraldean \eng{one-point crossover} operazioaren aplikazioaren adibide bat ikus daiteke. Gainera, eskuineko irudiak operadore hau nola orokortu daitekeen erakusten du, puntu bakar bat erabili beharrean bi, hiru, etab. puntu erabiliz. 
 
-Azken operadore orokorrago honi, \eng{k-point crossover} deritzo eta \code{metaheuR} liburutegiko \code{k.point.crossover} funtzioan inplementaturik dago. Ikus ditzagun bere erabileraren adibide batzuk:
+Azken operadore orokorrago honi, \eng{k-point crossover} deritzo eta \code{metaheuR} liburutegiko \code{kPointCrossover} funtzioan inplementaturik dago. Ikus ditzagun bere erabileraren adibide batzuk:
 
 <<k_point_cross , prompt=TRUE, echo=-1 , message=FALSE, cache=TRUE>>=
 set.seed(666)
-A.sol <- rep("A" , 10)
-B.sol <- rep("B" , 10)
+A.sol <- rep("A", 10)
+B.sol <- rep("B", 10)
 A.sol
 B.sol
-k.point.crossover(A.sol , B.sol , 1)
-k.point.crossover(A.sol , B.sol , 5)
-k.point.crossover(A.sol , B.sol , 20)
+kPointCrossover(A.sol, B.sol, 1)
+kPointCrossover(A.sol, B.sol, 5)
+kPointCrossover(A.sol, B.sol, 20)
 @
 
 Azken adibidean ikus daitekeen bezala, $n$ tamainako bektore bat izanik, gehienez $n-1$ puntuko gurutzaketa aplikatu dezakegu; edonola ere, balio handiago bat aukeratzen badugu funtzioak abisu bat emango du eta puntu kopuruaren parametroa bere balio maximoan ezarriko du. Balio maximoa aukeratuz gero, jatorrizko \hgl{guraso} soluzioen elementuak tartekatuta agertuko dira soluzio berrietan; operadore honi \eng{uniform crossover} deritzo.
@@ -250,7 +258,7 @@ Erabiliko dugun puntu kopuruak eragin handia izan dezake algoritmoaren performan
 \eng{k-point crossover} operadorea nahiko orokorra da, ia edozen bektoreari aplikatu ahal baitzaio. Hala eta guztiz ere, kodeketa batzuetan beste operadore espezifikoagoak erabiltzea egokiagoa izan daiteke\cite{gwiazda2006}. Esate baterako, soluzioak bektore errealen bidez kodetuta badaude, bi soluzio era ezberdin askotan konbina daitezke; adibidez, bataz bestekoa kalkulatuz. Ikus dezagun operadore hau nola inplementa daitekeen R-n:
 
 <<mean_cross , prompt=TRUE, message=FALSE, cache=TRUE>>=
-mean.crossover <- function (sol1 , sol2){
+meanCrossover <- function(sol1, sol2) {
   new.solution <- (sol1 + sol2) / 2
   return(new.solution)
 }
@@ -259,21 +267,21 @@ s1 <- runif(10)
 s2 <- runif(10)
 s1
 s2
-mean.crossover(s1 , s2)
+meanCrossover(s1, s2)
 @
 
 Permutazioak ere bektoreak dira baina, bete beharreko murrizketak direla eta, \eng{k-point crossover} operadorea ezin da erabili kodeketa mota honekin.  Ikus dezagun hau argiago ikusten lagunduko digun adibide bat. Izan bitez bi permutazio, $s_1 = 12345678$ eta $s_2=87654321$, eta gurutzatze puntu bat, $i=3$. Lehenengo soluzio berria lortzeko $s_1$ soluziotik lehendabiziko hiru posizioak kopiatuko ditugu, hau da, $123$, eta besteak $s_2$-tik, hots, $54321$. Hortaz, lortutako soluzioa $s^\prime = 12354321$ izango zen baina, zoritxarrez, hau ez da permutazio bat. Hortaz, permutazioak gurutatzeko operadore bereziak behar ditugu. 
 
-Aukera asko izan arren \cite{talbi2009}, hemen puntu bakarreko gurutzatze operadorearen baliokidea ikusiko dugu. Puntu bateko gurutzaketan bezala, hasteko, puntu bat aukeratuko dugu ausaz, $i$. Ondoren, lehenengo soluzio berria sortzeko, \hgl{guraso} soluzio baten lehenengo $i$ posizioetako balioak zuzenean kopiatuko ditugu; gainontzeko balioak zuzenean beste \hgl{guraso} soluziotik kopiatu beharrean, ordena bakarrik hartuko dugu kontutan. Hau da, aurreko adibidera itzuliz, soluzio berria sortzeko $s_1$-etik lehenengo 3 elementuak zuzenean kopiatuko ditugu, $123$, eta falta direnak, $45678$, $s_2$-an agertzen diren ordenean kopiatuko ditugu, hots, $87654$. Emaitza, beraz, $s^\prime = 12387654$ izango da eta, kasu honetan bai, permutazio bat. Era berean, bigarren soluzio berri bat sor daiteke $s_2$-tik lehenengo hiru posizioak kopiatuz ($876$) eta gainontzekoak $s_1$-n agertzen diren ordenean kopiatuz ($12345$); beste soluzioa, beraz, $87612345$ izango da. Operadore honi \hgl{Order crossover} deritzo eta \code{metaheuR} liburutegian \code{order.crossover} funtzioan \footnote{Funtzio honetan inplementatuta dagoena \eng{2-point crossover} operadorea da. Hau da, bi puntu erabiltzen dira eta, soluzioak eraikitzeko, bi puntuen artean dagoen soluzio zatia soluzio batetik zuzenean kopiatu ondoren, gainontzeko elementuak beste \hgl{guraso} soluzioan agertzen diren ordenean ezartzen dira.}.
+Aukera asko izan arren \cite{talbi2009}, hemen puntu bakarreko gurutzatze operadorearen baliokidea ikusiko dugu. Puntu bateko gurutzaketan bezala, hasteko, puntu bat aukeratuko dugu ausaz, $i$. Ondoren, lehenengo soluzio berria sortzeko, \hgl{guraso} soluzio baten lehenengo $i$ posizioetako balioak zuzenean kopiatuko ditugu; gainontzeko balioak zuzenean beste \hgl{guraso} soluziotik kopiatu beharrean, ordena bakarrik hartuko dugu kontutan. Hau da, aurreko adibidera itzuliz, soluzio berria sortzeko $s_1$-etik lehenengo 3 elementuak zuzenean kopiatuko ditugu, $123$, eta falta direnak, $45678$, $s_2$-an agertzen diren ordenean kopiatuko ditugu, hots, $87654$. Emaitza, beraz, $s^\prime = 12387654$ izango da eta, kasu honetan bai, permutazio bat. Era berean, bigarren soluzio berri bat sor daiteke $s_2$-tik lehenengo hiru posizioak kopiatuz ($876$) eta gainontzekoak $s_1$-n agertzen diren ordenean kopiatuz ($12345$); beste soluzioa, beraz, $87612345$ izango da. Operadore honi \hgl{Order crossover} deritzo eta \code{metaheuR} liburutegian \code{orderCrossover} funtzioan \footnote{Funtzio honetan inplementatuta dagoena \eng{2-point crossover} operadorea da. Hau da, bi puntu erabiltzen dira eta, soluzioak eraikitzeko, bi puntuen artean dagoen soluzio zatia soluzio batetik zuzenean kopiatu ondoren, gainontzeko elementuak beste \hgl{guraso} soluzioan agertzen diren ordenean ezartzen dira.}.
  inplementaturik dago. 
 
 <<order_cross , prompt=TRUE, message=FALSE , echo=-1 , warning=FALSE, cache=TRUE>>=
 set.seed(5)
-sol1 <- random.permutation(10)
-sol2 <- identity.permutation(10)
+sol1 <- randomPermutation(10)
+sol2 <- identityPermutation(10)
 as.numeric(sol1)
 as.numeric(sol2)
-new.solutions <- order.crossover(sol1 , sol2)
+new.solutions <- orderCrossover(sol1, sol2)
 as.numeric(new.solutions[[1]])
 as.numeric(new.solutions[[2]])
 @
@@ -314,37 +322,36 @@ Mutazio operadorea aukeratzean --eta baita diseinatzean ere-- hainbat gauza hart
 \caption{Algoritmo genetikoen sasikodea}\label{alg:algoritmo_genetikoak}
 \end{ifalgorithm}
 
-Honenbestez, algoritmo genetiko orokorra \ref{alg:algoritmo_genetikoak} irudian ikus daiteke eta sasikode hay \code{metaheuR} paketeko \code{basic.genetic.algorithm} funtzioan inplementaturik dago. Ikus dezagun funtzio honen erabilpenaren adibide bat \eng{graph coloring} problemaren instantzia bat ebazteko. Lehenik, ausazko grafo bat sortuko dugu problemaren instantzia sortzeko.
+Honenbestez, algoritmo genetiko orokorra \ref{alg:algoritmo_genetikoak} irudian ikus daiteke eta sasikode hay \code{metaheuR} paketeko \code{basicGeneticAlgorithm} funtzioan inplementaturik dago. Ikus dezagun funtzio honen erabilpenaren adibide bat \eng{graph coloring} problemaren instantzia bat ebazteko. Lehenik, ausazko grafo bat sortuko dugu problemaren instantzia sortzeko.
 
 <<ga_graph_col_1 , prompt=TRUE, message=FALSE , echo=-2 , warning=FALSE, cache=TRUE>>=
 library(igraph)
 set.seed(5)
 n <- 50
-rnd.graph <- aging.ba.game(n = n , pa.exp = 2 , 
-                           aging.exp = 0, m = 3 , directed = F)
-gcp <- graph.coloring.problem (graph = rnd.graph)
+rnd.graph <- aging.ba.game(n=n, pa.exp=2, aging.exp=0, m=3, directed=FALSE)
+gcp <- graphColoringProblem(graph=rnd.graph)
 @
 
 Orain zenbait elementu definitu behar ditugu. Lehenengoa, hasierako populazioa izango da eta, sortu ahal izateko, lehenik, bere tamaina ezarri behar dugu. Hau algoritmoaren parametro garrantzitsu bat denez, bi balio ezberdinekin probatuko dugu, emaitzak alderatzeko: $n$ eta $10n$. Behin hasierako populazioaren tamaina definituta bertako soluzioak ausaz sortuko ditugu eta, bideragarriak ez badira, zuzenduko egingo ditugu \code{gcp} objektuaren \code{correct} funtzioa erabiliz.
 
 <<ga_graph_col_2 , prompt=TRUE, message=FALSE , warning=FALSE, cache=TRUE>>=
 n.pop.small <- n
-n.pop.big <- 10*n
-levels <- paste("C" , 1:n , sep = "")
-rnd.sol <- function(x){
-  sol <- factor(paste("C" , sample(1:n , size = n , replace = TRUE) , 
-                      sep = "") , levels = levels)
+n.pop.big <- 10 * n
+levels <- paste("C", 1:n, sep="")
+createRndSolution <- function(x) {
+  sol <- factor(paste("C", sample(1:n, size=n, replace=TRUE), 
+                      sep=""), levels=levels)
   return(gcp$correct(sol))
 }
-pop.small <- lapply(1:n.pop.small , FUN = rnd.sol)
-pop.big   <- lapply(1:n.pop.big , FUN = rnd.sol)
+pop.small <- lapply(1:n.pop.small, FUN=createRndSolution)
+pop.big   <- lapply(1:n.pop.big, FUN=createRndSolution)
 @
 
 Hasierako populazioaz gain, ondoko parametro hauek ezarri behar ditugu:
 
 \begin{itemize}
 \item Hautespen operadoreak - Hurrengo belaunaldira zuzenean pasatuko diren soluzioak aukeratzeko hautespen elitista erabiliko dugu, populazio erdia aukeratuz; zein soluzio gurutzatuko diren aukeratzeko, berriz, lehiaketa hautespena erabiliko dugu.
-\item Mutazioa - Soluzioak mutatzeko \code{factor.mutation} funtzioa erabiliko dugu. Funtzio honek zenbait posizio ausaz aukeratzen ditu eta bertako balioak ausaz aldatzen ditu. Funtzioak parametro bat du, \code{ratio}, aldatuko diren posizioen ratioa adierazten duena. Gure kasuan 0.1 balioa erabiliko dugu, alegia, posizioen \%10-a aldatuko da mutazioa aplikatzen denean. Soluzioak zein probabilitatearekin mutatuko ditugun soluzioak ere aurrez finkatu behar da, \code{mutation.rate} parametroaren bidez. Gure kasuan, probabilitatea bat zati populazioaren tamaina izango da.
+\item Mutazioa - Soluzioak mutatzeko \code{factorMutation} funtzioa erabiliko dugu. Funtzio honek zenbait posizio ausaz aukeratzen ditu eta bertako balioak ausaz aldatzen ditu. Funtzioak parametro bat du, \code{ratio}, aldatuko diren posizioen ratioa adierazten duena. Gure kasuan 0.1 balioa erabiliko dugu, alegia, posizioen \%10-a aldatuko da mutazioa aplikatzen denean. Soluzioak zein probabilitatearekin mutatuko ditugun soluzioak ere aurrez finkatu behar da, \code{mutation.rate} parametroaren bidez. Gure kasuan, probabilitatea bat zati populazioaren tamaina izango da.
 \item Gurutzaketa - Soluzioak gurutzatzeko \eng{k-point crossover} operadorea erabiliko dugu, $k = 2$ finkatuz. 
 \item Beste parametro batzuk - Algoritmo genetikoaren parametroaz gain, beste bi parametro finkatuko ditugu, \code{non.valid = 'discard'}, bideraezina diren soluzioak baztertu behar direla adierazteko, eta \code{resources}, gelditze irizpidea finkatzeko ($5n^2$ ebaluazio kopuru maximoa erabiliko dugu).
 \end{itemize}
@@ -366,31 +373,32 @@ Jarraian parametro hauek erabiliz algoritmo genetikoa exekutatzeko kodea ikus de
 args <- list()
 args$evaluate             <- gcp$evaluate
 args$initial.population   <- pop.small
-args$select.subpopulation <- elitist.selection
+args$selectSubpopulation  <- elitistSelection
 args$selection.ratio      <- 0.5
-args$select.cross         <- tournament.selection
-args$mutate               <- factor.mutation
+args$selectCross          <- tournamentSelection
+args$mutate               <- factorMutation
 args$ratio                <- 0.1
 args$mutation.rate        <- 1 / length(args$initial.population)
-args$cross                <- k.point.crossover
+args$cross                <- kPointCrossover
 args$k                    <- 2
-args$non.valid            <- 'discard'
-args$resources            <- cresource(evaluations = 5*n^2)
+args$non.valid            <- "discard"
+args$resources            <- cResource(evaluations=5 * n^2)
 
-bga.small <- do.call(basic.genetic.algorithm , args)
+bga.small <- do.call(basicGeneticAlgorithm, args)
 
 args$initial.population   <- pop.big
 args$mutation.rate        <- 1 / length(args$initial.population)
 
-bga.big <- do.call(basic.genetic.algorithm , args)
-plot.progress(list("Big population" = bga.big , "Small population" = bga.small) , 
-              size = 1.1) + labs(y = "Average fitness") + aes(linetype = Group)
+bga.big <- do.call(basicGeneticAlgorithm, args)
+
+plotProgress(list("Big population"=bga.big, "Small population"=bga.small), size=1.1) + 
+  labs(y="Average fitness") + aes(linetype=Group)
 @
 
 
 <<ga_graph_col_4, prompt=TRUE, cache=TRUE , echo = FALSE , message=FALSE , warning=FALSE  , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=5 , fig.height=5>>=
-best.big <- unlist(optima(bga.big)[[1]])
-gcp$plot(best.big,node.size=15,label.cex=0.75)
+best.big <- unlist(getSolution(bga.big)[[1]])
+gcp$plot(best.big, node.size=15, label.cex=0.75)
 @
 
 
@@ -410,20 +418,20 @@ Populazioaren tamaina ez ezik, beste hainbat parametrok ere eragin handia izan d
 set.seed(10)
 args$initial.population   <- pop.small
 args$verbose              <- FALSE
-args$resources            <- cresource(evaluations = n^2)
+args$resources            <- cResource(evaluations=n^2)
 
-test.mutprob <- function (rate){
-  args$mutation.rate        <- rate
-  res <- do.call(basic.genetic.algorithm , args)
-  evaluation(res)
+testMutProb <- function (rate) {
+  args$mutation.rate <- rate
+  res <- do.call(basicGeneticAlgorithm, args)
+  return(getEvaluation(res))
 }
 
 ratios <- seq(0,1,0.2)
-evaluations <- sapply(ratios , FUN = test.mutprob)
+evaluations <- sapply(ratios , FUN = testMutProb)
 
-df <- data.frame("Mutation_rate" = ratios , "Fitness" = evaluations)
-ggplot(df , aes(x=Mutation_rate , y = Fitness)) + geom_line() + geom_point(size = 5) + 
-  labs(x = "Mutation rate")
+df <- data.frame("Mutation_rate"=ratios, "Fitness"=evaluations)
+ggplot(df, aes(x=Mutation_rate, y=Fitness)) + geom_line() + geom_point(size=5) + 
+  labs(x="Mutation rate")
 @
 
 
@@ -445,16 +453,18 @@ Probabilitate marjinalak maneiatzeko \code{metaheuR} paketeko \code{UnivariateMa
 
 <<UMDA_1, cache=TRUE , echo=-1 , prompt=TRUE, message=FALSE , warning=FALSE>>=
 set.seed(1)
-population <- lapply(1:5 , FUN = function(x) factor(sample(1:3 , 10 , replace = TRUE) ,
-                                                    levels = 1:3))
+population <- lapply(1:5, 
+                     FUN=function(x) {
+                       res <- factor(sample(1:3, 10, replace=TRUE), levels=1:3) 
+                       return(res)
+                     })
 @
 
 Orain, \code{univariateMarginals} funtzioa erabiliz probabilitate marginalak kalkulatuko ditugu:
 
 <<UMDA_2, cache=TRUE, prompt=TRUE, message=FALSE , warning=FALSE>>=
-model <- univariateMarginals(data = population)
-
-do.call(rbind , population)
+model <- univariateMarginals(data=population)
+do.call(rbind, population)
 model@prob.table
 @
 
@@ -463,28 +473,28 @@ Sortutako soluzioek 10 elementu dituzte (10 posizioko bektore kategorikoak dira)
 Ikasitako eredu probabilistikoa soluzio berriak sortzeko erabil daiteke, posizioz-posizio dagokion marginala laginduz; laginketa \code{simulate} funtzioaren bidez egiten da.
 
 <<UMDA_3, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
-simulate(model , nsim = 2)
+simulate(model, nsim=2)
 @
 
-UMDA \code{basic.eda} funtzioaren bidez exekutatu dezakegu eta, segidan, aurreko ataleko problema ebazteko erabiliko dugu. Horretarako, bakarrik hautespen operadoreak eta ereduak ikasteko funtzioak zehaztu behar ditugu --algoritmo genetikoekin komunak diren parametroez gain--.
+UMDA \code{basicEda} funtzioaren bidez exekutatu dezakegu eta, segidan, aurreko ataleko problema ebazteko erabiliko dugu. Horretarako, bakarrik hautespen operadoreak eta ereduak ikasteko funtzioak zehaztu behar ditugu --algoritmo genetikoekin komunak diren parametroez gain--.
 
 <<umda_gc, echo = -1, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE , results='hide' , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=10 , fig.height=5>>=
 set.seed(2)
 args <- list()
 args$evaluate             <- gcp$evaluate
 args$initial.population   <- pop.small
-args$select.subpopulation <- elitist.selection
+args$selectSubpopulation  <- elitistSelection
 args$selection.ratio      <- 0.5
 args$learn                <- univariateMarginals
-args$non.valid            <- 'discard'
-args$resources            <- cresource(evaluations = n^2)
+args$non.valid            <- "discard"
+args$resources            <- cResource(evaluations = n^2)
 
-umda <- do.call(basic.eda , args)
+umda <- do.call(basicEda, args)
 
-plot.progress(umda , size = 1.1) + 
-  geom_line(aes(y = Current_sol + Current_sd) , col = "gray40" , linetype = 2) +
-  geom_line(aes(y = Current_sol - Current_sd)  , col = "gray40" , linetype = 2) + 
-  labs(y = "Average fitness")
+plotProgress(umda, size=1.1) + 
+  geom_line(aes(y=Current_sol + Current_sd), col="gray40", linetype=2) +
+  geom_line(aes(y=Current_sol - Current_sd), col="gray40", linetype=2) + 
+  labs(y="Average fitness")
 @
 
 \begin{figure}[t]
@@ -501,9 +511,12 @@ Permutazio multzo bat izanik, posible da marjinalak bektore kategorikoekin bezal
 
 <<UMDA_permu_1, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 n <- 5
-perm.pop <- lapply (1:50 , FUN = function(x) factor(as.numeric(random.permutation(n)) , 
-                                                    levels = 1:n))
-perm.umda <- univariateMarginals(perm.pop)
+generateRndPopulation <- lapply(1:50, 
+                   FUN=function(x) {
+                     res <- factor(as.numeric(randomPermutation(n)), levels=1:n) 
+                     return(res)
+                   })
+perm.umda <- univariateMarginals(generateRndPopulation)
 simulate(perm.umda)
 @
 
@@ -514,7 +527,7 @@ set.seed(10)
 marginals <- perm.umda@prob.table
 remaining <- 1:n
 probabilities <- marginals[,1]
-new.element <- sample(remaining , size = 1 , prob = probabilities)
+new.element <- sample(remaining, size=1, prob=probabilities)
 new.solution <- new.element
 @
 
@@ -523,11 +536,11 @@ Ondoren, bigarren elementua aukeratu aurretik, lehenengo posiziorako aukeratu du
 <<UMDA_permu_3, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 id <- which(remaining %in% new.element)
 remaining <- remaining [-id]
-marginals <- marginals[-id , ]
-probabilities <- marginals[ , 2]
+marginals <- marginals[-id, ]
+probabilities <- marginals[, 2]
 probabilities <- probabilities / sum(probabilities)
-new.element <- sample(remaining , size = 1 , prob = probabilities)
-new.solution <- c(new.solution , new.element)
+new.element <- sample(remaining, size=1, prob=probabilities)
+new.solution <- c(new.solution, new.element)
 @
 
 Estrategia berbera aplikatzen dugu 3. eta 4. elementuak erauzteko.
@@ -535,19 +548,19 @@ Estrategia berbera aplikatzen dugu 3. eta 4. elementuak erauzteko.
 <<UMDA_permu_4, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 id <- which(remaining %in% new.element)
 remaining <- remaining [-id]
-marginals <- marginals[-id , ]
-probabilities <- marginals[ , 3]
+marginals <- marginals[-id, ]
+probabilities <- marginals[, 3]
 probabilities <- probabilities / sum(probabilities)
-new.element <- sample(remaining , size = 1 , prob = probabilities)
-new.solution <- c(new.solution , new.element)
+new.element <- sample(remaining, size=1, prob=probabilities)
+new.solution <- c(new.solution, new.element)
 
 id <- which(remaining %in% new.element)
 remaining <- remaining [-id]
-marginals <- marginals[-id , ]
-probabilities <- marginals[ , 3]
+marginals <- marginals[-id, ]
+probabilities <- marginals[, 3]
 probabilities <- probabilities / sum(probabilities)
-new.element <- sample(remaining , size = 1 , prob = probabilities)
-new.solution <- c(new.solution , new.element)
+new.element <- sample(remaining, size=1, prob=probabilities)
+new.solution <- c(new.solution, new.element)
 @
 
 Amaitzeko, permutazioaren azken elementua definitzeko, soberan geratzen den  elementua aukeratuko dugu zuzenean.
@@ -555,7 +568,7 @@ Amaitzeko, permutazioaren azken elementua definitzeko, soberan geratzen den  ele
 <<UMDA_permu_5, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 id <- which(remaining %in% new.element)
 remaining <- remaining [-id]
-new.solution <- c(new.solution , remaining)
+new.solution <- c(new.solution, remaining)
 new.solution
 @
 
@@ -620,17 +633,17 @@ Beraz, gure adibidean feromona eredua matrize sinple baten bidez inplementa dait
 <<ACO_MDS_1, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE , echo=-1>>=
 set.seed(666)
 n <- 10
-rnd.graph <- aging.ba.game (n , 0.5 , 0 , 2 , directed = FALSE)
-mdsp <- mds.problem(graph = rnd.graph)
+rnd.graph <- aging.ba.game (n, 0.5, 0, 2, directed=FALSE)
+mdsp <- mdsProblem(graph=rnd.graph)
 @
 
 Feromona eredua eraikitzeko matrizea hasieratu behar dugu. Ohikoena balio finko batekin hasieratzea da. Era honetan osagai guztiak balio berdina dute eta, beraz, guztien probabilitatea berdina izango da. Gogoratu gure adibidean matrizeak bi errenkada izan behar dituela, soluzioak bektore bitarrak baitira.
 
 <<ACO_MDS_2, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
-init.trail <- matrix (rep(1 , 2*n) , ncol = n)
+init.trail <- matrix (rep(1, 2*n), ncol=n)
 evaporation <- 0.1
-pheromones <- vectorPheromone(binary = TRUE , initial.trail = init.trail , 
-                              evaporation.factor = evaporation)
+pheromones <- vectorPheromone(binary=TRUE, initial.trail=init.trail,
+                              evaporation.factor=evaporation)
 pheromones@trail
 @
 
@@ -643,19 +656,19 @@ evaporate(pheromones)
 pheromones@trail
 @
 
-Esan dugun bezala, inurriek feromona ereduak soluzioak eraikitzeko erabiltzen dute. Soluzioak \code{build.solution} funtzioaren bitartez egiten da.
+Esan dugun bezala, inurriek feromona ereduak soluzioak eraikitzeko erabiltzen dute. Soluzioak \code{buildSolution} funtzioaren bitartez egiten da.
 
 <<ACO_MDS_4, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
-build.solution(pheromones , 1)
+buildSolution(pheromones, 1)
 @
 
-Inurriek ingurunetik ibiltzen diren heinean feromona uzten dute eta, era berean, inurri artifizialek soluzioak eraikitzen dutenean feromona kopurua handitzen dute; ereduaren eguneraketa hau \code{update.trail} funtzioa erabiliz egiten da.
+Inurriek ingurunetik ibiltzen diren heinean feromona uzten dute eta, era berean, inurri artifizialek soluzioak eraikitzen dutenean feromona kopurua handitzen dute; ereduaren eguneraketa hau \code{updateTrail} funtzioa erabiliz egiten da.
 
 <<ACO_MDS_5, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
-solution <- build.solution(pheromones , 1)[[1]]
+solution <- buildSolution(pheromones, 1)[[1]]
 eval <- mdsp$evaluate(solution)
 eval
-update.trail(object = pheromones , solution = solution , value = eval)
+updateTrail(object=pheromones, solution=solution, value=eval)
 pheromones@trail
 @
 
@@ -664,11 +677,11 @@ Ikus daitekeen bezala, zutabe bakoitzean errenkada bati soluzioaren helburu funt
 <<ACO_MDS_6, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE , echo = -1>>=
 set.seed(1)
 n <- 100
-rnd.graph <- aging.ba.game (n , 0.5 , 0 , 3 , directed = FALSE)
-mdsp <- mds.problem(graph = rnd.graph)
-init.trail <- matrix (rep(1 , 2*n) , ncol = n)
-pheromones <- vectorPheromone(binary = TRUE , initial.trail = init.trail , 
-                              evaporation.factor = evaporation)
+rnd.graph <- aging.ba.game(n, 0.5, 0, 3, directed=FALSE)
+mdsp <- mdsProblem(graph=rnd.graph)
+init.trail <- matrix (rep(1, 2*n), ncol=n)
+pheromones <- vectorPheromone(binary=TRUE, initial.trail=init.trail,
+                              evaporation.factor=evaporation)
 @
 
 Orain, 500 inurri simulatuko ditugu; bakoitzak soluzio bat sortuko du eta \hgl{bidetik} feromona utziko du. Inurri bakoitza simulatu ondoren feromona \hgl{lurrundu} egiten dugu.
@@ -676,12 +689,12 @@ Orain, 500 inurri simulatuko ditugu; bakoitzak soluzio bat sortuko du eta \hgl{b
 <<ACO_MDS_7, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 num.ant <- 500
 sol.evaluations <- vector()
-for (ant in 1:num.ant){
-  solution <- mdsp$correct(build.solution(pheromones , 1)[[1]])
+for (ant in 1:num.ant) {
+  solution <- mdsp$correct(buildSolution(pheromones, 1)[[1]])
   eval <- mdsp$evaluate(solution)
-  update.trail(pheromones , solution , eval)
+  updateTrail(pheromones, solution, eval)
   evaporate(pheromones)
-  sol.evaluations <- c(sol.evaluations , eval)
+  sol.evaluations <- c(sol.evaluations, eval)
 }
 @
 
@@ -691,7 +704,8 @@ for (ant in 1:num.ant){
 \end{figure}
 
 <<ACO_MDS_8, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE , echo=FALSE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=15 , fig.height=5>>=
-plot(sol.evaluations , type="l" , xlab="Number of Artificial Ants" , ylab = "Solution evaluation")
+plot(sol.evaluations, type="l", 
+     xlab="Number of Artificial Ants", ylab="Solution evaluation")
 @
 
 \ref{fig:simple_aco} irudiak algoritmoaren eboluzioa erakusten du. Irudian, hasieran sortutako soluzioen helburu funtzioaren balioek oso bariabilidade handia daukatela ikus daiteke. Alabaina, inurri kopurua handitzen den heinean bariabilidadea murrizten da eta, amaieran, prozedura soluzio bakar batera konbergitzen du. Edonola ere, soluzio hori ez da hasierakoak baino hobea. Kontua da, nahiz eta naturan horrela izan, optimizazioaren ikuspegitik inurri guztiek feromona eredua eguneratzea ez dela hurbilketarik onena; algoritmoa hobetzeko hautespen prozesu bat sartzea komenigarria da.
@@ -725,7 +739,7 @@ Ikusi dugun algoritmo sinpleak ez du ondo funtzionatzen, inurri guztiek feromona
 \end{ifalgorithm}
 
 
-Aldaketa honekin oinarrizko ACO algoritmoaren sasikodea defini dezakegu (ikusi \ref{alg:ant} algoritmoa). \code{basic.aco} funtzioak Oinarrizko ACO-a inplementatzen du eta, hortaz, lehen sortutako MDS problema ebazteko erabil dezakegu. Ohiko parametroaz gain, \code{basic.aco} argumentu hauek zehaztu behar dira.
+Aldaketa honekin oinarrizko ACO algoritmoaren sasikodea defini dezakegu (ikusi \ref{alg:ant} algoritmoa). \code{basicAco} funtzioak Oinarrizko ACO-a inplementatzen du eta, hortaz, lehen sortutako MDS problema ebazteko erabil dezakegu. Ohiko parametroaz gain, \code{basicAco} argumentu hauek zehaztu behar dira.
 
 \begin{itemize}
 \item \code{nants} - Zenbat inurri artifizial izango ditugu gure kolonian
@@ -739,23 +753,24 @@ set.seed(17)
 args <- list()
 args$evaluate         <- mdsp$evaluate
 args$nants            <- 5
-init.value            <- 1
-initial.trail <- matrix(rep(init.value , 2*n ) , nrow=2)
-evapor <- 0.1
-pher <- vectorPheromone(binary = TRUE , initial.trail = initial.trail , 
-                        evaporation.factor = evapor)
-args$pheromones       <- pher
-args$update.sol       <- 'best.it'
-args$update.value     <- init.value / 10
-args$non.valid        <- 'correct'
-args$valid            <- mdsp$is.valid
-args$correct          <- mdsp$correct
 
-args$resources        <- cresource(iterations = 100)
-args$verbose          <- FALSE
+init.value    <- 1
+initial.trail <- matrix(rep(init.value, 2*n), nrow=2)
+evapor        <- 0.1
+pher          <- vectorPheromone(binary=TRUE, initial.trail=initial.trail,
+                                 evaporation.factor=evapor)
+args$pheromones   <- pher
+args$update.sol   <- "best.it"
+args$update.value <- init.value / 10
+args$non.valid    <- "correct"
+args$valid        <- mdsp$is.valid
+args$correct      <- mdsp$correct
 
-results.aco <- do.call(basic.aco , args)
-plot.progress(results.aco) + labs(y="Average evaluation")
+args$resources    <- cResource(iterations=100)
+args$verbose      <- FALSE
+
+results.aco <- do.call(basicAco, args)
+plotProgress(results.aco) + labs(y="Average evaluation")
 @
 
 \begin{figure}
@@ -778,29 +793,30 @@ Bi eredu hauek \code{metaheuR} librutegian inplementaturik daude, \code{PermuPos
 <<ACO_LOP, cache=TRUE , prompt=TRUE, echo=-1 , message=FALSE , warning=FALSE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=15 , fig.height=5>>=
 set.seed(1)
 n <- 100
-rnd.mat <- matrix(round(runif(n^2)*100) , n)
-lop <- lop.problem(matrix = rnd.mat)
+rnd.mat <- matrix(round(runif(n^2)*100), n)
+lop     <- lopProblem(matrix=rnd.mat)
 
 args <- list()
-args$evaluate         <- lop$evaluate
-args$nants            <- 15
-init.value            <- 1
-initial.trail         <- matrix(rep(init.value , n^2 ) , n)
-evapor                <- 0.9
-pher                  <- permuLinkPheromone(initial.trail = initial.trail , 
-                                            evaporation.factor = evapor)
-args$pheromones       <- pher
-args$update.sol       <- 'best.it'
-args$update.value     <- init.value / 10
-args$resources        <- cresource(iterations = 250)
-args$verbose          <- FALSE
+args$evaluate <- lop$evaluate
+args$nants    <- 15
 
-aco.links <- do.call(basic.aco , args)
+init.value    <- 1
+initial.trail <- matrix(rep(init.value, n^2 ), n)
+evapor        <- 0.9
+pher          <- permuLinkPheromone(initial.trail=initial.trail,
+                                    evaporation.factor=evapor)
+args$pheromones   <- pher
+args$update.sol   <- "best.it"
+args$update.value <- init.value / 10
+args$resources    <- cResource(iterations=250)
+args$verbose      <- FALSE
 
-args$pheromones       <- permuPosPheromone(initial.trail , evapor)
-aco.pos <- do.call(basic.aco , args)
+aco.links <- do.call(basicAco, args)
 
-plot.progress (list("Position" = aco.pos , "Link" = aco.links))
+args$pheromones <- permuPosPheromone(initial.trail, evapor)
+aco.pos <- do.call(basicAco, args)
+
+plotProgress(list("Position"=aco.pos, "Link"=aco.links))
 @
 
 \begin{figure}
@@ -820,31 +836,32 @@ TSP problematan, berriz, ertzetan oinarrintzen den ereduak ondo adieraztzen du p
 
 <<ACO_TSP, cache=TRUE , prompt=TRUE, echo=-1 , message=FALSE , warning=FALSE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=15 , fig.height=5>>=
 set.seed(1)
-url <- system.file("bays29.xml.zip" , package = "metaheuR")
-cost.matrix <- tsplib.parser(url)
+url <- system.file("bays29.xml.zip", package="metaheuR")
+cost.matrix <- tsplibParser(url)
 n <- ncol(cost.matrix)
-tsp <- tsp.problem(cmatrix = cost.matrix)
+tsp <- tspProblem(cmatrix=cost.matrix)
 
 args <- list()
-args$evaluate         <- tsp$evaluate
-args$nants            <- 15
-init.value            <- 1
-initial.trail         <- matrix(rep(init.value , n^2 ) , n)
-evapor                <- 0.9
-pher                  <- permuLinkPheromone(initial.trail = initial.trail , 
-                                            evaporation.factor = evapor)
-args$pheromones       <- pher
-args$update.sol       <- 'best.it'
-args$update.value     <- init.value / 10
-args$resources        <- cresource(iterations = 250)
-args$verbose          <- FALSE
+args$evaluate <- tsp$evaluate
+args$nants    <- 15
 
-aco.links <- do.call(basic.aco , args)
+init.value    <- 1
+initial.trail <- matrix(rep(init.value, n^2 ), n)
+evapor        <- 0.9
+pher          <- permuLinkPheromone(initial.trail=initial.trail,
+                                    evaporation.factor=evapor)
+args$pheromones   <- pher
+args$update.sol   <- "best.it"
+args$update.value <- init.value / 10
+args$resources    <- cResource(iterations=250)
+args$verbose      <- FALSE
 
-args$pheromones       <- permuPosPheromone(initial.trail , evapor)
-aco.pos <- do.call(basic.aco , args)
+aco.links <- do.call(basicAco, args)
 
-plot.progress (list("Position" = aco.pos , "Link" = aco.links))
+args$pheromones <- permuPosPheromone(initial.trail, evapor)
+aco.pos <- do.call(basicAco, args)
+
+plotProgress (list("Position"=aco.pos, "Link"=aco.links))
 @
 
 Ikus daitekeen bezala, TSP-aren kasuan bi ereduak problemaren informazioa gordetzeko gai dira eta, hortaz, bilaketak bi kasuetan aurrera egiten du.
@@ -931,20 +948,23 @@ Behin uneko iterazioaren abiadura kalkulatuta, abiadura partikularen kokapena eg
 Iterazio bakoitzean lortutako soluzio --hots, posizio-- berriak ebaluatu eta, beharrezkoa bada, partikulen \eng{personal} ($\mathbf{p}_i$) eta \eng{global best} ($\mathbf{p}_g$) eguneratu behar dira. Urrats guzti hauek \ref{alg:pso} algoritmoan biltzen dira.
 
 
-Algoritmo hau \code{metaheuR} paketeko \code{basic.pso} funtzioan inplementaturk dago. Erabilera erakusteko, optimizazio numerikoan \eng{benchmark} gisa erabiltzen den Rosenbrock funtzioa erabiliko dugu; problema sortzeko \code{rosenbrock.problem} funtzioa erabili behar dugu.
+Algoritmo hau \code{metaheuR} paketeko \code{basicPso} funtzioan inplementaturk dago. Erabilera erakusteko, optimizazio numerikoan \eng{benchmark} gisa erabiltzen den Rosenbrock funtzioa erabiliko dugu; problema sortzeko \code{rosenbrockProblem} funtzioa erabili behar dugu.
 
 
 <<PSO_1, cache=TRUE , echo = -1 , prompt=TRUE, message=FALSE , warning=FALSE>>=
 set.seed(1)
 n <- 10
-eval <- rosenbrock.problem(size = n)$evaluate
+rsb.problem <- rosenbrockProblem(size=n)
 @
 
 Algoritmoa aplikatzeko partikula kopurua, hasierako kokapenak eta abiadurak, abiadura maximoa, \eng{personal best} koefizientea eta \eng{global best} koefizientea ezarri behar ditugu:
 
 <<PSO_2, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 nparticles <- 100
-ipos <- lapply(1:nparticles , FUN = function (i) runif(n))
+ipos <- lapply(1:nparticles, 
+               FUN=function (i) {
+                 return(runif(n))
+               })
 args <- list()
 args$initial.positions  <- ipos 
 args$initial.velocity   <- 0
@@ -956,14 +976,14 @@ args$c.best             <- 4
 Horrez gain, helburu funtzioa eta baliabide konputazionalak ere finaktu behar ditugu.
 
 <<PSO_3, cache=TRUE , prompt=TRUE , echo = -1 , message=FALSE , warning=FALSE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=7 , fig.height=4>>=
-args$verbose    <- FALSE
-args$evaluate   <- eval
-args$resources  <- cresource(time=10)
+args$verbose   <- FALSE
+args$evaluate  <- rsb.problem$evaluate
+args$resources <- cResource(time=10)
 
-res.pso <- do.call(basic.pso , args)
+res.pso <- do.call(basicPso, args)
 
-plot.progress(res.pso , x = 'iterations' , y = 'best') + labs(y="Best Solution")
-plot.progress(res.pso , x = 'iterations' ) + labs(y="Average Solution")
+plotProgress(res.pso, x="iterations", y="best") + labs(y="Best Solution")
+plotProgress(res.pso, x="iterations") + labs(y="Average Solution")
 @
 
 \ref{fig:Rosenbrock} irudiak bilaketaren progresioa erakusten du. Ezkereko grafikoan partikulen batazbesteko ebaluazioa erakusten da, iterazioz iterazio; eskubikoak, berriz, bilaketan zehar topatutako soluziorik onenaren \eng{fitness}-aren progresioa erakusten du. Beste algoritmoetan ez bezala, partikulen helburu funtzioaren balioek ez dute konbergitzen; hala eta gustiz ere, bilaketak aurrera egiten du eta, azkenean, optimotik oso hurbil gelditzen da --Rosenbrock funtzioaren balio minimoa 0 da--.

@@ -8,17 +8,16 @@
 #' @param steps Number of desired steps to get from the initial temperature to the final one
 #' @return A function that, given a temperature, returns the updated temperature according to the cooling scheme. The return function uses just a single parameter, the current temperature
 #' @examples
-#' update <- linear.cooling(initial.temperature = 100 , final.temperature = 10 , steps = 9)
+#' update <- linearCooling(initial.temperature=100, final.temperature=10, steps=9)
 #' update(100)
 #' update(update(100))
 #' 
-
-linear.cooling <- function (initial.temperature, final.temperature, steps){
+linearCooling <- function (initial.temperature, final.temperature, steps) {
   delta <- (initial.temperature - final.temperature) / steps
-  f <- function (temperature , ...){
-    temperature - delta
+  f <- function (temperature, ...) {
+    return(temperature - delta)
   }
-  f
+  return(f)
 }
 
 #' Geometric decreasing of the temperature
@@ -31,14 +30,14 @@ linear.cooling <- function (initial.temperature, final.temperature, steps){
 #' @param steps Number of desired steps to get from the initial temperature to the final one
 #' @return A function that, given a temperature, returns the updated temperature according to the cooling scheme. The return function uses just a single parameter, the current temperature
 #' @examples
-#' update <- geometric.cooling(initial.temperature = 100 , final.temperature = 10 , steps = 9)
+#' update <- geometricCooling(initial.temperature=100, final.temperature=10, steps=9)
 #' update(100)
 #' update(update(100))
-
-geometric.cooling <- function (initial.temperature, final.temperature, steps){
-  alfa <- (final.temperature / initial.temperature)^(1/round(steps))
-  f <- function (temperature , ...){
-    temperature*alfa
+#' 
+geometricCooling <- function (initial.temperature, final.temperature, steps) {
+  alfa <- (final.temperature / initial.temperature)^(1 / round(steps))
+  f <- function (temperature, ...) {
+    return(temperature * alfa)
   }
-  f
+  return(f)
 }

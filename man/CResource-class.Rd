@@ -10,16 +10,16 @@ An S4 class to represent computational resources
 \section{Slots}{
 
 \describe{
-\item{\code{time_total}}{A positive real number representing the total time available. It can be null, indicating that there is no time limit}
+\item{\code{time.total}}{A positive real number representing the total time available. It can be null, indicating that there is no time limit}
 
-\item{\code{evaluations_total}}{A positive integer number representing the total number of evaluations available. It can be null, indicating that there is no evaluations limit}
+\item{\code{evaluations.total}}{A positive integer number representing the total number of evaluations available. It can be null, indicating that there is no evaluations limit}
 
-\item{\code{iterations_total}}{A positive integer number representing the total number of iterations available. It can be null, indicating that there is no iterations limit}
+\item{\code{iterations.total}}{A positive integer number representing the total number of iterations available. It can be null, indicating that there is no iterations limit}
 
-\item{\code{time_consumed}}{A positive real number representing the time consumed.}
+\item{\code{time.consumed}}{A positive real number representing the time consumed.}
 
-\item{\code{evaluations_consumed}}{A positive integer number representing the number of evaluations consumed.}
+\item{\code{evaluations.consumed}}{A positive integer number representing the number of evaluations consumed.}
 
-\item{\code{iterations_consumed}}{A positive integer number representing the number of iterations consumed.}
+\item{\code{iterations.consumed}}{A positive integer number representing the number of iterations consumed.}
 }}
 

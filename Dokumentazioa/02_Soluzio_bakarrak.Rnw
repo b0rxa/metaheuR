@@ -125,9 +125,9 @@ library(metaheuR)
 n <- 10
 rnd.value <- runif(n) * 100
 rnd.weight <- rnd.value + runif(n) * 50
-max.weight <- sum(sample(rnd.weight , size = n/2 , replace = FALSE))
-knp <- knapsack.problem(weight = rnd.weight , value = rnd.value , limit = max.weight)
-rnd.sol <- runif(n) < 1/3
+max.weight <- sum(sample(rnd.weight, size=n / 2, replace=FALSE))
+knp <- knapsackProblem(weight=rnd.weight, value=rnd.value, limit=max.weight)
+rnd.sol <- runif(n) < 1 / 3
 @
 
 Kontutan hartu behar da motxilaren probleman soluzio guztiak --azpi-multzo guztiak, alegia-- ez direla bideragarriak. Eta beraz, ausazko soluzio bat sortzean, elementu edo objektu bat aukeratzeko probabilitatea handitzen badugu, soluzio bideraezinak lortzea probableagoa izango da. Edozein kasutan, sortutako soluzioa bideraezina izan daitekeenez, lehenengo pausua soluzioa zuzentzea izango da. Gero, \zkk flip\skk\ operadorea erabiliko dugu inguruneko soluzioak sortzeko. Operadore honek Hamming-en bat distantziara dauden soluzioak esleituko dizkio inguruneari. Nahiz eta uneko soluzioa bideragarria izan, ingurunekoak bideraezinak izan daitezke, beraz, pausu bakoitzean inguruneko soluzioa bideragarria den ala ez aztertu beharko dugu. 
@@ -135,17 +135,18 @@ Kontutan hartu behar da motxilaren probleman soluzio guztiak --azpi-multzo guzti
 <<GC_2 , prompt=TRUE>>=
 rnd.sol <- knp$correct(rnd.sol)
 which(rnd.sol)
-flip.ngh <- flipNeighborhood(base = rnd.sol , random = FALSE)
-while(has.more.neighbors(flip.ngh)){
-  ngh <- next.neighbor(flip.ngh)
-  isvalid <- ifelse (knp$is.valid(ngh) , "bideragarria" , "bideraezina")
-  mssg <- paste("Inguruneko soluzio ",isvalid,": " , 
-                paste(which(ngh),collapse = ",") , sep="")
-  cat (mssg , "\n")
+flip.ngh <- flipNeighborhood(base=rnd.sol, random=FALSE)
+while(hasMoreNeighbors(flip.ngh)) {
+  ngh <- nextNeighbor(flip.ngh)
+  is.valid <- ifelse(test=knp$valid(ngh), 
+                    yes="bideragarria", 
+                    no="bideraezina")
+  message("Inguruneko soluzio ", is.valid, ": ",
+          paste(which(ngh), collapse=","))
 }
 @
 
-Goiko kodean ikus daitekeen bezala, \code{metaheuR} paketean inguruneak korritzeko bi funtzio aurki ditzakegu: \code{has.more.neighbors} eta \code{next.neighbor}. Izenek adierazten duten bezala, lehenengo funtzioak ingurunean oraindik bisitatu gabeko soluzioren bat dagoen esaten digu eta, bigarrenak, bisitatu gabeko hurrengo soluzioa itzultzen du. Horrez gain, badago beste funtzio bat, \code{reset.neighborhood}, ingurune objektua berrabiarazteko. Informazio gehiago lor dezakezu R-ko terminalean \code{?reset.neighborhood} tekleatuz.
+Goiko kodean ikus daitekeen bezala, \code{metaheuR} paketean inguruneak korritzeko bi funtzio aurki ditzakegu: \code{hasMoreNeighbors} eta \code{nextNeighbor}. Izenek adierazten duten bezala, lehenengo funtzioak ingurunean oraindik bisitatu gabeko soluzioren bat dagoen esaten digu eta, bigarrenak, bisitatu gabeko hurrengo soluzioa itzultzen du. Horrez gain, badago beste funtzio bat, \code{resetNeighborhood}, ingurune objektua berrabiarazteko. Informazio gehiago lor dezakezu R-ko terminalean \code{?resetNeighborhood} tekleatuz.
 
 \paragraph{}
 \noindent{\bf Permutazioak} - Permutazioen arteko distantziak neurtzeko metrikak existitu arren, ingurune operadore klasikoak ez dituzte zuzenean erabiltzen. Horren ordez, permutazioetan definitutako eragiketak erabili ohi dira, trukaketa eta txertaketa batik bat. 
@@ -162,21 +163,21 @@ Ingurunearen tamainari dagokionez, ondoz-ondoko posizioetan soilik trukaketak eg
 
 <<Neighborhoods , prompt=TRUE>>=
 n <- 10
-rnd.sol <- random.permutation(length = n)
+rnd.sol <- randomPermutation(length=n)
 
-swp.ngh <- swapNeighborhood(base = rnd.sol)
+swp.ngh <- swapNeighborhood(base=rnd.sol)
 exchange.count <- 0
 swap.count <- 0
-while(has.more.neighbors (swp.ngh)){
+while(hasMoreNeighbors(swp.ngh)) {
   swap.count <- swap.count + 1
-  next.neighbor(swp.ngh)
+  nextNeighbor(swp.ngh)
 }
 
-ex.ngh <- exchangeNeighborhood(base = rnd.sol)
+ex.ngh <- exchangeNeighborhood(base=rnd.sol)
 exchange.count <- 0
-while(has.more.neighbors (ex.ngh)){
+while(hasMoreNeighbors(ex.ngh)) {
   exchange.count <- exchange.count + 1
-  next.neighbor(ex.ngh)
+  nextNeighbor(ex.ngh)
 }
 
 swap.count
@@ -238,7 +239,7 @@ Erakarpen-arroa, definizioan ikus daitekeen legez, helburu funtzioaren, ingurune
 
 \section{Bilaketa lokala}
 
-Bilaketa lokalean oinarritutako edozein algoritmoren errendimendua, kodeketaren eta ingurunearen aukeraketaz gain, beste zenbait elementutan ere oinarritzen da. Lehenik eta behin, hasierako soluzioa nola aukeratzen dugun erabakitzea garrantzitsua da, aurreko atalean ikusi dugun moduan horren arabera optimo lokal batean edo bestean amaituko baita bilaketa. Bigarren oinarrizko elementua inguruneko soluzioen aukeraketa egiteko aplikatzen den estrategia da. Uneko soluzioaren ingurunean hainbat soluzio izango ditugu, baina, zein aukeratuko dugu hurrengo soluzioa izateko? Azkenik, gelditze irizpideak ere kontutan hartu beharreko faktoreak dira. Bilaketa lokala optimo lokal bat topatzen dugunean amaitzen da; dena dela, beste edozein algoritmotan bezala, denboran edota ebaluazio kopuruan oinarritutako gelditze irizpideak ere proposa ditzakegu\footnote{Informazio gehiago R-ren laguntzan duzu; \code{?basic.local.search} tekleatu laguntza zabaltzeko.}. \ref{alg:basicLS} algoritmoan oinarrizko bilaketa lokalaren sasikodea ikus daiteke.
+Bilaketa lokalean oinarritutako edozein algoritmoren errendimendua, kodeketaren eta ingurunearen aukeraketaz gain, beste zenbait elementutan ere oinarritzen da. Lehenik eta behin, hasierako soluzioa nola aukeratzen dugun erabakitzea garrantzitsua da, aurreko atalean ikusi dugun moduan horren arabera optimo lokal batean edo bestean amaituko baita bilaketa. Bigarren oinarrizko elementua inguruneko soluzioen aukeraketa egiteko aplikatzen den estrategia da. Uneko soluzioaren ingurunean hainbat soluzio izango ditugu, baina, zein aukeratuko dugu hurrengo soluzioa izateko? Azkenik, gelditze irizpideak ere kontutan hartu beharreko faktoreak dira. Bilaketa lokala optimo lokal bat topatzen dugunean amaitzen da; dena dela, beste edozein algoritmotan bezala, denboran edota ebaluazio kopuruan oinarritutako gelditze irizpideak ere proposa ditzakegu\footnote{Informazio gehiago R-ren laguntzan duzu; \code{?basicLocalSearch} tekleatu laguntza zabaltzeko.}. \ref{alg:basicLS} algoritmoan oinarrizko bilaketa lokalaren sasikodea ikus daiteke.
 
 \begin{ifalgorithm}[t]\label{alg:basicLS}
 \begin{ifpseudo}{Oinarrizko bilaketa lokala}
@@ -256,59 +257,67 @@ Bilaketa lokalean oinarritutako edozein algoritmoren errendimendua, kodeketaren 
 \caption{Oinarrizko bilaketa lokalaren sasikodea. Uneko soluzioaren ingurunean fitness-a hobetzen duen soluzio bat bilatzen dugu. Horrelakorik badago, uneko soluzioa ordezkatzen dugu; ez badago, bilaketa amaitzen da.}
 \end{ifalgorithm}
 
-Sasikodean dagoen algorithmoa \code{metaheuR} paketeko \code{basic.local.search} funtzioak inplementatzen du. Funtzio honek zenbait parametro ditu, batzuk algoritmoarekin zerikusia dutenak eta beste batzuk problemari eta exekuzioari lotuta daudenak. Paketean dauden metaheuristika guztiek antzerako egitura izango dutenez, pausuz pausu aztertuko ditugu parametro hauek. Gauzak honela, parametroak hiru motakoak dira:
+Sasikodean dagoen algorithmoa \code{metaheuR} paketeko \code{basicLocalSearch} funtzioak inplementatzen du. Funtzio honek zenbait parametro ditu, batzuk algoritmoarekin zerikusia dutenak eta beste batzuk problemari eta exekuzioari lotuta daudenak. Paketean dauden metaheuristika guztiek antzerako egitura izango dutenez, pausuz pausu aztertuko ditugu parametro hauek. Gauzak honela, parametroak hiru motakoak dira:
 \begin{itemize}
 \item Problemari lotutako parametroak - Bilaketa gidatzeko helburu funtzio bat behar dugu. Funtzio hau \code{evaluate} parametroaren bidez pasatuko diogu algoritmoari. Algoritmoen inplementazioa orokorra denez, gerta daiteke problema batzuetarako bideraezinak diren soluzioak agertzea. Problema mota hauekin lan egin ahal izateko, \code{metaheuR} paketeak soluzioen bideragarritasuna aztertu eta soluzio bideraezinak konpontzeko funtzioak parametro gisa sartzea ahalbidetzen du. Funtzio hauek problema bakoitzeko ezberdinak izango dira eta algoritmoari \code{valid} eta \code{correct} parametroen bidez pasatuko dizkiogu, hurrenez hurren.
 
-\item Exekuzio kontrola - Badaude exekuzioaren zenbait aspektu kontrola ditzakegunak. Lehenik eta behin, algoritmoari baliabide konputazionalak mugatu diezazkiokegu, denbora, soluzio berrien ebaluazio kopurua edota iterazio kopurua finkatuz. Hau \code{CResource} objektuen  \code{cresource} parametroaren bidez kontrola dezakegu, bertan algoritmoak eskuragarri dituen baliabideak definituz. Horrez gain, \code{basic.local.search} funtzioak, algoritmoak gauzatzen duen bilaketaren progresioa bistaratzeko aukera ematen digu \code{verbose} parametroaren bidez. Era berean, progresioa taula batean gorde dezakegu, \code{do.log} parametroaren bidez.
+\item Exekuzio kontrola - Badaude exekuzioaren zenbait aspektu kontrola ditzakegunak. Lehenik eta behin, algoritmoari baliabide konputazionalak mugatu diezazkiokegu, denbora, soluzio berrien ebaluazio kopurua edota iterazio kopurua finkatuz. Hau \code{cResource} objektuen  \code{cResource} parametroaren bidez kontrola dezakegu, bertan algoritmoak eskuragarri dituen baliabideak definituz. Horrez gain, \code{basicLocalSearch} funtzioak, algoritmoak gauzatzen duen bilaketaren progresioa bistaratzeko aukera ematen digu \code{verbose} parametroaren bidez. Era berean, progresioa taula batean gorde dezakegu, \code{do.log} parametroaren bidez.
 
 \item Bilaketaren parametroak - Bilaketa lokala aplikatzeko hiru gauza behar ditugu, hasierako soluzioa, ingurune definizio bat eta inguruneko soluzio bat aukeratzeko prozedura. Hiru elementu hauek \code{initial.solution}, \code{neighborhood} eta \code{selector} parametroen bidez ezarri beharko ditugu. Horez gain, soluzio bideraezinak daudenean, hiru aukera ditugu, bideraezin diren soluzioak onartu, deskartatu edo konpontzea. Zein aukera erabili \code{non.valid} parametroaren bidez adiraziko dugu.
 \end{itemize}
 
-Jarraian \code{basic.local.search} funtzioaren eta bere parametro guztien erabilera adibide baten bidez aztertuko dugu. Adibiderako grafoen koloreztetze-problema bat sortuko dugu \code{graph.coloring.problem} funtzioa erabiliz eta ausazko grafo bat hautatuz. Honela, \code{gcp} objektuak problemaren ebaluazio funtzioa eta soluzio bideragarriekin tratatzeko funtzioak gordeko ditu.
+Jarraian \code{basicLocalSearch} funtzioaren eta bere parametro guztien erabilera adibide baten bidez aztertuko dugu. Adibiderako grafoen koloreztetze-problema bat sortuko dugu \code{graphColoringProblem} funtzioa erabiliz eta ausazko grafo bat hautatuz. Honela, \code{gcp} objektuak problemaren ebaluazio funtzioa eta soluzio bideragarriekin tratatzeko funtzioak gordeko ditu.
 
-<<GC_1, prompt=TRUE , echo=-1>>=
+<<GC_1, prompt=TRUE , echo=-2>>=
+library(igraph)
 set.seed(1)
 n <- 25
-rnd.graph <- random.graph.game(n = n , p.or.m = 0.25)
-gcp <- graph.coloring.problem (graph = rnd.graph)
+rnd.graph <- random.graph.game(n=n, p.or.m=0.25)
+gcp <- graphColoringProblem (graph=rnd.graph)
 @
 
 Orain, algoritmoari emango dizkiogun baliabideak mugatuko ditugu. Gehienez, algoritmoak 10 segundu, helburu funtzioaren $100n^2$ ebaluazio edo algoritmoaren $100n$ iterazio erabili ahalko ditu.
 
 <<GC_3, prompt=TRUE>>=
-resources <- cresource(time = 10 , evaluations = 100*n^2 , iterations = 100*n)
+resources <- cResource(time=10, evaluations=100 * n^2, iterations=100 * n)
 @
 
 
 Azkenik, bilaketarekin loturiko parametroei dagokienez, hasierako soluzio gisa soluzio tribiala sortuko dugu, non nodo bakoitzak kolore bat duen. Horrez gain, Hamming distantzian oinarritutako ingurune objektua sortuko dugu. Objetu honek ingurunea aztertu eta harekin lan egiteko beharrezko funtzioak gordeko ditu.
 
 <<GC_2, prompt=TRUE, cache=TRUE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=5 , fig.height=5>>=
-colors <- paste("C",1:n,sep="")
-initial.solution <- factor (colors, levels = colors)
-h.ngh <- hammingNeighborhood(base = initial.solution)
+colors <- paste("C", 1:n, sep="")
+initial.solution <- factor (colors, levels=colors)
+h.ngh <- hammingNeighborhood(base=initial.solution)
 @
 
 
 Dena prest daukagu bilaketa abiaratzeko ...
 
 <<GC_4, prompt=TRUE , cache=TRUE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=6 , fig.height=6>>=
-bls <- basic.local.search(evaluate = gcp$evaluate , valid = gcp$is.valid , 
-                          correct = gcp$correct, initial.solution = initial.solution , 
-                          neighborhood = h.ngh , selector = first.improvement.selector , 
-                          non.valid = 'correct' , resources = resources)
+args <- list()
+args$evaluate         <- gcp$evaluate
+args$valid            <- gcp$valid
+args$correct          <- gcp$correct
+args$initial.solution <- initial.solution
+args$neighborhood     <- h.ngh
+args$selector         <- firstImprovementSelector
+args$non.valid        <- "correct"
+args$resources        <- resources
+
+bls <- do.call(basicLocalSearch, args)
 
 bls
-final.solution <- optima(bls)[[1]]
-as.character(unique(final.solution))
+final.solution <- getSolution(bls)
+as.character(final.solution)
 plot.gpc.solution <- gcp$plot
-plot.gpc.solution(solution = final.solution , node.size = 15 , label.cex = 0.8)
+plot.gpc.solution(solution=final.solution, node.size=15, label.cex=0.8)
 @
 
-Bilaketa lokalak --eta, oro har, beste gainontzeko algoritmoek-- objektu berezi bat itzultzen dute, \code{MHResult} klasekoa. Bertan dagoen informazioa funtzio sorta baten bitartez lor daiteke; este baterako, \code{optima} funtzioak lortutako soluzio optimoa(k) itzultzen du, zerrenda batean. Bilaketa lokalak soluzio bakarra itzultzen duenez, soluzio hori listaren 1. posizioan egongo da. Soluzioa grafikoki bistaratzeko \code{graph.coloring.problem} funtzioak itzultzen duen \code{plot} funtzioa erabil daiteke. Gainera, bilaketaren progresioa ere bistara dezakegu, \code{plot.progress} funtzioa erabiliz. \ref{fig:bls_gcp} irudiak problemarako soluzioa eta bilaketaren progresioa jasotzen ditu.
+Bilaketa lokalak --eta, oro har, beste gainontzeko algoritmoek-- objektu berezi bat itzultzen dute, \code{mHResult} klasekoa. Bertan dagoen informazioa funtzio sorta baten bitartez lor daiteke; este baterako, \code{optima} funtzioak lortutako soluzio optimoa(k) itzultzen du, zerrenda batean. Bilaketa lokalak soluzio bakarra itzultzen duenez, soluzio hori listaren 1. posizioan egongo da. Soluzioa grafikoki bistaratzeko \code{graphColoringProblem} funtzioak itzultzen duen \code{plot} funtzioa erabil daiteke. Gainera, bilaketaren progresioa ere bistara dezakegu, \code{plotProgress} funtzioa erabiliz. \ref{fig:bls_gcp} irudiak problemarako soluzioa eta bilaketaren progresioa jasotzen ditu.
 
 <<GC_5, prompt=TRUE , cache=TRUE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=10 , fig.height=5>>=
-plot.progress(bls , size=1.1 ) + labs(y="Evaluation")
+plotProgress(bls, size=1.1) + labs(y="Evaluation")
 @
 
 \begin{figure}[t]
@@ -354,41 +363,43 @@ Inguruneko soluzioak lortzeko posizio bakoitzeko balioa banan-banan aldatu behar
 
 Adibidean, soluzioen kodeketarekin zerikusia duen ordena erabiltzen da inguruneko soluzioak lortzeko. Horren ordez, esplorazioa ausaz ere egin daiteke.
 
-Jarraian azaltzen den kodean ingurunearen azterketan ordenak duen eragina erakusten da. Lehenik eta behin, TSPlib repositorioan dagoen problema bat kargatuko dugu, \code{metaheuR} paketeko \code{tsplib.parser} funtzioa erabiliz. TSPlib repositorioan TSP problemaren zenbait adibide ezberdin topa ditzakegu. Erabiliko dugun probleman Babariako 29 hiri izango ditugu. Hasierako soluzio gisa identitate permutazioa hartuko dugu.
+Jarraian azaltzen den kodean ingurunearen azterketan ordenak duen eragina erakusten da. Lehenik eta behin, TSPlib repositorioan dagoen problema bat kargatuko dugu, \code{metaheuR} paketeko \code{tsplibParser} funtzioa erabiliz. TSPlib repositorioan TSP problemaren zenbait adibide ezberdin topa ditzakegu. Erabiliko dugun probleman Babariako 29 hiri izango ditugu. Hasierako soluzio gisa identitate permutazioa hartuko dugu.
 
 <<Order_1, prompt=TRUE , echo=-1 , message=FALSE , tidy=TRUE>>=
 set.seed(1)
-url <- system.file("bays29.xml.zip" , package = "metaheuR")
-cost.matrix <- tsplib.parser(url)
+url <- system.file("bays29.xml.zip", package="metaheuR")
+cost.matrix <- tsplibParser(url)
 n <- dim(cost.matrix)[1]
-tsp.babaria <- tsp.problem(cost.matrix)
-csol <- identity.permutation(n)
+tsp.babaria <- tspProblem(cost.matrix)
+csol <- identityPermutation(n)
+csol
 eval <- tsp.babaria$evaluate(csol)
+eval
 @
 
 Problema definitu ostean, hasierako soluzioaren ingurunea sortuko dugu. {\it 2-opt} ingurunea aukeratu dugu, ausazko eta ez-ausazko esplorazioak hautatuz. Lehenengoan inguruneko soluzioak ausazko orden batean aztertuko dira eta bigarrenean, ordea, kodeketaren araberako orden zehatz bat jarraituko da ingurunea arakatzeko.
 
 <<Order_2, prompt=TRUE>>=
-ex.nonrandom <- exchangeNeighborhood(base = csol , random = TRUE)
-ex.random <- exchangeNeighborhood(base = csol , random = FALSE)
+ex.nonrandom <- exchangeNeighborhood(base=csol, random=TRUE)
+ex.random <- exchangeNeighborhood(base=csol, random=FALSE)
 @
 
-Bilaketaren pausu bakoitzean inguruneko helburu funtzioa hobetzen duen lehenengo soluzioa aukeratzen badugu, hautatutako bi ordenazioak erabiliz emaitza ezberdinak lortuko ditugu. Ingurunea modu honetan arakatzeko, \code{first.improvement.selector} funtzioa erabili dezakegu. Funtzio honek, uneko soluzioaren ingurunea arakatu du eta fitness-a hobetzen duen lehenengo soluzioa itzultzen du.
+Bilaketaren pausu bakoitzean inguruneko helburu funtzioa hobetzen duen lehenengo soluzioa aukeratzen badugu, hautatutako bi ordenazioak erabiliz emaitza ezberdinak lortuko ditugu. Ingurunea modu honetan arakatzeko, \code{firstImprovementSelector} funtzioa erabili dezakegu. Funtzio honek, uneko soluzioaren ingurunea arakatu du eta fitness-a hobetzen duen lehenengo soluzioa itzultzen du.
 
 <<Order_3, prompt=TRUE , cache=TRUE>>=
-first.improvement.selector(neighborhood = ex.nonrandom , evaluate = tsp.babaria$evaluate , 
-                           initial.solution = csol , initial.evaluation = eval)$evaluation
-first.improvement.selector(neighborhood = ex.random , evaluate = tsp.babaria$evaluate , 
-                           initial.solution = csol , initial.evaluation = eval)$evaluation
+firstImprovementSelector(neighborhood=ex.nonrandom, evaluate=tsp.babaria$evaluate,
+                         initial.solution=csol,initial.evaluation=eval)$evaluation
+firstImprovementSelector(neighborhood=ex.random, evaluate=tsp.babaria$evaluate,
+                         initial.solution=csol, initial.evaluation=eval)$evaluation
 @
 
-Inguruneko soluziorik onena aukeratzen badugu, hautatutako bi ordenazioak erabiliz emaitza bera lortuko dugu, kasu guztietan inguruneko soluzio guztiak aztertzen baitira. Ingurunea aztertzeko estrategia hau \code{greedy.selector} funtzioak inplementatzen du.
+Inguruneko soluziorik onena aukeratzen badugu, hautatutako bi ordenazioak erabiliz emaitza bera lortuko dugu, kasu guztietan inguruneko soluzio guztiak aztertzen baitira. Ingurunea aztertzeko estrategia hau \code{greedySelector} funtzioak inplementatzen du.
 
 <<Order_4, prompt=TRUE,cache=TRUE>>=
-greedy.selector(neighborhood = ex.nonrandom , evaluate = tsp.babaria$evaluate ,
-                initial.solution = csol , initial.evaluation = eval)$evaluation
-greedy.selector(neighborhood = ex.random , evaluate = tsp.babaria$evaluate , 
-                initial.solution = csol , initial.evaluation = eval)$evaluation
+greedySelector(neighborhood=ex.nonrandom, evaluate=tsp.babaria$evaluate,
+               initial.solution=csol, initial.evaluation=eval)$evaluation
+greedySelector(neighborhood=ex.random, evaluate=tsp.babaria$evaluate,
+               initial.solution=csol, initial.evaluation=eval)$evaluation
 @
 
 Inguruneak handiak direnean ordenak oso eragin handia izan dezake eta, hortaz, heuristikoak erabil daitezke esplorazioa egiteko. Adibide gisa, Fred Glover-ek TSP problemarako proposatutako \textit{ejection chains} \citep{pesch1997} aipa daitezke. Gainera, metodo heuristikoez gain, tamaina handiko inguruneak era eraginkorrean zehazki aztertzeko algoritmoak ere badaude; hauetako adibide bat \textit{dynasearch}\citep{congram2000} algoritmoa da.
@@ -402,65 +413,75 @@ Zehazki, aurreko atalean aurkeztutako Babariako hirien problema erabiliko dugu. 
 
 <<Babaria_1, prompt=TRUE,cache=TRUE,echo=-1>>=
 set.seed(1)
-rnd.sol <- random.permutation(n)
-greedy.sol <- tsp.greedy(cmatrix = cost.matrix)
+rnd.sol <- randomPermutation(n)
+greedy.sol <- tspGreedy(cmatrix=cost.matrix)
 tsp.babaria$evaluate(rnd.sol)
 tsp.babaria$evaluate(greedy.sol)
 @
 
-Ikusi daitekeenez, algoritmo eraikitzaileak (\code{tsp.greedy}) ematen duen soluzioa ausazkoa baino askoz ere hobea da. Bi soluzio hauek hasierako soluzio gisa hartuz, bilaketa lokala aplikatu ahal dugu, {\it swap} ingurunea erabiliz. Gainera, pausu bakoitzean, inguruneko soluziorik onena aukera dezakegu ({\it greedy}) edo, bestela, uneko soluzioaren fitness-a hobetzen duen lehenengo soluzioa hartu ({\it first improvement (fi)}). Honenbestez, lau bilaketa ezberdin exekutatuko ditugu.
+Ikusi daitekeenez, algoritmo eraikitzaileak (\code{tspGreedy}) ematen duen soluzioa ausazkoa baino askoz ere hobea da. Bi soluzio hauek hasierako soluzio gisa hartuz, bilaketa lokala aplikatu ahal dugu, {\it swap} ingurunea erabiliz. Gainera, pausu bakoitzean, inguruneko soluziorik onena aukera dezakegu ({\it greedy}) edo, bestela, uneko soluzioaren fitness-a hobetzen duen lehenengo soluzioa hartu ({\it first improvement (fi)}). Honenbestez, lau bilaketa ezberdin exekutatuko ditugu.
 
 <<Babaria_2, prompt=TRUE,cache=TRUE>>=
 eval <- tsp.babaria$evaluate
-swp.ngh.rnd <- swapNeighborhood (base = rnd.sol)
-swp.ngh.greedy <- swapNeighborhood (base = greedy.sol)
-swap.greedy.rnd.sol <- basic.local.search(evaluate = eval , initial.solution = rnd.sol , 
-                                          neighborhood = swp.ngh.rnd , 
-                                          selector = greedy.selector , verbose = FALSE)
+swp.ngh.rnd <- swapNeighborhood(base=rnd.sol)
+swp.ngh.greedy <- swapNeighborhood(base=greedy.sol)
 
-swap.fi.rnd.sol <- basic.local.search(evaluate = eval , initial.solution = rnd.sol ,
-                                      neighborhood = swp.ngh.rnd ,
-                                      selector = first.improvement.selector, verbose = FALSE)
+args <- list()
+args$evaluate         <- eval
+args$initial.solution <- rnd.sol
+args$neighborhood     <- swp.ngh.rnd
+args$selector         <- greedySelector
+args$verbose          <- FALSE
 
-swap.greedy.greedy.sol <- basic.local.search(evaluate = eval , initial.solution = greedy.sol ,
-                                             neighborhood = swp.ngh.greedy , 
-                                             selector = greedy.selector, verbose = FALSE)
+swap.greedy.rnd.sol <- do.call(basicLocalSearch, args)
 
-swap.fi.greedy.sol <- basic.local.search(evaluate = eval , initial.solution = greedy.sol ,
-                                         neighborhood = swp.ngh.greedy , 
-                                         selector = first.improvement.selector, verbose = FALSE)
+args$selector   <- firstImprovementSelector
+swap.fi.rnd.sol <- do.call(basicLocalSearch, args)
+
+args$initial.solution <- greedy.sol
+swap.fi.greedy.sol    <- do.call(basicLocalSearch, args)
+
+args$selector          <- greedySelector
+swap.greedy.greedy.sol <- do.call(basicLocalSearch, args)
+
 @
 
 Azter dezagun zer nolako hobekuntza lortu dugun bilaketa lokalarekin, ausazko soluziotik abiatzen garenean.
 
 <<Babaria_3, prompt=TRUE,cache=TRUE>>=
-tsp.babaria$evaluate(rnd.sol) - evaluation(swap.greedy.rnd.sol)
-tsp.babaria$evaluate(rnd.sol) - evaluation(swap.fi.rnd.sol)
+tsp.babaria$evaluate(rnd.sol) - getEvaluation(swap.greedy.rnd.sol)
+tsp.babaria$evaluate(rnd.sol) - getEvaluation(swap.fi.rnd.sol)
 @
 
 Ikusi daitekeenez bilaketa lokalaren bidez, topatutako soluzioa hasierakoa baino askoz ere hobea da. Are gehiago, bilaketa prozesuko pausu bakoitzean inguruneko soluziorik onena aukeratzen badugu, hobekuntza handiagoa da. Halere, kontutan hartu behar da ebaluazio kopurua ere handiagoa dela kasu honetan.
 
 <<Babaria_4, prompt=TRUE,cache=TRUE>>=
-consumed.evaluations(resources(swap.greedy.rnd.sol))
-consumed.evaluations(resources(swap.fi.rnd.sol))
+getConsumedEvaluations(getResources(swap.greedy.rnd.sol))
+getConsumedEvaluations(getResources(swap.fi.rnd.sol))
 @
 
 Algoritmo eraikitzailearekin lortutako hasierako soluzioa, ausazko soluzioa baina hobea dela ikusi dugu. Hala ere, soluzio horri bilaketa lokala aplikatuz, soluzio oraindik hobea lortuko dugu, nahiz eta kasu honetan hobekuntza hain handia ez izan. 
 
 <<Babaria_5, prompt=TRUE,cache=TRUE>>=
-tsp.babaria$evaluate(greedy.sol) - evaluation(swap.greedy.greedy.sol)
+tsp.babaria$evaluate(greedy.sol) - getEvaluation(swap.greedy.greedy.sol)
 @
 
 Inguruneko soluzio guztietatik onena hartzeak emaitza hobeak ematen ditu --ausazko soluziotik abiatzen garenean, behintzat--, bilaketa espazioa sakonago aztertzen delako. Bilaketa sakonagoa egiteko beste era bat, {\it swap} ingurunearen ordez {\it 2-opt} ingurunea erabiltzean datza. Izan ere, lehen ikusi dugun bezala, {\it 2-opt} ingurunea {\it swap} ingurunea baino askoz ere handiagoa da.
 
 <<Babaria_6, prompt=TRUE,cache=TRUE>>=
-ex.ngh.rnd <- exchangeNeighborhood (base = rnd.sol)
-ex.greedy.rnd.sol <- basic.local.search(evaluate = eval , initial.solution = rnd.sol ,
-                                        neighborhood = ex.ngh.rnd , 
-                                        selector = greedy.selector , verbose = FALSE)
+ex.ngh.rnd <- exchangeNeighborhood (base=rnd.sol)
 
-tsp.babaria$evaluate(rnd.sol) - evaluation(ex.greedy.rnd.sol)
-consumed.evaluations(resources(ex.greedy.rnd.sol))
+args <- list()
+args$evaluate         <- eval
+args$initial.solution <- rnd.sol
+args$neighborhood     <- ex.ngh.rnd
+args$selector         <- greedySelector
+args$verbose          <- FALSE
+
+ex.greedy.rnd.sol <- do.call(basicLocalSearch, args)
+
+tsp.babaria$evaluate(rnd.sol) - getEvaluation(ex.greedy.rnd.sol)
+getConsumedEvaluations(getResources(ex.greedy.rnd.sol))
 @
 
 Ikus daitekeen bezala, hobekuntza handiagoa da baina, inguruneak handiagoak direnez, baita ebaluazio kopurua ere.
@@ -534,7 +555,7 @@ Gainera, soluzioak perturbatzeko prozedura aurreratuetan, bilaketaren \zkk histo
 \label{fig:ILS}
 \end{figure}
 
-\code{metaheuR} paketean, ILS-a \code{iterated.local.search} funtzioan dago inplementatuta. Funtzio honen parametro gehienak \code{basic.local.search} funtzioaren berberak dira, inplementazioa funtzio horretan oinarritzen baita. Algoritmo honek ordea, hiru parametro berri izango ditugu:
+\code{metaheuR} paketean, ILS-a \code{iteratedLocalSearch} funtzioan dago inplementatuta. Funtzio honen parametro gehienak \code{basicLocalSearch} funtzioaren berberak dira, inplementazioa funtzio horretan oinarritzen baita. Algoritmo honek ordea, hiru parametro berri izango ditugu:
 
 \begin{itemize}
 \item \code{perturb} - Parametro honen bidez soluzioak perturbatzeko erabiliko den funtzioa adieraziko diogu algoritmoari. \code{perturb} funtzioak parametro bakarra izango du, perturbatu behar den soluzioa, eta perturbazioa aplikatuz lortzen den soluzioa itzuliko du.
@@ -545,32 +566,32 @@ Gainera, soluzioak perturbatzeko prozedura aurreratuetan, bilaketaren \zkk histo
 Ikus dezagun adibide bat, TSPlib-eko problema bat erabiliz. Problema honetan Burma-ko 14 hirien arteko distantziak izango ditugu. Problema ebazteko ausazko soluzio batetik abiatuko dugu bilaketa. Ingurune gisa \textit{2-opt} erabiliko dugu (trukaketa orokorrak, ez bakarrik elkar-ondokoak) eta soluzioak perturbatzeko eragiketa bera erabiliko dugu baina behin baino gehiagotan aplikatuz; soluzio bati operazio hau ausaz aplikatzeko \code{shuffle} funtzioa erabil dezakegu.
 
 <<Burma_1, prompt=TRUE,cache=TRUE>>=
-f <- paste("http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95"
-         ,"/XML-TSPLIB/instances/burma14.xml.zip",sep="")
-burma.mat <- tsplib.parser(f)
+f <- paste("http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95", 
+           "/XML-TSPLIB/instances/burma14.xml.zip", sep="")
+burma.mat <- tsplibParser(f)
 
 n <- ncol(burma.mat)
-burma.tsp <- tsp.problem(burma.mat)
+burma.tsp <- tspProblem(burma.mat)
 
-init.sol <- random.permutation(n)
-ngh <- exchangeNeighborhood(init.sol)
-sel <- greedy.selector
-
+init.sol <- randomPermutation(n)
+ngh      <- exchangeNeighborhood(init.sol)
+sel      <- greedySelector
 @
 
 Segidan, optimo lokalak onartzeko irizpideak definituko ditugu. Kasu honetan, soluzioen arteko diferentzia 0 baina handiagoa izan beharko da, optimo lokal berria onartzeko. Hau da,  optimo lokal berria aurrekoa baina hobea izan behar da.
 
 <<Burma_2, prompt=TRUE,cache=TRUE>>=
-th.accpet <- threshold.accept
+th.accpet <- thresholdAccept
 th <- 0
 @
 
-Perturbazio maila soluzioari aplikatuko dizkiogun trukaketa kopuruaren bidez kontrolatuko dugu. Beraz, trukaketa kopurua, gure perturbazio funtzioaren parametro bat izan beharko da\footnote{\code{iterated.local.search} funtzioarekin (eta paketearen beste hainbat funtzioekin) arazorik ez izateko, pasatutako funtzioak \code{...} argumentua izan behar du gutxienez, nahiz eta gero barruan ez erabili.}.
+Perturbazio maila soluzioari aplikatuko dizkiogun trukaketa kopuruaren bidez kontrolatuko dugu. Beraz, trukaketa kopurua, gure perturbazio funtzioaren parametro bat izan beharko da\footnote{\code{iteratedLocalSearch} funtzioarekin (eta paketearen beste hainbat funtzioekin) arazorik ez izateko, pasatutako funtzioak \code{...} argumentua izan behar du gutxienez, nahiz eta gero barruan ez erabili.}.
 
 <<Burma_3, prompt=TRUE,cache=TRUE>>=
 set.seed(1)
-perturb.2opt <- function(solution , ratio , ...)
-  shuffle(permutation = solution , ratio = ratio)
+perturbShuffle <- function(solution, ratio, ...) {
+  return(shuffle(permutation=solution, ratio=ratio))
+}
 @ 
 
 Honekin guztiarekin ILS algoritmoa exekutatu dezakegu perturbazio maila ezberdinekin:
@@ -578,29 +599,29 @@ Honekin guztiarekin ILS algoritmoa exekutatu dezakegu perturbazio maila ezberdin
 <<Burma_4, echo=-1 , prompt=TRUE,cache=TRUE , results='hide', fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=14 , fig.height=6 >>=
 r <- 5
 ratio <- 0.01
-ils.1 <- iterated.local.search(evaluate = burma.tsp$evaluate , 
-                               initial.solution = init.sol ,
-                               neighborhood = ngh , selector = sel , 
-                               perturb = perturb.2opt ,  ratio = ratio ,
-                               accept = th.accpet , th = th , 
-                               num.restarts = r)
-ratio <- 0.25
-ils.25 <- iterated.local.search(evaluate = burma.tsp$evaluate , 
-                               initial.solution = init.sol ,
-                               neighborhood = ngh , selector = sel , 
-                               perturb = perturb.2opt ,  ratio = ratio ,
-                               accept = th.accpet , th = th , 
-                               num.restarts = r)
-ratio <- 1
-ils.100 <- iterated.local.search(evaluate = burma.tsp$evaluate , 
-                               initial.solution = init.sol ,
-                               neighborhood = ngh , selector = sel , 
-                               perturb = perturb.2opt ,  ratio = ratio ,
-                               accept = th.accpet , th = th , 
-                               num.restarts = r)
 
-plot.progress(result = list(ILS1 = ils.1 , ILS33 = ils.25 , ILS100 = ils.100)) + 
-  facet_grid(. ~ Group , scales = 'free_x') + labs(y="Evaluation")
+args <- list()
+args$evaluate         <- burma.tsp$evaluate
+args$initial.solution <- init.sol
+args$neighborhood     <- ngh
+args$selector         <- sel
+args$perturb          <- perturbShuffle
+args$ratio            <- ratio
+args$accept           <- th.accpet
+args$th               <- th
+args$num.restarts     <- r
+args$verbose          <- FALSE
+
+ils.1 <- do.call(iteratedLocalSearch, args)
+
+args$ratio <- 0.25
+ils.25 <- do.call(iteratedLocalSearch, args)
+
+args$ratio <- 1
+ils.100 <- do.call(iteratedLocalSearch, args)
+
+plotProgress(result=list(ILS1=ils.1, ILS25=ils.25, ILS100=ils.100)) + 
+  facet_grid(. ~ Group, scales="free_x") + labs(y="Evaluation")
 @
 
 \begin{figure}[t]
@@ -629,28 +650,28 @@ Algoritmo hau GRASP algoritmoaren ideiara modu errezean egokitu daiteke. Algorit
 
 Edozein problemari GRASP algoritmoa aplikatzeko, adibidean planteatzen den hasierako soluzio onak sortzeko estrategiaren antzerako prozedura bat diseinatu eta inplementatu beharko dugu. Funtzio honen parametro gehienak problema bakoitzarentzat ezberdinak izango dira baina, gainera, hautagaien zerrendaren luzeera $\alpha$ proportzio baten bidez adierazi beharko dugu. 
 
-Adibide gisa, \code{metaheuR} paketean motxilaren problema GRASP algoritmoaren bitartez ebatzi ahal izateko, \code{knap.GRASP} funtzioa izango dugu. Funtzio honetan, hasteko, zenbait datu atera eta aldagai batzuk hasieratzen dira. Besteak beste, elementurik gabeko soluzio \zkk hutsa\skk sortuko dugu.
+Adibide gisa, \code{metaheuR} paketean motxilaren problema GRASP algoritmoaren bitartez ebatzi ahal izateko, \code{graspKnapsack} funtzioa izango dugu. Funtzio honetan, hasteko, zenbait datu atera eta aldagai batzuk hasieratzen dira. Besteak beste, elementurik gabeko soluzio \zkk hutsa\skk sortuko dugu.
 
 <<Knap_GRASP, prompt = TRUE , echo = FALSE>>=
-knap.GRASP <- function (weight , value , limit , cl.size = 0.25){
+graspKnapsack <- function(weight, value, limit, cl.size=0.25) {
   size <- length(weight)
   ratio <- value / weight
-  solution <- rep(FALSE , size)
-  finished = FALSE
-  while (!finished){
+  solution <- rep(FALSE, size)
+  finished <- FALSE
+  while (!finished) {
     non.selected <- which(!solution)
-    cl.n <- max(1, round(length(non.selected)*cl.size))
-    cl <- sort(ratio[non.selected] , decreasing=TRUE)[1:cl.n]
-    selected <- sample(cl,1)    
+    cl.n <- max(1, round(length(non.selected) * cl.size))
+    cl <- sort(ratio[non.selected], decreasing=TRUE)[1:cl.n]
+    selected <- sample(cl, 1)    
     aux <- solution
     aux[ratio == selected] <- TRUE
-    if (sum(weight[aux])<limit){
+    if (sum(weight[aux]) < limit) {
       solution <- aux
     }else{
       finished <- TRUE
     }
   }
-  solution
+  return(solution)
 }
 @
 
@@ -679,49 +700,52 @@ Sortu dugun funtzioa, GRASP algoritmoa, guztiz ausazkoa den hasieraketa anizkoit
 <<GRASP_vs_rndstart_1, echo=-1 , prompt=TRUE , cache=TRUE>>=
 set.seed(5)
 n <- 50
-values  <- c(runif(n/2) * 10,  runif(n/2)*25)
-weights <- values * rnorm(n,1,0.05)
-limit   <- sum(sample(weights , n/5))
+values  <- c(runif(n / 2) * 10,  runif(n / 2) * 25)
+weights <- values * rnorm(n, 1, 0.05)
+limit   <- sum(sample(weights, n / 5))
 @
 
-GRASP eta hasieraketa anizkoitzeko bilaketa lokala erabiltzeko, \code{multistart.local.search} funtzioa erabil dezakegu. Orain arte ikusitakoen antzerakoa da funtzio hau, baina argumentu moduan hasierako soluzioa pasatu beharrean, soluzioak sortzeko funtzio bat pasatu behar diogu. Funtzioak parametro asko dituenez, sarrerako balioak antolatzeko beste era bat erabiliko dugu kodea irakurterrezagoa izateko. Zerrenda batean sartuko ditugu, izenak erabiliz eta gero R-ren \code{do.call} funtzioa erabiliko dugu.
+GRASP eta hasieraketa anizkoitzeko bilaketa lokala erabiltzeko, \code{multistartLocalSearch} funtzioa erabil dezakegu. Orain arte ikusitakoen antzerakoa da funtzio hau, baina argumentu moduan hasierako soluzioa pasatu beharrean, soluzioak sortzeko funtzio bat pasatu behar diogu. Funtzioak parametro asko dituenez, sarrerako balioak antolatzeko beste era bat erabiliko dugu kodea irakurterrezagoa izateko. Zerrenda batean sartuko ditugu, izenak erabiliz eta gero R-ren \code{do.call} funtzioa erabiliko dugu.
 
 <<GRASP_vs_rndstart_2, echo=-1 , prompt=TRUE , cache=TRUE>>=
 args <- list()
-knp.problem             <- knapsack.problem(weights , values , limit)
+knp.problem <- knapsackProblem(weights, values , limit)
 
-args$evaluate           <- knp.problem$evaluate
-args$valid              <- knp.problem$is.valid
-args$correct            <- knp.problem$correct
-args$non.valid          <- 'discard'
+args$evaluate  <- knp.problem$evaluate
+args$valid     <- knp.problem$valid
+args$correct   <- knp.problem$correct
+args$non.valid <- "discard"
+args$verbose   <- FALSE
 
-args$neighborhood       <- flipNeighborhood(base = rep(FALSE , n))
-args$selector           <- greedy.selector
+args$neighborhood <- flipNeighborhood(base=rep(FALSE, n))
+args$selector     <- firstImprovementSelector
 
-args$generate.solution  <- knap.GRASP
-args$num.restarts       <- 25
-args$weight             <- weights
-args$value              <- values
-args$limit              <- limit
+args$generateSolution <- graspKnapsack
+args$num.restarts     <- 10
+args$weight           <- weights
+args$value            <- values
+args$limit            <- limit
 @
 
 Behin parametro guztiak ezarrita, \code{cl.size} parametroari 3 balio ezberdin esleituko dizkiogu, 1, 0.5 eta 0.1. Lehenengo kasuan hautagai zerrendan aukera guztiak egongo direnez, soluzioak guztiz ausaz sortuko ditu, hots, ausazko hasieraketa anizkoitza erabiliko du bilaketa lokalak. Beste kasuetan, berriz, aukera guztietatik \%50 eta \%10 erabiliko ditu, hurrenez hurren.
 
 <<GRASP_vs_rndstart_3, echo=-1 , prompt=TRUE , cache=TRUE , results='hide'>>=
 args$cl.size <- 1
-rnd.ls <- do.call (multistart.local.search , args)
+rnd.ls <- do.call(multistartLocalSearch, args)
 
 args$cl.size <- 0.50
-GRASP.50 <- do.call (multistart.local.search , args)
+GRASP.50 <- do.call (multistartLocalSearch, args)
 
 args$cl.size <- 0.1
-GRASP.10 <- do.call (multistart.local.search , args)
+GRASP.10 <- do.call (multistartLocalSearch, args)
 @
 
 
 <<GRASP_vs_rndstart_4, echo=FALSE , prompt=TRUE , cache=TRUE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=8 , fig.height=4>>=
-plot.progress(list(GRASP50 = GRASP.50 , GRASP10 = GRASP.10 , RND = rnd.ls) ) + labs(y="Current solution") + scale_color_discrete("Strategy")
-plot.progress(list(GRASP50 = GRASP.50 , GRASP10 = GRASP.10 , RND = rnd.ls) , y = 'best') + labs(y="Best solution") + scale_color_discrete("Strategy")
+plotProgress(list(GRASP50=GRASP.50, GRASP10=GRASP.10, RND=rnd.ls)) + 
+  labs(y="Current solution") + scale_color_discrete("Strategy")
+plotProgress(list(GRASP50=GRASP.50, GRASP10=GRASP.10, RND=rnd.ls), y="best") + 
+  labs(y="Best solution") + scale_color_discrete("Strategy")
 @
 
 
@@ -827,8 +851,8 @@ Hasierako tenperatura 185 balioan finkatzen badugu, badakigu hasierako iterazioe
 Algoritmoaren erabilera erakusteko \ref{sec:LS_selection} ataleko adibidea erabiliko dugu (Bavariako hiriena).
 
 <<TSP_SA_1, echo=FALSE, results='hide'>>=
-url <- system.file("bays29.xml.zip" , package = "metaheuR")
-cost.matrix <- tsplib.parser(url)
+url <- system.file("bays29.xml.zip", package="metaheuR")
+cost.matrix <- tsplibParser(url)
 @
 
 Goiko adibidean egin dugun bezala, fitness balio maximo eta minimo posibleak kalkulatuko ditugu eta beraien arteko diferentzia hasierako tenperatura definitzeko erabiliko dugu. Horretarako, kostu matrizearen goiko triangeluanzenbaki minimoak eta maximoak bilatu beharko ditugu. Gainera, adibidean ez bezala, kasu honetan, hozketa prozesua gehiegi ez luzatzeko hasierako tenperatura kalkulatzeko diferentzia maximoaren probabilitatea 0.5-en finkatuko dugu.
@@ -836,11 +860,11 @@ Goiko adibidean egin dugun bezala, fitness balio maximo eta minimo posibleak kal
 <<TSP_SA_2, prompt=TRUE , cache=TRUE>>=
 n <- ncol(cost.matrix)
 distances <- cost.matrix[upper.tri(cost.matrix)]
-ebal.max <- sum(sort(distances , decreasing = TRUE)[1:n])
-ebal.min <- sum(sort(distances , decreasing = FALSE)[1:n])
+ebal.max <- sum(sort(distances, decreasing=TRUE)[1:n])
+ebal.min <- sum(sort(distances, decreasing=FALSE)[1:n])
 probability <- 0.5
 
-init.t <- -1*(ebal.max - ebal.min) / log(probability)
+init.t <- -1 * (ebal.max - ebal.min) / log(probability)
 init.t
 @
 
@@ -860,7 +884,7 @@ Funtzio guzti hauek monotonoak dira, hau da, iterazio bakoitzean tenperatura bet
 \item \textbf{Algoritmoa gelditzeko irizpidea} - Aurreko puntuan ikusi dugun legez, iterazioak aurrera egin ahala tenperatura zero baliora hurbiltzen da baina, kasu gehienetan, ez da inoiz heltzen. Honek esan nahi du beti optimo lokaletatik ateratzeko aukera izango dugula, probabilitate oso txikiarekin bada ere. Hori dela eta, algoritmoa gelditzeko baldintzaren bat definitu beharko dugu. Irizpide hedatuena tenperatura minimo bat finkatzea da; bestela, denbora edota helburu funtzioaren ebaluazio kopuru maximo bat ere finka ditzakegu.
 \end{itemize}
 
-Suberaketa simulatuaren erabilera erakusteko Bavierako TSP adibidearekin jarraituko dugu. Algoritmoa \code{simulated.annealing} funtzioak inplementatzen du. Funtzio honek, ohiko argumentuez gain, beste zenbait parametro berezi ditu:
+Suberaketa simulatuaren erabilera erakusteko Bavierako TSP adibidearekin jarraituko dugu. Algoritmoa \code{simulatedAnnealing} funtzioak inplementatzen du. Funtzio honek, ohiko argumentuez gain, beste zenbait parametro berezi ditu:
 
 \begin{itemize}
 \item \code{cooling.scheme} - Tenperaturaren eguneraketa funtzioa. Funtzioak uneko tenperatura jasoko du argumentu gisa eta hurrengo tenperatura itzuliko du.
@@ -876,10 +900,22 @@ Estrategia hau gauzatzeko 500 ausazko soluzio sortuko eta ebaluatuko ditugu. Ger
 
 <<TSP_SA_3, prompt=TRUE , cache=TRUE>>=
 rep <- 500
-rnd.eval <- sapply (1:rep , FUN = function(x) tsp.babaria$evaluate(random.permutation(n)))
-pairs <- do.call(rbind , lapply(2:rep , FUN = function(i) cbind(i-1 , i:rep)))
-diffs <- apply(pairs , MARGIN = 1 , FUN = function(p) abs(rnd.eval[p[1]] - rnd.eval[p[2]]))
-min.delta <- min(subset(diffs , diffs != 0))
+rnd.eval <- sapply (1:rep, 
+                    FUN=function(x) {
+                      return(tsp.babaria$evaluate(randomPermutation(n)))
+                    })
+
+aux <- lapply(2:rep,
+              FUN=function(i) {
+                return(cbind(i-1 , i:rep))
+              })
+pairs <- do.call(rbind, aux) 
+
+diffs <- apply(pairs, MARGIN=1, 
+               FUN=function(p) {
+                 return(abs(rnd.eval[p[1]] - rnd.eval[p[2]]))
+               })
+min.delta <- min(subset(diffs, diffs != 0))
 min.delta
 @
 
@@ -909,18 +945,18 @@ Informazio guztiarekin funtzioaren argumentuak pausuz pausu munta ditzakegu. Ing
 set.seed(90)
 args <- list()
 
-args$evaluate             <- tsp.babaria$evaluate
-args$initial.solution     <- random.permutation(n)
-args$neighborhood         <- swapNeighborhood(args$initial.solution)
+args$evaluate         <- tsp.babaria$evaluate
+args$initial.solution <- randomPermutation(n)
+args$neighborhood     <- swapNeighborhood(args$initial.solution)
 @
 
-Hozketa funtzioa sortzeko \code{geometric.cooling} funtzioa erabiliko dugu --hozketa geometrikoa inplementatzen duena--. Funtzio honi hasierako eta amaierako tenperaturak eman behar dizkiogu. Horrez gain, hasierako tenperaturatik amaierakora zenbat eguneraketa behar diren ere adierazi beharko diogu.
+Hozketa funtzioa sortzeko \code{geometricCooling} funtzioa erabiliko dugu --hozketa geometrikoa inplementatzen duena--. Funtzio honi hasierako eta amaierako tenperaturak eman behar dizkiogu. Horrez gain, hasierako tenperaturatik amaierakora zenbat eguneraketa behar diren ere adierazi beharko diogu.
 
 <<TSP_SA_6_2 , prompt=TRUE , cache=TRUE , results='hide' >>=
 steps <- 20
-args$cooling.scheme       <- geometric.cooling(init.t , final.t , steps)
-args$initial.temperature  <- init.t
-args$final.temperature    <- final.t
+args$cooling.scheme      <- geometricCooling(init.t, final.t, steps)
+args$initial.temperature <- init.t
+args$final.temperature   <- final.t
 @
 
 Eguneraketa funtzioari tenperatura bat emanik, hurrengo tenperatura emango digu.
@@ -936,19 +972,22 @@ next.t
 Oreka egoera, soluzio berrien ebaluazio kopuru baten arabera kontsideratuko dugu. Zehazki, 10 bider ingurunearen tamaina (hiri kopurua) izango da.
 
 <<TSP_SA_6_4, echo=-1 , prompt=TRUE , cache=TRUE , results='hide' >>=
-args$eq.value             <- 10*n
-args$log.frequency        <- 10
-args$eq.criterion         <- 'evaluations'
+args$eq.value      <- 10 * n
+args$log.frequency <- 10
+args$eq.criterion  <- "evaluations"
+args$verbose       <- FALSE
 @
 
 Amaitzeko, algoritmoa exekutatzen dugu.
 
 <<TSP_SA_6_5, echo=-1 , prompt=TRUE , cache=TRUE , results='hide' >>=
-sa <- do.call(simulated.annealing , args)
+sa <- do.call(simulatedAnnealing, args)
 @
 
 <<TSP_SA_7, echo=FALSE , fig.path='./Irudiak/' , fig.keep='all' , fig.show='hide' , fig.width=8 , fig.height=4>>=
-plot.progress(sa) + labs(y="Evaluation") + geom_line(aes(y=Best_sol) , col="red" , linetype=2 , size=1.1) + geom_vline(xintercept = seq(10*n, steps*10*n , 10*n) , col="darkgray" , linetype=2) 
+plotProgress(sa) + labs(y="Evaluation") + 
+  geom_line(aes(y=Best_sol), col="red", linetype=2, size=1.1) + 
+  geom_vline(xintercept=seq(10 * n, steps * 10 * n, 10 * n), col="darkgray", linetype=2) 
 @
 
 \begin{figure}[t]

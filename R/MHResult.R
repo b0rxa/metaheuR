@@ -8,323 +8,377 @@ setClassUnion("DFORNull", c("data.frame", "NULL"))
 #' @slot description A free filed to include comments
 #' @slot algorithm Name of the algorithm used
 #' @slot parameters This should be a named list with the parameters used by the algorithm
-#' @slot optima List of optimal solutions
+#' @slot solution Best solution found
 #' @slot evaluation Evaluation of the best solution(s)
 #' @slot resources Object contining the information about the available and consumed computational resources
 #' @slot log A numeric matrix containing the evolution of the search. The matrix should have four columns, named as \code{Time}, \code{Evaluations}, \code{Iterations}, \code{Current_sol}, \code{Current_sd} and \code{Best_sol}
+#' 
 setClass(
-  Class = "MHResult", 
-  representation = representation(description = "character",
-                                  algorithm = "character",
-                                  parameters = "list",
-                                  optima = "list",
-                                  evaluation = "numeric",
-                                  resources = "CResource",
-                                  log = "DFORNull")
+  Class="MHResult", 
+  representation=representation(description="character",
+                                algorithm="character",
+                                parameters="list",
+                                solution="ANY",
+                                evaluation="numeric",
+                                resources="CResource",
+                                log="DFORNull")
 )
 
 setValidity(
-  Class = "MHResult", 
-  method = function(object){
-    if (!all(names(object@log) %in% c("Time" , "Evaluations" , "Iterations" , "Current_sol" , "Current_sd" , "Best_sol"))) stop ("The definition of the log data.frame is not correct. It has to have six columns named 'Time', 'Evaluations', 'Iterations', 'Current_sol', 'Current_sd' and 'Best_sol'")
+  Class="MHResult", 
+  method=function(object) {
+    if (!all(names(object@log) %in% c("Time", "Evaluations", "Iterations", 
+                                      "Current_sol", "Current_sd", "Best_sol"))) {
+      stop ("The definition of the log data.frame is not correct. It has to have ",
+            "six columns named 'Time', 'Evaluations', 'Iterations', 'Current_sol', ",
+            "'Current_sd' and 'Best_sol'")
+    }
     return (TRUE)
-  }
-)
+  })
 
-# GENERIC METHODS ---------------------------------------------------------
-
+# GENERIC METHODS --------------------------------------------------------------
 setMethod(
   f="print", 
-  signature = "MHResult", 
-  definition = function(x, ...) {
-    consumed <- what.finished(x@resources)
-    consumption.message <- switch (as.character(length(consumed)) , 
-                                   "0" =  "None of the resources completely consumed" ,
-                                   "1" =  paste(consumed[1] , "completely consumed") , 
-                                   "2" =  paste(consumed[1] , "and" , consumed[2] , "completely consumed") , 
-                                   "3" =  paste(consumed[1] , ", " , consumed[2] , " and " , consumed[3] , " completely consumed", sep=""))
-    cat("RESULTS OF THE SEARCH\n")
-    cat("Best solution's evaluation: " , x@evaluation , "\n")
-    cat("Algorithm:" , x@algorithm , "\n")
-    cat("Resource consumption:\n")
-    cat("\tTime:" , consumed.time(x@resources) ,"\n")
-    cat("\tEvaluations:" , consumed.evaluations(x@resources),"\n")
-    cat("\tIterations:" , consumed.iterations(x@resources),"\n")
-    cat(consumption.message,"\n\n")
-    cat("You can use functions 'optima', 'parameters' and 'progress' to get the list of optimal solutions, the list of parameters of the search and the log of the process, respectively")
+  signature="MHResult", 
+  definition=function(x, ...) {
+    consumed <- whatFinished(x@resources)
+    consumption.message <- switch (as.character(length(consumed)), 
+                                   "0"={
+                                     "None of the resources completely consumed"
+                                   },
+                                   "1"={
+                                     paste(consumed[1], "completely consumed")
+                                   }, 
+                                   "2"={
+                                     paste(consumed[1], "and", 
+                                           consumed[2], "completely consumed")
+                                   }, 
+                                   "3"={
+                                     paste(consumed[1], ", ", consumed[2], 
+                                           " and ", consumed[3], 
+                                           " completely consumed", sep="")
+                                   })
+    message("RESULTS OF THE SEARCH\n")
+    message("Best solution's evaluation: " , x@evaluation , "\n")
+    message("Algorithm: " , x@algorithm , "\n")
+    message("Resource consumption:\n")
+    message("\tTime: " , getConsumedTime(x@resources) ,"\n")
+    message("\tEvaluations: " , getConsumedEvaluations(x@resources),"\n")
+    message("\tIterations: " , getConsumedIterations(x@resources),"\n")
+    message(consumption.message,"\n\n")
+    message("You can use functions 'getSolution', 'getParameters' and 'getProgress' to get the list of optimal solutions, the list of parameters of the search and the log of the process, respectively")
   }
 )
 
 
 setMethod(
   f="show", 
-  signature = "MHResult", 
-  definition = function(object) {
+  signature="MHResult", 
+  definition=function(object) {
     print(object)
-  }
-)
+  })
 
 #' @title Accession function for the \code{description} slot of the object
 #'
 #' @description Accession function for the \code{description} slot of the object
-#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{mHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{description} slot
+#' 
 
-setGeneric(name = "description", def = function(result){standardGeneric("description")})
+setGeneric(name="getDescription", 
+           def=function(result) {
+             standardGeneric("getDescription")
+           })
 
 setMethod(
-  f="description", 
-  signature = "MHResult", 
-  definition = function(result) {
-    result@description
-  }
-)
+  f="getDescription", 
+  signature="MHResult", 
+  definition=function(result) {
+    return(result@description)
+  })
 
 #' @title Accession function for the \code{algorithm} slot of the object
 #'
 #' @description Accession function for the \code{algorithm} slot of the object
-#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{mHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{algorithm} slot
-
-setGeneric(name = "algorithm", def = function(result){standardGeneric("algorithm")})
+#' 
+setGeneric(name="getAlgorithm", 
+           def=function(result) {
+             standardGeneric("getAlgorithm")
+           })
 
 setMethod(
-  f="algorithm", 
-  signature = "MHResult", 
-  definition = function(result) {
-    result@algorithm
-  }
-)
+  f="getAlgorithm", 
+  signature="MHResult", 
+  definition=function(result) {
+    return(result@algorithm)
+  })
 
 #' @title Accession function for the \code{parameters} slot of the object
 #'
 #' @description Accession function for the \code{parameters} slot of the object
-#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{mHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{parameters} slot
-
-setGeneric(name = "parameters", def = function(result){standardGeneric("parameters")})
+#' 
+setGeneric(name="getParameters", 
+           def=function(result) {
+             standardGeneric("getParameters")
+           })
 
 setMethod(
-  f="parameters", 
-  signature = "MHResult", 
-  definition = function(result) {
-    result@parameters
-  }
-)
+  f="getParameters", 
+  signature="MHResult", 
+  definition=function(result){
+    return(result@parameters)
+  })
 
 #' @title Accession function for the \code{optima} slot of the object
 #'
 #' @description Accession function for the \code{optima} slot of the object
-#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{mHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{optima} slot
-
-setGeneric(name = "optima", def = function(result){standardGeneric("optima")})
+#' 
+setGeneric(name="getSolution", 
+           def=function(result) {
+             standardGeneric("getSolution")
+           })
 
 setMethod(
-  f="optima", 
-  signature = "MHResult", 
-  definition = function(result) {
-    result@optima
-  }
-)
-
-
-
+  f="getSolution", 
+  signature="MHResult", 
+  definition=function(result) {
+    return(result@solution)
+  })
 
 #' @title Accession function for the \code{evaluation} slot of the object
 #'
 #' @description Accession function for the \code{evaluation} slot of the object
-#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{mHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{evaluation} slot
 
-setGeneric(name = "evaluation", def = function(result){standardGeneric("evaluation")})
+setGeneric(name="getEvaluation", 
+           def=function(result) {
+             standardGeneric("getEvaluation")
+           })
 
 setMethod(
-  f="evaluation", 
-  signature = "MHResult", 
-  definition = function(result) {
-    result@evaluation
-  }
-)
+  f="getEvaluation", 
+  signature="MHResult", 
+  definition=function(result) {
+    return(result@evaluation)
+  })
 
 
 
 #' @title Accession function for the \code{resources} slot of the object
 #'
 #' @description Accession function for the \code{resources} slot of the object
-#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{mHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{resources} slot
-
-setGeneric(name = "resources", def = function(result){standardGeneric("resources")})
+#' 
+setGeneric(name="getResources", 
+           def=function(result) {
+             standardGeneric("getResources")
+           })
 
 setMethod(
-  f="resources", 
-  signature = "MHResult", 
-  definition = function(result) {
-    result@resources
-  }
-)
-
+  f="getResources", 
+  signature="MHResult", 
+  definition=function(result) {
+    return(result@resources)
+  })
 
 
 #' @title Accession function for the \code{progress} slot of the object
 #'
 #' @description Accession function for the \code{progress} slot of the object
-#' @param result Object of class \code{\linkS4class{MHResult}} whose information we are quering
+#' @param result Object of class \code{\linkS4class{mHResult}} whose information we are quering
 #' 
 #' @return Content of the \code{progress} slot
-
-setGeneric(name = "progress", def = function(result){standardGeneric("progress")})
+#' 
+setGeneric(name="getProgress", 
+           def=function(result) {
+             standardGeneric("getProgress")
+           })
 
 setMethod(
-  f="progress", 
-  signature = "MHResult", 
-  definition = function(result) {
-    result@log
-  }
-)
+  f="getProgress", 
+  signature="MHResult", 
+  definition=function(result) {
+    return(result@log)
+  })
 
 #' @title Function to plot the evolution of the evaluation function during the search
 #'
 #' @description This function produces an object of class \code{\link{ggplot}} with the evolution of the search
-#' @param result Object of class \code{\linkS4class{MHResult}} whose log will be visualized or a named list of objects
+#' @param result Object of class \code{\linkS4class{mHResult}} whose log will be visualized or a named list of objects
 #' @param x Parameter indicating the value for the X axis. Valid options are 'time', 'evaluations' and 'iterations'
 #' @param y Parameter indicating the value for the Y axis. Valid options are 'current' and 'best'
 #' @param ... Additional parameters for the function \code{\link{geom_line}} used to draw the line
 #' @return An object of class \code{\link{ggplot}} 
-
-setGeneric(name = "plot.progress" , def = function(result , x = 'evaluations' , y = 'current', type = 'line' , ...){standardGeneric("plot.progress")})
+#' 
+setGeneric(name="plotProgress", 
+           def=function(result, x="evaluations", y="current", type="line", ...) {
+             standardGeneric("plotProgress")
+           })
 
 setMethod(
-  f="plot.progress", 
-  signature = "MHResult", 
-  definition = function(result , x = 'evaluations' , y = 'current' , type = 'line' , ...) {
+  f="plotProgress", 
+  signature="MHResult", 
+  definition=function(result, x="evaluations", y="current", type="line", ...) {
     require("ggplot2")
-    aes <- switch(x , 
-                  "evaluations" = {
+    aes <- switch(x, 
+                  "evaluations"={
                     aes(x=Evaluations)  
                   }, 
-                  "time" = {
+                  "time"={
                     aes(x=Time)  
                   }, 
-                  "iterations" = {
+                  "iterations"={
                     aes(x=Iterations)  
                   },
-                  stop("No-valid argument for the 'vs' parameter. Valid options are 'evaluations', 'time' and 'iterations'")
-    )
-    aes$y <- switch(y ,
-                    "current" = {
+                  {
+                    stop("No-valid argument for the 'vs' parameter. Valid options ",
+                         "are 'evaluations', 'time' and 'iterations'")
+                  })
+    aes$y <- switch(y,
+                    "current"={
                       aes(y=Current_sol)$y
                     },
-                    "best" = {
+                    "best"={
                       aes(y=Best_sol)$y
                     },
-                    stop("Non-valid argument for the y parameter. Valid options are 'current' and 'best'"))
+                    {
+                      stop("Non-valid argument for the y parameter. Valid options ",
+                           "are 'current' and 'best'")
+                    })
     
-    g <- ggplot(result@log , mapping = aes)
+    g <- ggplot(result@log, mapping=aes)
     switch(type,
-           'line' = g <- g + geom_line(...) ,
-           'point' = g <- g + geom_point(...) ,
-           stop ("Type not known. Try 'line' or 'point'")
-    )
+           "line"={
+             g <- g + geom_line(...) 
+           },
+           "point"={
+             g <- g + geom_point(...)
+           },
+           {
+             stop ("Type not known. Try 'line' or 'point'")
+           })
     return(g)
-  }
-)
+  })
 
 
 setMethod(
-  f="plot.progress", 
-  signature = "list", 
-  definition = function(result , x = 'evaluations' , y = 'current' , type = 'line' , ...) {
+  f="plotProgress", 
+  signature="list", 
+  definition=function(result, x="evaluations", y="current", type="line", ...) {
     require("ggplot2")
-    aux <- lapply (1:length(result) , FUN = function(i) {cbind(progress(result[[i]]) , Group = names(result)[i])})
-    df <- do.call(rbind , aux)
-    aes <- switch(x , 
-                  "evaluations" = {
-                    aes(x=Evaluations , color=Group)  
+    aux <- lapply(1:length(result), 
+                  FUN=function(i) {
+                    res <- cbind(getProgress(result[[i]]), 
+                                 Group=names(result)[i])
+                    return(res)
+                  })
+    df <- do.call(rbind, aux)
+    aes <- switch(x, 
+                  "evaluations"={
+                    aes(x=Evaluations, color=Group)  
                   }, 
-                  "time" = {
-                    aes(x=Time , color=Group)  
+                  "time"={
+                    aes(x=Time, color=Group)  
                   }, 
-                  "iterations" = {
-                    aes(x=Iterations , color=Group)  
+                  "iterations"={
+                    aes(x=Iterations, color=Group)  
                   },
-                  stop("No-valid argument for the 'vs' parameter. Valid options are 'evaluations', 'time' and 'iterations'")
-    )
-    aes$y <- switch(y ,
-                    "current" = {
+                  {
+                    stop("No-valid argument for the 'vs' parameter. Valid options ",
+                         "are 'evaluations', 'time' and 'iterations'")
+                  })
+    aes$y <- switch(y,
+                    "current"={
                       aes(y=Current_sol)$y
                     },
-                    "best" = {
+                    "best"={
                       aes(y=Best_sol)$y
                     },
-                    stop("Non-valid argument for the y parameter. Valid options are 'current' and 'best'"))
+                    {
+                      stop("Non-valid argument for the y parameter. Valid options ",
+                           "are 'current' and 'best'")
+                    })
     
-    g <- ggplot(df , mapping = aes)
+    g <- ggplot(df, mapping=aes)
     switch(type,
-           'line' = g <- g + geom_line(...) ,
-           'point' = g <- g + geom_point(...) ,
-           stop ("Type not known. Try 'line' or 'point'")
-    )
+           'line'={
+             g <- g + geom_line(...)
+           },
+           'point'={
+             g <- g + geom_point(...)
+           },
+           {
+             stop ("Type not known. Try 'line' or 'point'")
+           })
     return(g)
-  }
-)
+  })
 
 #' @title Function to plot the correlation among evaluations, iterations and time
 #'
 #' @description This function produces an object of class \code{\link{ggplot}} showing the correlation among evaluations, iterations and time
-#' @param result Object of class \code{\link{MHResult}} whose log will be visualized
+#' @param result Object of class \code{\link{mHResult}} whose log will be visualized
 #' @param a Parameter indicating the value for the X axis. Valid options are 'time', 'evaluations' and 'iterations'
 #' @param b Parameter indicating the value for the Y axis. Valid options are 'time', 'evaluations' and 'iterations'
 #' @param ... Additional parameters for the function \code{\link{geom_point}} used to draw the plots
 #' @return An object of class \code{\link{ggplot}} 
-
-setGeneric(name = "plot.correlation", 
-           def = function(result , a='time' , b='evaluations' , ...){standardGeneric("plot.correlation")})
+#' 
+setGeneric(name="plotCorrelation", 
+           def=function(result, a="time", b="evaluations", ...) {
+             standardGeneric("plotCorrelation")
+           })
 
 setMethod(
-  f="plot.correlation", 
-  signature = "MHResult", 
-  definition = function(result, a='time' , b='evaluations' , ...) {   
+  f="plotCorrelation", 
+  signature="MHResult", 
+  definition=function(result, a="time", b="evaluations", ...) {   
     require("ggplot2") 
-    df <- data.frame(Time=diff(result@log$Time) , 
-                     Evaluations=diff(result@log$Evaluations) , 
+    df <- data.frame(Time=diff(result@log$Time), 
+                     Evaluations=diff(result@log$Evaluations), 
                      Iterations=diff(result@log$Iterations))
     aes <- switch(a,
-                  'time' = aes(x=Time),
-                  'evaluations' = aes(x=Evaluations),
-                  'iterations' = aes(x=Iterations))
+                  "time"=aes(x=Time),
+                  "evaluations"=aes(x=Evaluations),
+                  "iterations"=aes(x=Iterations))
     aes$y <- switch(b,
-                    'time' = aes(y=Time)$y,
-                    'evaluations' = aes(y=Evaluations)$y,
-                    'iterations' = aes(y=Iterations)$y)
-    ggplot(df , mapping = aes) + geom_point(...)
-  }
-)
+                    "time"=aes(y=Time)$y,
+                    "evaluations"=aes(y=Evaluations)$y,
+                    "iterations"=aes(y=Iterations)$y)
+    g <- ggplot(df, mapping=aes) + geom_point(...)
+    return(g)
+  })
 
 # CONSTRUCTORS ------------------------------------------------------------
 
-#' @title Function to construct objects of type \code{MHResult}
+#' @title Function to construct objects of type \code{mHResult}
 #'
-#' @description This function creates objects of class \code{\link{MHResult}}
+#' @description This function creates objects of class \code{\link{mHResult}}
 #' @param algorithm String indicating the algorithm run
 #' @param description Description of the algorithm run
 #' @param parameters List of parameters used in the experiment
-#' @param optima One or more optimal solutions
+#' @param solution Best found solution
 #' @param evaluation Optimal value of the objective function
 #' @param resources Object of class \code{\link{CResource}} contining the information about the use of resources in the experiment
 #' @param log Matrix with the evolution of the search
-#' @return A new object of class \code{\link{MHResult}} with the updated remaining resources
-
-mhresult <- function (algorithm, description = "", parameters, optima = NULL, evaluation, resources, log = matrix()){
-  new("MHResult" , 
-      algorithm = algorithm , description = description , parameters = parameters, 
-      optima = optima , evaluation = evaluation , 
-      resources = resources, log = log)
+#' @return A new object of class \code{\link{mHResult}} with the updated remaining resources
+#' 
+mHResult <- function (algorithm, parameters, solution, evaluation, 
+                      resources, description="", log=NULL){
+  obj <- new("MHResult",
+             algorithm=algorithm, description=description, parameters=parameters,
+             solution=solution, evaluation=evaluation, resources=resources, log=log)
+  return(obj)
 }

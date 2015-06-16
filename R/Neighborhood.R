@@ -8,7 +8,11 @@
 #' @param neighborhood Object representing the neighborhood
 #' @return A new solution in th neighborhood represented by \code{neighborhood}
 #' @seealso \code{\link{hasMoreNeighbors}} \code{\link{resetNeighborhood}}
-setGeneric(name = "next.neighbor", def = function(neighborhood){standardGeneric("next.neighbor")})
+#' 
+setGeneric(name="nextNeighbor", 
+           def=function(neighborhood) {
+             standardGeneric("nextNeighbor")
+           })
 
 
 #' Function to check whether we have accessed to all the solutions in the neighborhood or not
@@ -19,7 +23,11 @@ setGeneric(name = "next.neighbor", def = function(neighborhood){standardGeneric(
 #' @param neighborhood Object representing the neighborhood
 #' @return \code{TRUE} if there are more solutions to explore, \code{FALSE} in other case
 #' @seealso \code{\link{nextNeighbor}} \code{\link{resetNeighborhood}}
-setGeneric(name = "has.more.neighbors", def = function(neighborhood){standardGeneric("has.more.neighbors")})
+#' 
+setGeneric(name="hasMoreNeighbors", 
+           def=function(neighborhood) {
+             standardGeneric("hasMoreNeighbors")
+           })
 
 #' Function to reset a neighborhood to a given base solution
 #' 
@@ -29,4 +37,8 @@ setGeneric(name = "has.more.neighbors", def = function(neighborhood){standardGen
 #' @param neighborhood Object representing the neighborhood
 #' @param solution Solution whose neighborhood we want to explore
 #' @seealso \code{\link{nextNeighbor}} \code{\link{resetNeighborhood}}
-setGeneric(name = "reset.neighborhood", def = function(neighborhood , solution){standardGeneric("reset.neighborhood")})
+#' 
+setGeneric(name="resetNeighborhood", 
+           def=function(neighborhood, solution) {
+             standardGeneric("resetNeighborhood")
+           })

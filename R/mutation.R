@@ -5,19 +5,21 @@
 #' @param ratio Ratio of the positions to be mutated. It has to be a value greater than 0.
 #' @examples
 #' 
-#' F.sol <- rep(FALSE , 10)
-#' binary.mutation (F.sol , ratio = 0.1)
-#' binary.mutation (F.sol , ratio = 0.1)
-#' binary.mutation (F.sol , ratio = 0.5)
-
-binary.mutation <- function (solution , ratio , ...){
-  if (ratio<=0) stop("The ratio has to be a strictly positive value.")
+#' F.sol <- rep(FALSE, 10)
+#' binaryMutation(F.sol, ratio=0.1)
+#' binaryMutation(F.sol, ratio=0.1)
+#' binaryMutation(F.sol, ratio=0.5)
+#' 
+binaryMutation <- function(solution, ratio, ...) {
+  if (ratio <= 0){
+    stop("The ratio has to be a strictly positive value")
+  }
   n <- length(solution)
-  for (i in 1:(n*ratio)){
-    id <- sample(n , 1)
+  for (i in 1:(n*ratio)) {
+    id <- sample(n, 1)
     solution[id] <- !solution[id]
   }
-  solution
+  return(solution)
 }
 
 
@@ -28,20 +30,22 @@ binary.mutation <- function (solution , ratio , ...){
 #' @param ratio Ratio of the positions to be mutated. It has to be a value greater than 0.
 #' @examples
 #' 
-#' A.sol <- factor(rep("A" , 10) , c("A" , "B" , "C"))
-#' factor.mutation (A.sol , ratio = 0.1)
-#' factor.mutation (A.sol , ratio = 0.1)
-#' factor.mutation (A.sol , ratio = 0.5)
+#' A.sol <- factor(rep("A", 10), c("A", "B", "C"))
+#' factorMutation(A.sol, ratio=0.1)
+#' factorMutation(A.sol, ratio=0.1)
+#' factorMutation(A.sol, ratio=0.5)
 
-factor.mutation <- function (solution , ratio , ...){
-  if (ratio<=0) stop("The ratio has to be a strictly positive value.")
-  n <- length(solution)
-  for (i in 1:(n*ratio)){
-    id <- sample(n , 1)
-    l<-levels(solution[id])
-    solution[id] <- sample(subset(l , l!=solution[id]) , 1)
+factorMutation <- function (solution, ratio, ...) {
+  if (ratio<=0) {
+    stop("The ratio has to be a strictly positive value")
   }
-  solution
+  n <- length(solution)
+  for (i in 1:(n*ratio)) {
+    id <- sample(n, 1)
+    l <- levels(solution[id])
+    solution[id] <- sample(subset(l, l != solution[id]), 1)
+  }
+  return(solution)
 }
 
 
@@ -52,17 +56,19 @@ factor.mutation <- function (solution , ratio , ...){
 #' @param ratio Ratio of the positions to be mutated. It has to be a value greater than 0.
 #' @examples
 #' 
-#' id.perm <- identity.permutation(10)
-#' swap.mutation (id.perm , ratio = 0.1)
-#' swap.mutation (id.perm , ratio = 0.1)
-#' swap.mutation (id.perm , ratio = 0.5)
+#' id.perm <- identityPermutation(10)
+#' swapMutation(id.perm, ratio=0.1)
+#' swapMutation(id.perm, ratio=0.1)
+#' swapMutation(id.perm, ratio  0.5)
 
-swap.mutation <- function (solution , ratio , ...){
-  if (ratio<=0) stop("The ratio has to be a strictly positive value.")
-  n <- length(solution)
-  for (i in 1:(n*ratio)){
-    id <- sample(n , 2 , replace = FALSE)
-    solution <- swap(solution , id[1] , id[2])
+swapMutation <- function (solution, ratio, ...){
+  if (ratio <= 0) {
+    stop("The ratio has to be a strictly positive value")
   }
-  solution
+  n <- length(solution)
+  for (i in 1:(n*ratio)) {
+    id <- sample(n, 2, replace=FALSE)
+    solution <- swap(solution, id[1], id[2])
+  }
+  return(solution)
 }

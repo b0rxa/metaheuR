@@ -20,11 +20,11 @@ This function creates an object of class \code{\linkS4class{FlipNeighborhood}}
 \seealso{
 \code{\link{hasMoreNeighbors}} \code{\link{resetNeighborhood}} \code{\link{nextNeighbor}}
 
-Other neighborhoods: \code{\link{hammingNeighborhood}},
+Other neighborhoods: \code{\link{exchangeNeighborhood}};
   \code{\link{hammingNeighborhood}};
-  \code{\link{has.more.neighbors}};
-  \code{\link{next.neighbor}};
-  \code{\link{reset.neighborhood}};
+  \code{\link{hasMoreNeighbors}};
+  \code{\link{nextNeighbor}};
+  \code{\link{resetNeighborhood}};
   \code{\link{swapNeighborhood}}
 }
 

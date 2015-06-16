@@ -16,7 +16,7 @@ An S4 class to represent the output of a search heuristic
 
 \item{\code{parameters}}{This should be a named list with the parameters used by the algorithm}
 
-\item{\code{optima}}{List of optimal solutions}
+\item{\code{solution}}{Best solution found}
 
 \item{\code{evaluation}}{Evaluation of the best solution(s)}
 

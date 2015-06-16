@@ -6,10 +6,12 @@
 #' @return This function always accepts the new solution, so it returns always \code{TRUE}.
 #' @family Acceptance functions.
 #' @examples
-#' always.accept (-1)
-#' always.accept (1)
-
-always.accept <- function (delta , ...) return(TRUE)
+#' alwaysAccept (-1)
+#' alwaysAccept (1)
+#' 
+alwaysAccept <- function (delta, ...) {
+  return(TRUE)
+}
 
 #' Acceptance based on a threshold.
 #' 
@@ -20,11 +22,11 @@ always.accept <- function (delta , ...) return(TRUE)
 #' @return \code{TRUE} when the increment is bellow the threshold.
 #' @family Acceptance functions.
 #' @examples
-#' threshold.accept (delta = -1 , th = -2)
-#' threshold.accept (delta = -3 , th = -2)
-#' threshold.accept (delta = -1 , th = 0)
-
-threshold.accept <- function (delta, th = 0 , ...){
+#' thresholdAccept (delta=-1, th=-2)
+#' thresholdAccept (delta=-3, th=-2)
+#' thresholdAccept (delta=-1, th=0)
+#' 
+thresholdAccept <- function (delta, th=0, ...) {
   return(delta < th)
 }
 
@@ -37,15 +39,17 @@ threshold.accept <- function (delta, th = 0 , ...){
 #' @return \code{TRUE} with probability given by exp(-1*delta/tempreature).
 #' @family Acceptance functions.
 #' @examples
-#' boltzmann.accept (delta = -1 , temperature = 2)
-#' boltzmann.accept (delta = -3 , th = -2)
-#' boltzmann.accept (delta = -1 , th = 0)
-
-boltzmann.accept <- function (delta, temperature = 1 , ...){
-  if (temperature <= 0) stop("The temperature has to be strictly greter than 0")
-  accept <- TRUE
-  if (delta>0){
-    accept <- runif(1) < exp(-1*delta/temperature)
+#' boltzmannAccept (delta=-1, temperature=2)
+#' boltzmannAccept (delta=-3, th=-2)
+#' boltzmannAccept (delta=-1, th=0)
+#' 
+boltzmannAccept <- function (delta, temperature=1, ...){
+  if (temperature <= 0) {
+    stop("The temperature has to be strictly greter than 0")
   }
-  accept
+  accept <- TRUE
+  if (delta > 0) {
+    accept <- runif(1) < exp(-1 * delta / temperature)
+  }
+  return(accept)
 } 

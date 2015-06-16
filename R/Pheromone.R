@@ -5,8 +5,10 @@
 #' @param solution A vector, either binary or factor, used to update the pheromone trail
 #' @param value Number to be used in the update
 #' 
-
-setGeneric(name = "update.trail", def = function(object, solution , value , ...){standardGeneric("update.trail")})
+setGeneric(name="updateTrail", 
+           def=function(object, solution, value, ...) {
+             standardGeneric("updateTrail")
+           })
 
 
 #' @title Function to uniformly reduce the amount of pheromone
@@ -14,9 +16,10 @@ setGeneric(name = "update.trail", def = function(object, solution , value , ...)
 #' @description This function updates the trail of pheromones through evaporation
 #' @param object Object of class \code{\linkS4class{VectorPheromone}} representing the pheromone model to be updated
 #' 
-
-setGeneric(name = "evaporate", def = function(object, ...){standardGeneric("evaporate")})
-
+setGeneric(name="evaporate", 
+           def=function(object, ...) {
+             standardGeneric("evaporate")
+           })
 
 
 #' @title Function to build solutions according to the pheromone trail
@@ -26,5 +29,7 @@ setGeneric(name = "evaporate", def = function(object, ...){standardGeneric("evap
 #' @param n Numeric value indicating the amount of solutions to be created
 #' @param seed Numeric value to indicate the seed used for the random number generator. If \code{NULL}, the seed is not set
 #' 
-
-setGeneric(name = "build.solution", def = function(object, n = 1, seed = NULL , ...){standardGeneric("build.solution")})
+setGeneric(name="buildSolution", 
+           def=function(object, n=1, seed=NULL, ...) {
+             standardGeneric("buildSolution")
+           })
