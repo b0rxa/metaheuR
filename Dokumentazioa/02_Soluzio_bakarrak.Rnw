@@ -902,7 +902,8 @@ Estrategia hau gauzatzeko 500 ausazko soluzio sortuko eta ebaluatuko ditugu. Ger
 rep <- 500
 rnd.eval <- sapply (1:rep, 
                     FUN=function(x) {
-                      return(tsp.babaria$evaluate(randomPermutation(n)))
+                      rnd.perm <- randomPermutation(n)
+                      return(tsp.babaria$evaluate(rnd.perm))
                     })
 
 aux <- lapply(2:rep,
@@ -954,7 +955,8 @@ Hozketa funtzioa sortzeko \code{geometricCooling} funtzioa erabiliko dugu --hozk
 
 <<TSP_SA_6_2 , prompt=TRUE , cache=TRUE , results='hide' >>=
 steps <- 20
-args$cooling.scheme      <- geometricCooling(init.t, final.t, steps)
+args$cooling.scheme      <- geometricCooling(init.t, 
+                                             final.t, steps)
 args$initial.temperature <- init.t
 args$final.temperature   <- final.t
 @

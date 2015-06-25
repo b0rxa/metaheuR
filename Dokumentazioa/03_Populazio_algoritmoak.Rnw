@@ -658,21 +658,13 @@ evaporate(pheromones)
 pheromones@trail
 @
 
-<<<<<<< HEAD
 Esan dugun bezala, inurriek feromona ereduak soluzioak eraikitzeko erabiltzen dute. Soluzioak \code{buildSolution} funtzioaren bitartez egiten da.
-=======
-Esan dugun bezala, inurriek feromona eredua soluzioak eraikitzeko erabiltzen dute. \code{metaheuR} paketean hau \code{build.solution} funtzioaren bitartez egiten da.
->>>>>>> 30080554cf8f533e7e4145fa65032d9456004410
 
 <<ACO_MDS_4, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 buildSolution(pheromones, 1)
 @
 
-<<<<<<< HEAD
 Inurriek ingurunetik ibiltzen diren heinean feromona uzten dute eta, era berean, inurri artifizialek soluzioak eraikitzen dutenean feromona kopurua handitzen dute; ereduaren eguneraketa hau \code{updateTrail} funtzioa erabiliz egiten da.
-=======
-Naturan, inurriek ingurunea arakatu ahala feromona askatzen dute eta, era berean, inurri artifizialek soluzioak eraikitzen dituztenean feromona jariatzen dute egindako aukeraketetan; ereduaren eguneraketa hau \code{update.trail} funtzioa erabiliz egiten da.
->>>>>>> 30080554cf8f533e7e4145fa65032d9456004410
 
 <<ACO_MDS_5, cache=TRUE , prompt=TRUE, message=FALSE , warning=FALSE>>=
 solution <- buildSolution(pheromones, 1)[[1]]
@@ -751,11 +743,8 @@ Portaera hau sakonago aztertu ezkero ondokoa ondorioztatzen da: nahiz eta natura
 \end{ifalgorithm}
 
 
-<<<<<<< HEAD
 Aldaketa honekin oinarrizko ACO algoritmoaren sasikodea defini dezakegu (ikusi \ref{alg:ant} algoritmoa). \code{basicAco} funtzioak Oinarrizko ACO-a inplementatzen du eta, hortaz, lehen sortutako MDS problema ebazteko erabil dezakegu. Ohiko parametroaz gain, \code{basicAco} argumentu hauek zehaztu behar dira.
-=======
-Aldaketa honekin oinarrizko ACO algoritmoaren sasikodea defini dezakegu (ikusi \ref{alg:ant} algoritmoa). \code{basic.aco} funtzioak Oinarrizko ACO-a inplementatzen du eta, hortaz, lehen sortutako MDS problema ebazteko erabil dezakegu. Ohiko parametroez gain, \code{basic.aco} zehazteko, argumentu hauek definitu behar dira.
->>>>>>> 30080554cf8f533e7e4145fa65032d9456004410
+
 
 \begin{itemize}
 \item \code{nants} - Kolonia zenbat inurri artifizialek osatuko duten.
@@ -966,11 +955,7 @@ Behin uneko iterazioaren abiadura kalkulatuta, abiadura partikularen kokapena eg
 Iterazio bakoitzean lortutako soluzio --hots, posizio-- berriak ebaluatu eta, behar izanez gero, partikulen \eng{personal} ($\mathbf{p}_i$) eta \eng{global best} ($\mathbf{p}_g$) balioak eguneratu behar dira. Urrats guzti hauek \ref{alg:pso} algoritmoan biltzen dira.
 
 
-<<<<<<< HEAD
 Algoritmo hau \code{metaheuR} paketeko \code{basicPso} funtzioan inplementaturk dago. Erabilera erakusteko, optimizazio numerikoan \eng{benchmark} gisa erabiltzen den Rosenbrock funtzioa erabiliko dugu; problema sortzeko \code{rosenbrockProblem} funtzioa erabili behar dugu.
-=======
-Algoritmo hau \code{metaheuR} paketeko \code{basic.pso} funtzioan inplementaturik dago. Erabilera erakusteko, optimizazio numerikoan \eng{benchmark} gisa erabiltzen den Rosenbrock funtzioa erabiliko dugu; problema sortzeko \code{rosenbrock.problem} funtzioa erabili dezakegu.
->>>>>>> 30080554cf8f533e7e4145fa65032d9456004410
 
 
 <<PSO_1, cache=TRUE , echo = -1 , prompt=TRUE, message=FALSE , warning=FALSE>>=
