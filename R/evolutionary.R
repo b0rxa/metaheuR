@@ -50,7 +50,7 @@ basicGeneticAlgorithm <- function (evaluate, initial.population,
   t0 <- Sys.time()
   current.population <- initial.population
   pop.size <- length(initial.population)
-  current.evaluation <- sapply(current.population, FUN = evaluate)
+  current.evaluation <- sapply(current.population, FUN=evaluate)
   evaluations <- length(initial.population)
   
   addConsumed(resources, t=as.numeric(Sys.time() - t0), ev=evaluations)

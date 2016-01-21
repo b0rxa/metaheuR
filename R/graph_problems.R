@@ -114,12 +114,9 @@ misProblem <- function (graph, penalization=0) {
   }
   
   plotSolution <- function (solution, node.size=5) {
-    if (1:length(V(graph))%in%which(solution)) {
-      V(graph)$color <- "black"  
-    } else {
-      "white"
-    }
-    
+    col <- rep("white", length(solution))
+    col[solution] <- "black"
+    V(graph)$color <- col 
     plot.igraph(graph, vertex.size=node.size, 
                 vertex.label=NA, edge.arrow.mode="-")
   }
@@ -174,11 +171,9 @@ mdsProblem <- function (graph, penalization=0) {
   }
   
   plotSolution <- function (solution, node.size=5) {
-    if (1:length(V(graph)) %in% which(solution)) {
-      V(graph)$color <- "black"
-    } else {
-      V(graph)$color <- "white"
-    }
+    col <- rep("white", length(solution))
+    col[solution] <- "black"
+    V(graph)$color <- col 
     plot.igraph(graph, vertex.size=node.size, 
                 vertex.label=NA, edge.arrow.mode="-")
   }

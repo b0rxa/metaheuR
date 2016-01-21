@@ -1,4 +1,3 @@
-% !TeX spellcheck = eu_ES
 \documentclass[eu]{ifirak}
 
 \usepackage{amsmath,latexsym,amssymb,natbib}
