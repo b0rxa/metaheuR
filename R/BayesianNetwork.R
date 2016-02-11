@@ -10,7 +10,7 @@ require(bnlearn)
 require(gRain)
 setClass(
 	Class="BayesianNetwork", 
-	representation=representation(network="ANY", numColumns="integer")
+	representation=representation(network="ANY")
 	# slots = c(network="CPTgrain", numColumns="integer")
 	# representation=representation(prob.table="matrix", 
 	#                               binary="logical")
@@ -52,10 +52,9 @@ setClass(
 setMethod(
 	f="simulate", 
 	signature="BayesianNetwork", 
-	definition=function(object, ...) {      
-		return(simulate(object@network, nsim = object@numColumns))
+	definition=function(object, nsim, ...) {      
+		return(cat2bin(simulate(object@network, nsim = nsim)))
 	})
-
 
 # CONSTRUCTOR -------------------------------------------------------------
 
@@ -68,22 +67,22 @@ setMethod(
 #' @param ... Ignored
 #' @return An object of class \code{\linkS4class{BayesianNetwork}} that includes the Bayesian Network of the given data
 #' 
-BayesianNetwork <- function(data, ...) {
-	if(class(data) == "data.frame"){  
+bayesianNetwork <- function(data) {
+	if(class(data) == "list"){  
 		# We can create the object
-		aux <- lapply(data, FUN=bin2cat)
+		data <- data.frame(data)
+	  aux <- lapply(data, FUN=bin2cat)
 		pop.cat.df <- data.frame(aux)
 		names(pop.cat.df) <- paste("X", 1:length(pop.cat.df), sep = "")
-
-		network <- hc(x=pop.cat.df)
+		network <- hc(x = pop.cat.df)
 		adjacencyMatrix <- amat(network)
-		n <- ncol(adjacencyMatrix)
+		#n <- ncol(adjacencyMatrix)
 		aux <- as(adjacencyMatrix, "graphNEL")
-		network <- grain(aux, pop.cat.df)
-		obj <- new("BayesianNetwork", network = network, numColumns = n)
+		network <- grain(x = aux, data = pop.cat.df, smooth = 1)
+		obj <- new("BayesianNetwork", network = network)
 		return(obj)
 	}else{
-		stop("The data must be a data.frame")
+		stop("The data must be a list")
 	}
 }
 
