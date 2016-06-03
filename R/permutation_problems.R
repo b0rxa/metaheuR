@@ -28,7 +28,7 @@ tspProblem <- function(cmatrix) {
     cost <- sum(cmatrix[ids])
     return(cost)
   }
-  return(list(evaluate=evaluate))
+  return(list(evaluate=evaluate, size=nrow(cmatrix)))
 }
 
 
@@ -67,7 +67,7 @@ qapProblem<-function(fmatrix, dmatrix) {
     cost <- sum(fmatrix * dmatrix[as.numeric(solution), as.numeric(solution)])
     return(cost)
   }
-  return(list(evaluate=evaluate))
+  return(list(evaluate=evaluate, , size=nrow(dmatrix)))
 }
 
 
@@ -100,5 +100,5 @@ lopProblem <- function(matrix) {
     cost <- sum(matrix[lower.tri(matrix, diag=FALSE)])
     return(cost)
   }
-  return(list(evaluate=evaluate))
+  return(list(evaluate=evaluate, , size=nrow(matrix)))
 }
