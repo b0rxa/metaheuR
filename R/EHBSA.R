@@ -1,6 +1,6 @@
 #' An S4 class to represent distributions based on Edge Histrogam Based Sampling Algorithm.
 #'
-#' @slot adjacencyMatrix A matrix containing the marginal second order probabilities from the data.
+#' @slot adjacencyMatrix A matrix containing the second order marginal probabilities from the data.
 #' 
 setClass(
 	Class="EHBSA", 

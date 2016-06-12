@@ -1,17 +1,19 @@
 #' An S4 class to represent distributions based on Bayesian networks
 #'
 #' @slot network An object of the type bn.fit (see bnLearn pacakge for details)
+#' @slot factor.population A logical value which determine if the learned population was factor or not.
 #' 
 
-# We import bnLearn Package
-require(bnlearn)
-require(gRain)
+if (!require("bnlean")) {
+  message("This function requires the bnlearn package. It can be installed running the command install.packages('bnlearn').")
+  ans <- readline(prompt="Do you want me to install it now (Y/N, default N)?")
+  if (ans=="y" | ans=="Y") {
+    install.packages("bnlearn")
+  }
+}
 setClass(
 	Class="BayesianNetwork", 
-	representation=representation(network="bn.fit")
-	# slots = c(network="CPTgrain", numColumns="integer")
-	# representation=representation(prob.table="matrix", 
-	#                               binary="logical")
+	representation=representation(network="bn.fit", factor.population="logical")
 )
 
 
@@ -33,14 +35,26 @@ setMethod(
 	  }
 	  aux <- rbn(object@network, nsim, debug=F)
 	  aux <- as.list(as.data.frame(t(aux)))
-	  aux <- lapply(aux, FUN=cat2bin)
-	  for(i in 1:length(aux)){
-	    for(j in 1:length(aux[[i]])){
-	      if(is.na(aux[[i]][j])){
-	        aux[[i]][j] <- runif(1) >= 0.5
+	  if(object@factor.population){
+	    # We must return the same type of population which was given before
+      for(i in 1:length(aux)){
+        for(j in 1:length(aux[[i]])){
+          if(is.na(aux[[i]][j])){
+            aux[[i]][j] <- sample(levels(aux[[i]]), 1)
+          }
+        }
+      }
+	  }else{
+	    aux <- lapply(aux, FUN=cat2bin)
+	    for(i in 1:length(aux)){
+	      for(j in 1:length(aux[[i]])){
+	        if(is.na(aux[[i]][j])){
+	          aux[[i]][j] <- runif(1) >= 0.5
+	        }
 	      }
-	    }
+	    }  
 	  }
+	  
 	  return(aux)
 	})
 
@@ -48,7 +62,7 @@ setMethod(
 
 #' Constructor of EBNA model
 #' 
-#' This function creates an object of class \code{\linkS4class{BayesianNetowork}}
+#' This function creates an object of class \code{\linkS4class{BayesianNetwork}}
 #' 
 #' @family EDA
 #' @param data The dataframe containing the initial-population to construct the bayesian network
@@ -58,6 +72,8 @@ setMethod(
 bayesianNetwork <- function(data, ...) {
 	if(class(data) == "list"){
 	  if(class(data[[1]]) == "logical"){
+	    # The model is going to learn from a logical population
+	    factor.population <- F # is not a factor population
 	    aux <- lapply(data, FUN=bin2cat)
 	    pop.cat.df <- data.frame(t(matrix(unlist(aux), nrow = length(aux[[1]]), byrow = F)), stringsAsFactors = T)
 	    names(pop.cat.df) <- paste("X", 1:length(pop.cat.df), sep = "")
@@ -65,11 +81,12 @@ bayesianNetwork <- function(data, ...) {
 	      pop.cat.df[[i]] <- factor(x=pop.cat.df[[i]], levels=c("T","F"))
 	    }
 	  }else if(class(data[[1]]) == "factor"){
+	    factor.population <- T
 	    pop.cat.df <- data.frame(t(matrix(unlist(data), nrow = length(data[[1]]), byrow=F)), stringsAsFactors = T)
 	  }
 		network <- hc(x = pop.cat.df)
 		network <- bn.fit(network, data=pop.cat.df)
-		obj <- new("BayesianNetwork", network = network)
+		obj <- new("BayesianNetwork", network = network, factor.population = factor.population)
 	}else{
 		stop("The data must be a list")
 	}

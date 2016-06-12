@@ -16,9 +16,6 @@ setMethod(
     parameters <- object@parameters # create a copy to manipulate it
     # Iterate through nsim
     for (k in 1:nsim){
-      #l <- sample(x=0, size=length(parameters), replace = T) # create an empty list
-      #l[1] <- round(runif(1, 1, length(parameters)), 0) #first value
-      #parameters[1] <- 0
       # Create a random number for roulette wheel
       ac <- 0
       rnd <- 0
@@ -35,12 +32,9 @@ setMethod(
         l[i] <- j
         parameters[j] <- 0
       }
-      #new.population <- rbind(new.population, l)
       l <- permutation(l)
       new.population <- c(new.population, l)
     }
-    #colnames(new.population) <- paste("X", 1:length(new.population[1,]), sep="")
-    #rownames(new.population) <- paste("I", 1:length(new.population[,1]), sep="")
     return(new.population)
   })
 
@@ -107,8 +101,8 @@ plackettLuce <- function(data, maxIter, ...) {
       g[g>0] <- 1./g[g>0]
       # At this point, g(i,j) should be the reciprocal of the sum of gamma's 
       # for places i and higher in the  jth contest exceppt for i=lastplace.
-      
-      g <- cumsum(g)
+
+      g <- getColCumsum(g)
       # Now g(i,j) should be the sum of all the denominators for ith place in the jth contest
       
       r2[r>0] <- g[r[r>0]]
@@ -129,7 +123,7 @@ plackettLuce <- function(data, maxIter, ...) {
 #' Acumulate the matrix values by columns
 #' @param m matrix
 #' @return acumulated matrix
-cumsum <- function(m){
+getColCumsum <- function(m){
   for(i in 2:(length(m[,1]))){
     m[i,] <- m[(i-1),] + m[i,]
   }
