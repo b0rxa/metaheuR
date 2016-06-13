@@ -12,7 +12,8 @@ exportClasses(
   UnivariateMarginals,
   VectorPheromone,
   PermuLinkPheromone,
-  PermuPosPheromone
+  PermuPosPheromone,
+  BayesianNetwork
 )
 
 exportMethods(
@@ -43,7 +44,8 @@ exportMethods(
   simulate,
   buildSolution,
   evaporate,
-  updateTrail
+  updateTrail,
+  bayesianNetwork
 )
 
 export(
