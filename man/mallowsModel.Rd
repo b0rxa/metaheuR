@@ -18,6 +18,8 @@ An object of class \code{\linkS4class{UnivariateMarginals}} that includes the ma
 This function creates an object of class \code{\linkS4class{FlipNeighborhood}}
 }
 \seealso{
-Other EDA: \code{\link{univariateMarginals}}
+Other EDA: \code{\link{bayesianNetwork}},
+  \code{\link{ehbsa}}, \code{\link{plackettLuce}},
+  \code{\link{univariateMarginals}}
 }
 

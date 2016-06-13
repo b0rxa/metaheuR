@@ -4,20 +4,20 @@ Title: Package including classical metaheuristics and combinatorial optimization
     problems
 Version: 0.2
 Date: 2014-12-08
-Author: Borja Calvo and Usue Mori
+Author: Borja Calvo [aut, cre], Usue Mori [aut], Ander Carreño [ctb]
 Maintainer: Borja Calvo <borja.calvo@ehu.eus>
 Description: This pacakge includes classical algorithms such as local search,
     iterated local search, simulated anneling or genetic algorithms. It also
     includes problems such as TSP, QAP, Graph Coloring, etc. The main goal of the
-    package is to used to teach metaheuristics.
+    package is to used to teach metaheuristics at the University of the Basque Country.
 License: GPL-2
+Imports: ggplot2
 Suggests:
-    testthat,
-    ggplot2,
     XML,
     igraph,
     colorspace,
-    knitr
+    knitr,
+    bnlearn
 VignetteBuilder: knitr
 Collate:
     Neighborhood.R
@@ -52,4 +52,7 @@ Collate:
     PermuPosPheromone.R
     PermuLinkPheromone.R
     swarm.R
+    BayesianNetwork.R
+    EHBSA.R
+    PlackettLuce.R
 RoxygenNote: 5.0.1

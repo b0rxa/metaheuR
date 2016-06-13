@@ -13,7 +13,9 @@ exportClasses(
   VectorPheromone,
   PermuLinkPheromone,
   PermuPosPheromone,
-  BayesianNetwork
+  BayesianNetwork,
+  EHBSA,
+  PlackettLuce
 )
 
 exportMethods(
@@ -44,8 +46,7 @@ exportMethods(
   simulate,
   buildSolution,
   evaporate,
-  updateTrail,
-  bayesianNetwork
+  updateTrail
 )
 
 export(
@@ -96,5 +97,8 @@ export(
   permuLinkPheromone,
   permuPosPheromone,
   basicAco,
-  basicPso
+  basicPso,
+  bayesianNetwork,
+  ehbsa,
+  plackettLuce
 )

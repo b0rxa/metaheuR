@@ -4,13 +4,6 @@
 #' @slot factor.population A logical value which determine if the learned population was factor or not.
 #' 
 
-if (!require("bnlean")) {
-  message("This function requires the bnlearn package. It can be installed running the command install.packages('bnlearn').")
-  ans <- readline(prompt="Do you want me to install it now (Y/N, default N)?")
-  if (ans=="y" | ans=="Y") {
-    install.packages("bnlearn")
-  }
-}
 setClass(
 	Class="BayesianNetwork", 
 	representation=representation(network="bn.fit", factor.population="logical")
@@ -29,7 +22,14 @@ setMethod(
 	f="simulate", 
 	signature="BayesianNetwork", 
 	definition=function(object, nsim=1, seed=NULL, ...) {
-	  #print("SIMULATE START")
+	  if (!require("bnlearn")) {
+	    message("This function requires the bnlearn package. It can be installed running the command install.packages('bnlearn').")
+	    ans <- readline(prompt="Do you want me to install it now (Y/N, default N)?")
+	    if (ans=="y" | ans=="Y") {
+	      install.packages("bnlearn")
+	    }
+	  }
+	  
 	  if(!is.null(seed)) {
 	    set.seed(seed)
 	  }
@@ -70,6 +70,15 @@ setMethod(
 #' @return An object of class \code{\linkS4class{BayesianNetwork}} that includes the Bayesian Network of the given data
 #' 
 bayesianNetwork <- function(data, ...) {
+  
+  if (!require("bnlearn")) {
+    message("This function requires the bnlearn package. It can be installed running the command install.packages('bnlearn').")
+    ans <- readline(prompt="Do you want me to install it now (Y/N, default N)?")
+    if (ans=="y" | ans=="Y") {
+      install.packages("bnlearn")
+    }
+  }
+  
 	if(class(data) == "list"){
 	  if(class(data[[1]]) == "logical"){
 	    # The model is going to learn from a logical population

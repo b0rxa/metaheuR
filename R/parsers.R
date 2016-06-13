@@ -49,7 +49,13 @@ processXmlGraph <- function (graph) {
 #' @seealso \code{\link{tspProblem}}
 #' 
 tsplibParser <- function (file) {
-  require("XML")
+  if (!require("XML")) {
+    message("This function requires the XML package. It can be installed running the command install.packages('XML').")
+    ans <- readline(prompt="Do you want me to install it now (Y/N, default N)?")
+    if (ans=="y" | ans=="Y") {
+      install.packages("XML")
+    }
+  }
   td <- tempdir()
   # If the file is a URL, download it
   if (length(grep("http", file)) > 0) {
