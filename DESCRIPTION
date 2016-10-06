@@ -26,6 +26,7 @@ Collate:
     MHResult.R
     UnivariateMarginals.R
     MallowsModel.R
+    GeneralizedMallowsModel.R
     permutation_problems.R
     continuous_problems.R
     subset_problems.R

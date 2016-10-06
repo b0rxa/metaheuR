@@ -1,18 +1,18 @@
-#' An S4 class to represent distributions based the Mallows Model
+#' An S4 class to represent distributions based on the Generalized Mallows Model
 #'
 #' @slot mode The central permutation of the model.
-#' @slot theta Theta parameter of the model
+#' @slot theta Theta parameters of the model
 #' @slot distance Type of distance to be used in the model
 #' 
 setClass(
-  Class="MallowsModel", 
+  Class="GeneralizedMallowsModel", 
   representation=representation(mode="Permutation", 
-                                theta="numeric", 
+                                theta="vector", 
                                 distance="character")
 )
 
 setValidity(
-  Class="MallowsModel", 
+  Class="GeneralizedMallowsModel", 
   method=function(object) {
     if (!object@distance %in% c("Kendall", "Cayley", "Hamming", "Ulam")) {
       stop ("Non valid distance. Valid options are 'Kendall', 'Cayley', ",
@@ -26,7 +26,7 @@ setValidity(
 
 setMethod(
   f="simulate", 
-  signature="MallowsModel", 
+  signature="GeneralizedMallowsModel", 
   definition=function(object, nsim=1, seed=NULL, ...) {
     if(!is.null(seed)) {
       set.seed(seed)
@@ -35,7 +35,7 @@ setMethod(
     s0 <- as.numeric(object@mode)
     
     f <- function(i) {
-      permu <- rmm(n=1, sigma0=s0, theta=object@theta, 
+      permu <- rgmm(n=1, sigma0=s0, theta=object@theta, 
                    dist.name=object@distance)[1, ]
       return(permutation(permu))
     }
@@ -46,19 +46,19 @@ setMethod(
 
 # CONSTRUCTOR ------------------------------------------------------------------
 
-#' Baisic consturctor of Mallows models
+#' Baisic consturctor of Generalized Mallows Models
 #' 
-#' This function creates an object of class \code{\linkS4class{MallowsModel}}
+#' This function creates an object of class \code{\linkS4class{GeneralizedMallowsModel}}
 #' 
 #' @family EDA
 #' @param data A list with the permutations from where the model will be learned
 #' @param distance Type of distance to be used in the model. By default, it is set to \code{Kendall}
-#' @param tmin Minimum value for the theta parameter. If \code{NULL} (default value) no bound is set
-#' @param tmax Maximum value for the theta parameter. If \code{NULL} (default value) no bound is set
+#' @param tmin Minimum value for the theta parameters. If \code{NULL} (default value) no bound is set
+#' @param tmax Maximum value for the theta parameters. If \code{NULL} (default value) no bound is set
 #' @param ... Ignored
-#' @return An object of class \code{\linkS4class{MallowsModel}} that represents the learned model
+#' @return An object of class \code{\linkS4class{GeneralizedMallowsModel}} that represents the learned model
 #' 
-mallowsModel <- function(data, distance="Kendall", tmin=NULL, tmax=NULL, ...) {
+generalizedMallowsModel <- function(data, distance="Kendall", tmin=NULL, tmax=NULL, ...) {
   if (class(data)!="list") {
     stop ("The data has to be a list")
   }
@@ -78,12 +78,15 @@ mallowsModel <- function(data, distance="Kendall", tmin=NULL, tmax=NULL, ...) {
   
   # Convert the list into a matrix
   mat <- do.call(rbind, lapply(data, as.numeric))
-  model <- lmm(mat, dist.name=distance, ...)
+  model <- lgmm(mat, dist.name=distance, ...)
   
   # Check the bounds
-  model$theta <- min(max(model$theta, tmin), tmax)
+  model$theta <- sapply(model$theta, 
+                        FUN=function(i){
+                          return(min(max(i, tmin), tmax))
+                        })
   
-  obj <- new("MallowsModel", mode=permutation(model$mode), theta=model$theta, 
+  obj <- new("GeneralizedMallowsModel", mode=permutation(model$mode), theta=model$theta, 
              distance=distance)
   return(obj)
 }

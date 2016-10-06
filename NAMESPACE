@@ -101,5 +101,6 @@ export(
   basicPso,
   bayesianNetwork,
   ehbsa,
-  plackettLuce
+  plackettLuce,
+  generalizedMallowsModel
 )
