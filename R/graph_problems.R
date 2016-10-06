@@ -1,7 +1,7 @@
 #' Graph coloring problem
 #' 
-#' This function generates an evaluation, validity and correction functions associated  with a classical graph coloring problem
-#' @concept Optimization_problems
+#' This function generates an evaluation, validity and correction functions associated  with a classical graph coloring problem.
+#' @family Problems
 #' @param graph Graph to color
 #' @return A list of functions to be used to solve a graph coloring problem. This includes the functions \code{evaluate}, for the evaluation of a solution, \code{valid}, to check whetehr a solution is valid or not, \code{correct}, to correct a non-valid solution and \code{plot} to graphically show the solution; all the functions have a single argument,  \code{solution}, representing the solution considered. Note that, given that the goal in all the algorithms in the library is minimizing the objective function, the \code{evaluate}. The solutions have to be vectors of factors indicating the color of each node
 #' @examples
@@ -80,6 +80,7 @@ graphColoringProblem <- function(graph) {
 #' This function generates an evaluation, validity and correction functions associated  with a classical maximum independet set problem
 #' @param graph Graph where we have to find the maximum independent set (MIS)
 #' @return A list of functions to be used to solve a MIS problem. This includes the functions \code{evaluate}, for the evaluation of a solution, \code{valid}, to check whetehr a solution is valid or not, \code{correct}, to correct a non-valid solution and \code{plot} to graphically show the solution; all the functions have a single argument,  \code{solution}. The solutions passed to these functions has to be a logical vector indicating with \code{TRUE} which nodes are in the independent set.
+#' @family Problems
 #' @details The evaluation function includes another parameter, \code{penalization}, which can be used to penalize non-valid solutions. The penalization terms is the number of nodes that are connected in the solution, and it is weighted with the factor passed in the \code{penalization} parameter By default its value is 0.
 #' @examples
 #' 
@@ -133,6 +134,7 @@ misProblem <- function (graph, penalization=0) {
 #' @param graph Graph where we have to find the minimum dominating set (MDS)
 #' @return A list of functions to be used to solve a MDS problem. This includes the functions \code{evaluate}, for the evaluation of a solution, \code{valid}, to check whetehr a solution is valid or not, \code{correct}, to correct a non-valid solution and \code{plot} to graphically show the solution; all the functions have a single argument,  \code{solution}. The solutions passed to these functions has to be a logical vector indicating with \code{TRUE} which nodes are in the independent set.
 #' @details The evaluation function includes another parameter, \code{penalization}, which can be used to penalize non-valid solutions. The penalization terms is the number of nodes that are not connected to the nodes in the solution, and it is weighted with the factor passed in the \code{penalization} parameter. By default its value is 0.
+#' @family Problems
 #' @examples
 #' 
 #' library("igraph")

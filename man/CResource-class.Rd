@@ -16,10 +16,10 @@ An S4 class to represent computational resources
 
 \item{\code{iterations.total}}{A positive integer number representing the total number of iterations available. It can be null, indicating that there is no iterations limit}
 
-\item{\code{time.consumed}}{A positive real number representing the time consumed.}
+\item{\code{time.consumed}}{A positive real number representing the time consumed}
 
-\item{\code{evaluations.consumed}}{A positive integer number representing the number of evaluations consumed.}
+\item{\code{evaluations.consumed}}{A positive integer number representing the number of evaluations consumed}
 
-\item{\code{iterations.consumed}}{A positive integer number representing the number of iterations consumed.}
+\item{\code{iterations.consumed}}{A positive integer number representing the number of iterations consumed}
 }}
 

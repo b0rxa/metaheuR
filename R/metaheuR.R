@@ -31,3 +31,21 @@ doNothing <- function(solution) {
   return(solution)
 }
 
+
+# FUNCTION TO MANAGE PACKAGES ---------------------------------------------
+
+loadPackage <- function(pack) {
+  r <- switch(pack,
+              "ggplot2"={
+                if(!require(ggplot2)) {
+                  ans <- "N"
+                  ans <- readline(prompt="This function requires the package ggplot2, that 
+                       can be installed running the command install.packages(\"ggplot2\"). 
+                       Do you want me to install it? (Y,N; Default N)")
+                  if (ans=="Y" | ans=="y") {
+                    install.packages("ggplot2")
+                  }
+                }
+              })
+}
+

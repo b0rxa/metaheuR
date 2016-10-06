@@ -9,7 +9,7 @@ misGreedy(graph, cl.size = 1)
 \arguments{
 \item{graph}{Graph where the MIS has to be found}
 
-\item{cl.size}{Number of nodes to consider at each step of the algorithm.}
+\item{cl.size}{Number of nodes to consider at each step of the algorithm.  By default it is 1, thus implementing a sheer greedy algorithm. If this value is greater than 1, then random solutions are created considering at each step the best options, as in GRASP algorithms.}
 }
 \value{
 A logical vector indicating which nodes are in the independent set

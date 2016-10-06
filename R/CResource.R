@@ -7,9 +7,9 @@ setClassUnion("NumORNull", c("numeric", "NULL"))
 #' @slot time.total A positive real number representing the total time available. It can be null, indicating that there is no time limit
 #' @slot evaluations.total A positive integer number representing the total number of evaluations available. It can be null, indicating that there is no evaluations limit
 #' @slot iterations.total A positive integer number representing the total number of iterations available. It can be null, indicating that there is no iterations limit 
-#' @slot time.consumed A positive real number representing the time consumed.
-#' @slot evaluations.consumed A positive integer number representing the number of evaluations consumed.  
-#' @slot iterations.consumed A positive integer number representing the number of iterations consumed.  
+#' @slot time.consumed A positive real number representing the time consumed
+#' @slot evaluations.consumed A positive integer number representing the number of evaluations consumed
+#' @slot iterations.consumed A positive integer number representing the number of iterations consumed 
 setClass(
   Class="CResource", 
   representation=representation(time.total="NumORNull",
@@ -264,6 +264,14 @@ setMethod(
 
 # CONSTRUCTORS ------------------------------------------------------------
 
+#' @title Constructor of CResource objects
+#'
+#' @description This function creates objects of class \code{\linkS4class{CResource}}
+#' @param time Maximum time in seconds. If \code{NULL} (default value), no time limit is set
+#' @param evaluations Maximum number of evaluations. If \code{NULL} (default value), no evaluations limit is set
+#' @param iterations Maximum number of iterations. If \code{NULL} (default value), no iterations limit is set
+#' @return Object of class \code{\linkS4class{CResource}} with the assigned resources
+#' 
 cResource <- function (time=NULL, evaluations=NULL, iterations=NULL){
   cr <- new("CResource",
             time.total=time, time.consumed=0 ,

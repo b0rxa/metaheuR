@@ -4,7 +4,8 @@
 #' @param weight Vector with the weights associated to each item
 #' @param value Vector with the value associated to each item
 #' @param limit Maximum weight allowed
-#' @return A list of functions to be used to solve a knapsack problem. This includes the functions \code{evaluate}, for the evaluation of a solution, \code{valid}, to check whetehr a solution is valid or not and 'correct', to correct a non-valid solution; all the functions have a single argument,  \code{solution}, representing the solution considered. Note that, given that the goal in all the algorithms in the library is minimizing the objective function, the \code{evaluate}. The solutions have to be vectors of logic values, indicating which items are included in the solution
+#' @return A list of functions to be used to solve a knapsack problem. This includes the functions \code{evaluate}, for the evaluation of a solution, \code{valid}, to check whetehr a solution is valid or not and 'correct', to correct a non-valid solution; all the functions have a single argument,  \code{solution}, representing the solution considered. Note that, given that the goal in all the algorithms in the library is minimizing the objective function, the \code{evaluate}. The solutions have to be vectors of logic values, indicating which items are included in the solution.
+#' @family Problems
 #' @examples
 #' ## Problem of size 100 with random vectors and limit
 #' n <- 100

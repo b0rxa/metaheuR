@@ -2,7 +2,8 @@
 #' 
 #' This function implements Rosenbrock's function
 #' @param size Number of dimensions
-#' @return A function that can be used to evaluate solutions
+#' @return A list with two elements, the evaluation function (\code{evaluate}) and the number of dimensions (\code{size})
+#' @family Continuous problems
 #' @examples
 #' rs <- rosenbrockProblem(3)
 #' rs$evaluate(c(2, -1, 1))
@@ -19,5 +20,5 @@ rosenbrockProblem <- function(size){
     f <- sum((1 - solution[id])^2 + 100 * (solution[id + 1] - solution[id]^2)^2)
     return(f)
   }
-  return(list(evaluate = evaluate))
+  return(list(evaluate=evaluate, size=size))
 }

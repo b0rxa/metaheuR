@@ -41,6 +41,7 @@ exportMethods(
   getEvaluation,
   getResources,
   getProgress,
+  getEvaluatedSolutions,
   plotProgress,
   plotCorrelation,
   simulate,

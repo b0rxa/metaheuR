@@ -2,11 +2,11 @@
 #' 
 #' @export
 #' @description This function updates the temperature decreasing it linearly
-#' @family Cooling schemes
 #' @param initial.temperature Starting temperature
 #' @param final.temperature Final expected temperature
 #' @param steps Number of desired steps to get from the initial temperature to the final one
 #' @return A function that, given a temperature, returns the updated temperature according to the cooling scheme. The return function uses just a single parameter, the current temperature
+#' @family Cooling schemes
 #' @examples
 #' update <- linearCooling(initial.temperature=100, final.temperature=10, steps=9)
 #' update(100)
@@ -24,11 +24,11 @@ linearCooling <- function (initial.temperature, final.temperature, steps) {
 #' 
 #' @export
 #' @description This function updates the temperature decreasing it geometrically
-#' @family Cooling schemes
 #' @param initial.temperature Starting temperature
 #' @param final.temperature Final expected temperature
 #' @param steps Number of desired steps to get from the initial temperature to the final one
 #' @return A function that, given a temperature, returns the updated temperature according to the cooling scheme. The return function uses just a single parameter, the current temperature
+#' @family Cooling schemes
 #' @examples
 #' update <- geometricCooling(initial.temperature=100, final.temperature=10, steps=9)
 #' update(100)

@@ -10,7 +10,7 @@ rosenbrockProblem(size)
 \item{size}{Number of dimensions}
 }
 \value{
-A function that can be used to evaluate solutions
+A list with two elements, the evaluation function (\code{evaluate}) and the number of dimensions (\code{size})
 }
 \description{
 This function implements Rosenbrock's function

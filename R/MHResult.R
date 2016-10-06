@@ -2,6 +2,7 @@
 
 setClassUnion("NumORNull", c("numeric", "NULL"))
 setClassUnion("DFORNull", c("data.frame", "NULL"))
+setClassUnion("ListORNull", c("list", "NULL"))
 
 #' An S4 class to represent the output of a search heuristic
 #'
@@ -12,6 +13,7 @@ setClassUnion("DFORNull", c("data.frame", "NULL"))
 #' @slot evaluation Evaluation of the best solution(s)
 #' @slot resources Object contining the information about the available and consumed computational resources
 #' @slot log A numeric matrix containing the evolution of the search. The matrix should have four columns, named as \code{Time}, \code{Evaluations}, \code{Iterations}, \code{Current_sol}, \code{Current_sd} and \code{Best_sol}
+#' @slot solutions A list with all the solutions evaluated during the search. Each element of the list is a list with two fields, 'iteration', 'solution' and 'evaluation'. The former contains the iteration when the soulution has been evaluated, the second the solution itself and the last one its evaluation.
 #' 
 setClass(
   Class="MHResult", 
@@ -21,7 +23,8 @@ setClass(
                                 solution="ANY",
                                 evaluation="numeric",
                                 resources="CResource",
-                                log="DFORNull")
+                                log="DFORNull",
+                                solutions="ListORNull")
 )
 
 setValidity(
@@ -215,6 +218,26 @@ setMethod(
     return(result@log)
   })
 
+
+#' @title Accession function for the \code{solutions} slot of the object
+#'
+#' @description Accession function for the \code{solutions} slot of the object
+#' @param result Object of class \code{\linkS4class{mHResult}} whose information we are quering
+#' 
+#' @return Content of the \code{solutions} slot
+#' 
+setGeneric(name="getEvaluatedSolutions", 
+           def=function(result) {
+             standardGeneric("getEvaluatedSolutions")
+           })
+
+setMethod(
+  f="getEvaluatedSolutions", 
+  signature="MHResult", 
+  definition=function(result) {
+    return(result@solutions)
+  })
+
 #' @title Function to plot the evolution of the evaluation function during the search
 #'
 #' @description This function produces an object of class \code{\link{ggplot}} with the evolution of the search
@@ -361,6 +384,42 @@ setMethod(
     return(g)
   })
 
+
+
+#' @title Function to plot the correlation among evaluations, iterations and time
+#'
+#' @description This function produces an object of class \code{\link{ggplot}} showing the correlation among evaluations, iterations and time
+#' @param result Object of class \code{\link{mHResult}} whose log will be visualized
+#' @param a Parameter indicating the value for the X axis. Valid options are 'time', 'evaluations' and 'iterations'
+#' @param b Parameter indicating the value for the Y axis. Valid options are 'time', 'evaluations' and 'iterations'
+#' @param ... Additional parameters for the function \code{\link{geom_point}} used to draw the plots
+#' @return An object of class \code{\link{ggplot}} 
+#' 
+setGeneric(name="plotCorrelation", 
+           def=function(result, a="time", b="evaluations", ...) {
+             standardGeneric("plotCorrelation")
+           })
+
+setMethod(
+  f="plotCorrelation", 
+  signature="MHResult", 
+  definition=function(result, a="time", b="evaluations", ...) {   
+    require("ggplot2") 
+    df <- data.frame(Time=diff(result@log$Time), 
+                     Evaluations=diff(result@log$Evaluations), 
+                     Iterations=diff(result@log$Iterations))
+    aes <- switch(a,
+                  "time"=aes(x=Time),
+                  "evaluations"=aes(x=Evaluations),
+                  "iterations"=aes(x=Iterations))
+    aes$y <- switch(b,
+                    "time"=aes(y=Time)$y,
+                    "evaluations"=aes(y=Evaluations)$y,
+                    "iterations"=aes(y=Iterations)$y)
+    g <- ggplot(df, mapping=aes) + geom_point(...)
+    return(g)
+  })
+
 # CONSTRUCTORS ------------------------------------------------------------
 
 #' @title Function to construct objects of type \code{mHResult}
@@ -376,9 +435,10 @@ setMethod(
 #' @return A new object of class \code{\link{mHResult}} with the updated remaining resources
 #' 
 mHResult <- function (algorithm, parameters, solution, evaluation, 
-                      resources, description="", log=NULL){
+                      resources, description="", log=NULL, solutions=NULL){
   obj <- new("MHResult",
              algorithm=algorithm, description=description, parameters=parameters,
-             solution=solution, evaluation=evaluation, resources=resources, log=log)
+             solution=solution, evaluation=evaluation, resources=resources, 
+             log=log, solutions=solutions)
   return(obj)
 }

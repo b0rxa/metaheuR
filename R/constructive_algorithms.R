@@ -1,10 +1,10 @@
 #' Constructive greedy algorithm for the TSP problem
 #' 
-#' @description This function implements a simple constructive greedy algorithm for the TSP problem.
+#' @description This function implements a simple constructive greedy algorithm for the TSP problem
 #' @param cmatrix Cost matrix associated to the TSP instance
-#' @param cl.size Size of candidate list. 
+#' @param cl.size Size of candidate list considered at each step. By default it is 1, thus implementing a sheer greedy algorithm. If this value is greater than 1, then random solutions are created considering at each step the best options, as in GRASP algorithms
 #' @return A permutation containing a solution for the problem
-#' @details The algorithm builds the solution iteratively, selecting, at each step, the closest city to the one added in the previous step.
+#' @details The algorithm builds the solution iteratively, selecting, at each step, the closest city to the one added in the previous step
 #' @family Constructive algorithms
 #' @examples
 #' n <- 10
@@ -73,7 +73,7 @@ tspGreedy <- function (cmatrix, cl.size=1){
 #' 
 #' @description This function implements a simple constructive greedy algorithm for the MIS problem
 #' @param graph Graph where the MIS has to be found
-#' @param cl.size Number of nodes to consider at each step of the algorithm.
+#' @param cl.size Number of nodes to consider at each step of the algorithm.  By default it is 1, thus implementing a sheer greedy algorithm. If this value is greater than 1, then random solutions are created considering at each step the best options, as in GRASP algorithms.
 #' @return A logical vector indicating which nodes are in the independent set
 #' @details The algorithm builds the solution iteratively selecting, uniformly at random, one of the nodes in the candidate list; this list contains the available nodes with the lowest degree. By default the candidate list is 1, which means that, in absence of ties, the algorithm returns always the same solution. The candidate list can be longer, in which case the algorithm generates random greedy solutions that can be used in GRASP-like algorithms.
 #' @family Constructive algorithms
@@ -108,4 +108,3 @@ misGreedy <- function (graph, cl.size=1){
   }
   return(mis)
 }
-  

@@ -2,18 +2,18 @@
 % Please edit documentation in R/acceptance_functions.R
 \name{alwaysAccept}
 \alias{alwaysAccept}
-\title{Dummy function to always accept changes.}
+\title{Dummy function to always accept changes}
 \usage{
 alwaysAccept(delta, ...)
 }
 \arguments{
-\item{delta}{Increment in the evaluation function computed as the evaluation of the new solution minus the evaluation of the existing solution.}
+\item{delta}{Increment in the evaluation function computed as the evaluation of the new solution minus the evaluation of the existing solution}
 }
 \value{
-This function always accepts the new solution, so it returns always \code{TRUE}.
+This function always accepts the new solution, so it returns always \code{TRUE}
 }
 \description{
-This function returns \code{TRUE}, regardless the increment in the evaluation function.
+This function returns \code{TRUE}, regardless the increment in the evaluation function
 }
 \examples{
 alwaysAccept (-1)
@@ -21,7 +21,7 @@ alwaysAccept (1)
 
 }
 \seealso{
-Other Acceptance functions.: \code{\link{boltzmannAccept}},
+Other Acceptance functions: \code{\link{boltzmannAccept}},
   \code{\link{thresholdAccept}}
 }
 

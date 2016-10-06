@@ -9,16 +9,16 @@ tspGreedy(cmatrix, cl.size = 1)
 \arguments{
 \item{cmatrix}{Cost matrix associated to the TSP instance}
 
-\item{cl.size}{Size of candidate list.}
+\item{cl.size}{Size of candidate list considered at each step. By default it is 1, thus implementing a sheer greedy algorithm. If this value is greater than 1, then random solutions are created considering at each step the best options, as in GRASP algorithms}
 }
 \value{
 A permutation containing a solution for the problem
 }
 \description{
-This function implements a simple constructive greedy algorithm for the TSP problem.
+This function implements a simple constructive greedy algorithm for the TSP problem
 }
 \details{
-The algorithm builds the solution iteratively, selecting, at each step, the closest city to the one added in the previous step.
+The algorithm builds the solution iteratively, selecting, at each step, the closest city to the one added in the previous step
 }
 \examples{
 n <- 10

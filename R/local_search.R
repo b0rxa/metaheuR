@@ -6,6 +6,7 @@
 #' @param neighborhood Object representing the type of neighborhood to be used
 #' @param selector A function used to select a solution from the neighborhood. For an example of the parameters required and the result it should produce, see \code{\link{greedySelector}}
 #' @param do.log Logic value to indicate whether the progress shoul be tracked or not
+#' @param save.sols Logic value to indicate whether the evaluated solutions should be stored
 #' @param verbose Logic value to indicate whether the function should print information about the search
 #' @param non.valid Action to be performed when a non valid solution is considered. The options are \code{'ignore'}, meaning that the solution is considered anyway, \code{'discard'}, meaning that the solution is not considered and \code{'correct'}, meaning that the solution has to be corrected. This parameter has to be set only when there can be non valid solutions
 #' @param valid A function that, given a solution, determines whether it is valid or not
@@ -15,7 +16,7 @@
 #' @return The function returns an object of class \code{\linkS4class{mHResult}} with all the information about the search
 #' 
 basicLocalSearch <- function (evaluate, initial.solution, neighborhood, selector, 
-                              do.log=TRUE, verbose=TRUE, non.valid='ignore', 
+                              do.log=TRUE, save.sols=FALSE, verbose=TRUE, non.valid='ignore', 
                               valid=allValid, correct=doNothing, 
                               resources=cResource(), ...) {
   if (!valid(initial.solution)) {
@@ -28,7 +29,10 @@ basicLocalSearch <- function (evaluate, initial.solution, neighborhood, selector
   addConsumed(resources, t=as.numeric(Sys.time() - t0), ev=1)
   stopSearch <- isFinished(resources)
   iteration <- 0
-  log <- NULL
+  
+  # Progress information
+  log  <- NULL
+  sols <- NULL
   if (do.log){
     log <- data.frame(Iterations=getConsumedIterations(resources),
                       Evaluations=getConsumedEvaluations(resources),
@@ -37,6 +41,13 @@ basicLocalSearch <- function (evaluate, initial.solution, neighborhood, selector
                       Current_sd=NA,
                       Best_sol=current.evaluation)
   }
+  if (save.sols) {
+    sols <- list()
+    sols$iteration  <- iteration
+    sols$evaluation <- current.evaluation
+    sols$solution   <- list(current.solution)
+  }
+  
   # Main loop of the search, get each neighbor and evaluate it
   while(!stopSearch) {
     iteration <- iteration + 1
@@ -72,6 +83,13 @@ basicLocalSearch <- function (evaluate, initial.solution, neighborhood, selector
                                    Current_sd=NA , 
                                    Best_sol=current.evaluation))
     }
+    
+    # Save the solutions
+    if (save.sols) {
+      sols$iteration  <- c(sols$iteration, iteration)
+      sols$evaluation <- c(sols$evaluation, current.evaluation)
+      sols$solution   <- append(sols$solution, current.solution)
+    }
   }
   
   # Build the output
@@ -83,7 +101,8 @@ basicLocalSearch <- function (evaluate, initial.solution, neighborhood, selector
                   solution=current.solution,
                   evaluation=current.evaluation, 
            resources=resources ,
-           log=log)
+           log=log,
+           solutions=sols)
   return(res)
 }
 
@@ -97,6 +116,7 @@ basicLocalSearch <- function (evaluate, initial.solution, neighborhood, selector
 #' @param selector A function used to select a solution from the neighborhood. For an example of the parameters required and the result it should produce, see \code{\link{greedySelector}}
 #' @param num.restarts Number of restarts to perform. If NULL, then restarts will be performed unitl the resources are finished
 #' @param do.log Logic value to indicate whether the progress shoul be tracked or not
+#' @param save.sols Logic value to indicate whether the evaluated solutions should be stored
 #' @param verbose Logic value to indicate whether the function should print information about the search
 #' @param non.valid Action to be performed when a non valid solution is considered. The options are \code{'ignore'}, meaning that the solution is considered anyway, \code{'discard'}, meaning that the solution is not considered and \code{'correct'}, meaning that the solution has to be corrected. This parameter has to be set only when there can be non valid solutions
 #' @param valid A function that, given a solution, determines whether it is valid or not
@@ -107,14 +127,14 @@ basicLocalSearch <- function (evaluate, initial.solution, neighborhood, selector
 #' @details If the function provided in the \code{generateSolution} parameter generates solutions completely at random, then the function performs a random multistart search; if the funciton generates random greedy solutions, then the function performs a GRASP-like search
 #' 
 multistartLocalSearch <- function(evaluate, generateSolution, neighborhood, selector, 
-                                  num.restarts=NULL, do.log=TRUE, verbose=TRUE, 
-                                  non.valid='ignore', valid=allValid, 
+                                  num.restarts=NULL, do.log=TRUE,  save.sols=FALSE, 
+                                  verbose=TRUE, non.valid='ignore', valid=allValid, 
                                   correct=doNothing, resources=cResource(), ...) {
   # Perform the initial local search
   initial.solution <- generateSolution(...) 
   search.result <- basicLocalSearch(evaluate=evaluate, initial.solution=initial.solution, 
                                       neighborhood=neighborhood, selector=selector, 
-                                      do.log=do.log, verbose=verbose,
+                                      do.log=do.log, save.sols=save.sols, verbose=verbose,
                                       non.valid=non.valid, valid=valid, 
                                       correct=correct, resources=resources, ...)
   # Extract the best solution and its evaluation, as well as the remaining resources
@@ -123,6 +143,10 @@ multistartLocalSearch <- function(evaluate, generateSolution, neighborhood, sele
     
   resources <- getResources(search.result)
   log <- getProgress(search.result)
+  if (save.sols) {
+    solutions <- getEvaluatedSolutions(search.results)
+  }
+  
   restarts <- 0
   if (is.null(num.restarts)) {
     num.restarts.txt <- "no limit"     
@@ -141,7 +165,7 @@ multistartLocalSearch <- function(evaluate, generateSolution, neighborhood, sele
     initial.solution <- generateSolution(...) 
     search.result <- basicLocalSearch(evaluate=evaluate, initial.solution=initial.solution, 
                                         neighborhood=neighborhood, selector=selector,
-                                        do.log=do.log, verbose=verbose,
+                                        do.log=do.log, save.sols=save.sols, verbose=verbose,
                                         non.valid=non.valid, valid=valid, 
                                         correct=correct, resources=resources, ...)
     # If we have a better solution, update the current best
@@ -156,6 +180,12 @@ multistartLocalSearch <- function(evaluate, generateSolution, neighborhood, sele
     newlog <- getProgress(search.result)
     newlog$Best_sol <- best.evaluation
     log <- rbind (log, newlog)
+    if (save.sols) {
+      newsols <- getEvaluatedSolutions(search.result)
+      solutions$evaluation <- c(solutions$evaluation, newsols$evaluation)
+      solutions$solution   <- append(solutions$solution, newsols$solution)
+      solutions$iteration  <- c(solutions$iteration, newsols$iteration + tail(solutions$iteration, 1))
+    }
   }
   
   # Build the output
@@ -168,7 +198,8 @@ multistartLocalSearch <- function(evaluate, generateSolution, neighborhood, sele
                   solution=best.solution,
                   evaluation=best.evaluation, 
                   resources=resources,
-                  log=log)
+                  log=log,
+                  solutions=sols)
   return(res)
 }
 
@@ -186,6 +217,7 @@ multistartLocalSearch <- function(evaluate, generateSolution, neighborhood, sele
 #' @param accept A function to determine when a new local optimum is accepted. This function has to have, at least, one parameter named \code{delta}, corresponding to the difference between the evaluation of the new solution and the existing one.
 #' @param num.restarts Number of restarts to perform. If NULL, then restarts will be performed unitl the resources are finished
 #' @param do.log Logic value to indicate whether the progress shoul be tracked or not
+#' @param save.sols Logic value to indicate whether the evaluated solutions should be stored
 #' @param verbose Logic value to indicate whether the function should print information about the search
 #' @param non.valid Action to be performed when a non valid solution is considered. The options are \code{'ignore'}, meaning that the solution is considered anyway, \code{'discard'}, meaning that the solution is not considered and \code{'correct'}, meaning that the solution has to be corrected. This parameter has to be set only when there can be non valid solutions
 #' @param valid A function that, given a solution, determines whether it is valid or not
@@ -197,13 +229,13 @@ multistartLocalSearch <- function(evaluate, generateSolution, neighborhood, sele
 #' 
 iteratedLocalSearch <- function (evaluate, initial.solution, neighborhood, selector, 
                                  perturb, accept=thresholdAccept, num.restarts=NULL, 
-                                 do.log=TRUE, verbose=TRUE, non.valid="ignore", 
-                                 valid=allValid, correct=doNothing, 
+                                 do.log=TRUE, save.sols=FALSE, verbose=TRUE, 
+                                 non.valid="ignore", valid=allValid, correct=doNothing, 
                                  resources=cResource(), ...) {
   # Perform the initial local search
   search.result <- basicLocalSearch(evaluate=evaluate, initial.solution=initial.solution,
                                     neighborhood=neighborhood, selector=selector,
-                                    do.log=do.log, verbose=verbose,
+                                    do.log=do.log, save.sols=save.sols, verbose=verbose,
                                     non.valid=non.valid, valid=valid,
                                     correct=correct, resources=resources, ...)
   # Extract the best solution and its evaluation, as well as the remaining resources
@@ -213,6 +245,9 @@ iteratedLocalSearch <- function (evaluate, initial.solution, neighborhood, selec
   best.evaluation <- current.evaluation
   resources <- getResources(search.result)
   log <- getProgress(search.result)
+  if (save.sols) {
+    solutions <- getEvaluatedSolutions(search.result)
+  }
   restarts <- 0
   if(is.null(num.restarts)) {
     rst <- "no limit"
@@ -233,7 +268,7 @@ iteratedLocalSearch <- function (evaluate, initial.solution, neighborhood, selec
     initial.solution <- perturb(current.solution, ...) 
     search.result <- basicLocalSearch(evaluate=evaluate, initial.solution=initial.solution,
                                       neighborhood=neighborhood, selector=selector,
-                                      do.log=do.log, verbose=verbose,
+                                      do.log=do.log, save.sols=save.sols, verbose=verbose,
                                       non.valid=non.valid, valid=valid,
                                       correct=correct, resources=resources, ...)
     # If we have a better solution, update the current best
@@ -250,9 +285,22 @@ iteratedLocalSearch <- function (evaluate, initial.solution, neighborhood, selec
     # Get the updated resources
     resources <- getResources(search.result)
     
-    ## Append the new search to the log
+    # Append the new search to the log
     log <- rbind (log, getProgress(search.result))
+    
+    if (save.sols) {
+      newsols <- getEvaluatedSolutions(search.result)
+      solutions$evaluation <- c(solutions$evaluation, newsols$evaluation)
+      solutions$solution   <- append(solutions$solution, newsols$solution)
+      solutions$iteration  <- c(solutions$iteration, 
+                                newsols$iteration + tail(solutions$iteration, 1) + 1)
+    }
   }
+  
+  # The best solution recorded is the best found in each local search. To make it the
+  # best in any local search we have to check that any solution is better than the previous
+  
+  log$Best_sol <- cummin(log$Best_sol)
   
   # Build the output
   res <- mHResult(algorithm="Iterated Local Search",
@@ -263,6 +311,7 @@ iteratedLocalSearch <- function (evaluate, initial.solution, neighborhood, selec
                   solution=best.solution, 
                   evaluation=best.evaluation, 
                   resources=resources,
-                  log=log)
+                  log=log,
+                  solutions=solutions)
   return(res)
 }
