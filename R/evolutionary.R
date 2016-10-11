@@ -234,7 +234,7 @@ basicEda <- function (evaluate, initial.population, selectSubpopulation,
     needed.solutions <- pop.size - length(selected$population)
     
     # Build the model and sample it
-    model <- learn(selected$population)
+    model <- learn(selected$population, ...)
     new.solutions <- simulate(model, needed.solutions, ...)
     
     # Evaluate the new solutions
