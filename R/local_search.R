@@ -143,6 +143,7 @@ multistartLocalSearch <- function(evaluate, generateSolution, neighborhood, sele
     
   resources <- getResources(search.result)
   log <- getProgress(search.result)
+  solutions <- NULL
   if (save.sols) {
     solutions <- getEvaluatedSolutions(search.results)
   }
@@ -245,6 +246,7 @@ iteratedLocalSearch <- function (evaluate, initial.solution, neighborhood, selec
   best.evaluation <- current.evaluation
   resources <- getResources(search.result)
   log <- getProgress(search.result)
+  solutions <- NULL
   if (save.sols) {
     solutions <- getEvaluatedSolutions(search.result)
   }
