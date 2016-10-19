@@ -200,7 +200,7 @@ multistartLocalSearch <- function(evaluate, generateSolution, neighborhood, sele
                   evaluation=best.evaluation, 
                   resources=resources,
                   log=log,
-                  solutions=sols)
+                  solutions=solutions)
   return(res)
 }
 
