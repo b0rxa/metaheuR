@@ -34,13 +34,15 @@ setMethod(
     
     s0 <- as.numeric(object@mode)
     
-    f <- function(i) {
-      permu <- rgmm(n=1, sigma0=s0, theta=object@theta, 
-                   dist.name=object@distance)[1, ]
-      return(permutation(permu))
+    samp <- rgmm(n=nsim, sigma0=s0, theta=object@theta, 
+                 dist.name=object@distance)
+    
+    # Convert the sample matrix to a list of objects of class Permutation
+    f <- function(vec) {
+      return(permutation(vec))
     }
     
-    return(lapply(1:nsim, f))
+    return(apply(samp, MARGIN=1, FUN=f))
   })
 
 
