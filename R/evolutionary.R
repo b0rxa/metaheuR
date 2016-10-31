@@ -134,6 +134,11 @@ basicGeneticAlgorithm <- function (evaluate, initial.population,
                                    Current_sd=sd(current.evaluation), 
                                    Best_sol=best.evaluation))
     
+    # Some garbage collection
+    rm("selected", "needed.solutions", "new.solutions", 
+       "new.sol.evaluations", "best")
+    gc()
+    
   }  
   # Build the output
   res <- mHResult(algorithm="Basic Genetic Algorithm",
@@ -263,6 +268,11 @@ basicEda <- function (evaluate, initial.population, selectSubpopulation,
                                    Current_sd = sd(current.evaluation),
                                    Best_sol = best.evaluation))
     }
+    
+    # Some garbage collection
+    rm("selected", "needed.solutions", "model", "new.solutions", 
+       "new.sol.evaluations", "best")
+    gc()
   }  
   # Build the output
   res <- mHResult(algorithm="Basic EDA",
