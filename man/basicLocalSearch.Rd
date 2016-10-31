@@ -5,8 +5,9 @@
 \title{Basic local search}
 \usage{
 basicLocalSearch(evaluate, initial.solution, neighborhood, selector,
-  do.log = TRUE, verbose = TRUE, non.valid = "ignore", valid = allValid,
-  correct = doNothing, resources = cResource(), ...)
+  do.log = TRUE, save.sols = FALSE, verbose = TRUE,
+  non.valid = "ignore", valid = allValid, correct = doNothing,
+  resources = cResource(), ...)
 }
 \arguments{
 \item{evaluate}{Function of a single parameter. Given a solution, the function returns its evaluation as a real number}
@@ -18,6 +19,8 @@ basicLocalSearch(evaluate, initial.solution, neighborhood, selector,
 \item{selector}{A function used to select a solution from the neighborhood. For an example of the parameters required and the result it should produce, see \code{\link{greedySelector}}}
 
 \item{do.log}{Logic value to indicate whether the progress shoul be tracked or not}
+
+\item{save.sols}{Logic value to indicate whether the evaluated solutions should be stored}
 
 \item{verbose}{Logic value to indicate whether the function should print information about the search}
 

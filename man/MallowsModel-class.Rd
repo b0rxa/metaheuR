@@ -3,15 +3,17 @@
 \docType{class}
 \name{MallowsModel-class}
 \alias{MallowsModel-class}
-\title{An S4 class to represent distributions based on univariate marginals}
+\title{An S4 class to represent distributions based the Mallows Model}
 \description{
-An S4 class to represent distributions based on univariate marginals
+An S4 class to represent distributions based the Mallows Model
 }
 \section{Slots}{
 
 \describe{
-\item{\code{prob.table}}{A matrix with the marginal probabilities. Each column is a variable and each row a possible value.}
+\item{\code{mode}}{The central permutation of the model.}
 
-\item{\code{levels}}{A list of levels in case the model is constructed over factors. If it is to be used with logical values, then this slot will be \code{NULL}.}
+\item{\code{theta}}{Theta parameter of the model}
+
+\item{\code{distance}}{Type of distance to be used in the model}
 }}
 

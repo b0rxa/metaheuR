@@ -5,7 +5,7 @@
 \title{Local search with multistart}
 \usage{
 multistartLocalSearch(evaluate, generateSolution, neighborhood, selector,
-  num.restarts = NULL, do.log = TRUE, verbose = TRUE,
+  num.restarts = NULL, do.log = TRUE, save.sols = FALSE, verbose = TRUE,
   non.valid = "ignore", valid = allValid, correct = doNothing,
   resources = cResource(), ...)
 }
@@ -21,6 +21,8 @@ multistartLocalSearch(evaluate, generateSolution, neighborhood, selector,
 \item{num.restarts}{Number of restarts to perform. If NULL, then restarts will be performed unitl the resources are finished}
 
 \item{do.log}{Logic value to indicate whether the progress shoul be tracked or not}
+
+\item{save.sols}{Logic value to indicate whether the evaluated solutions should be stored}
 
 \item{verbose}{Logic value to indicate whether the function should print information about the search}
 

@@ -10,6 +10,8 @@ boltzmannAccept(delta, temperature = 1, ...)
 \item{delta}{Increment in the evaluation function computed as the evaluation of the new solution minus the evaluation of the existing solution}
 
 \item{temperature}{Temperature parameter in Boltzmann's distribution. This temperature has to be a value strictly greater than 0. By default this parameter is equal to 1}
+
+\item{...}{This parameter is ignored}
 }
 \value{
 \code{TRUE} with probability given by exp(-1*delta/tempreature)

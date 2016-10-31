@@ -13,7 +13,7 @@ graphColoringProblem(graph)
 A list of functions to be used to solve a graph coloring problem. This includes the functions \code{evaluate}, for the evaluation of a solution, \code{valid}, to check whetehr a solution is valid or not, \code{correct}, to correct a non-valid solution and \code{plot} to graphically show the solution; all the functions have a single argument,  \code{solution}, representing the solution considered. Note that, given that the goal in all the algorithms in the library is minimizing the objective function, the \code{evaluate}. The solutions have to be vectors of factors indicating the color of each node
 }
 \description{
-This function generates an evaluation, validity and correction functions associated  with a classical graph coloring problem
+This function generates an evaluation, validity and correction functions associated  with a classical graph coloring problem.
 }
 \examples{
 
@@ -30,7 +30,10 @@ gcol.problem$plot(rnd.sol)
 gcol.problem$plot(corrected.sol)
 
 }
-\concept{
-Optimization_problems
+\seealso{
+Other Problems: \code{\link{knapsackProblem}},
+  \code{\link{lopProblem}}, \code{\link{mdsProblem}},
+  \code{\link{misProblem}}, \code{\link{qapProblem}},
+  \code{\link{tspProblem}}
 }
 

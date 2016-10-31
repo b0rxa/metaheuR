@@ -2,24 +2,32 @@
 % Please edit documentation in R/MallowsModel.R
 \name{mallowsModel}
 \alias{mallowsModel}
-\title{Bais consturctor of flip neighborhoods}
+\title{Baisic consturctor of Mallows models}
 \usage{
-mallowsModel(data, distance = "Kendall", ...)
+mallowsModel(data, distance = "Kendall", tmin = NULL, tmax = NULL, ...)
 }
 \arguments{
-\item{data}{A matrix or data frame with the values to estimate the marginal probabilities. The columns represent the variables and the rwos the samples. Values can be logical, factors or characters}
+\item{data}{A list with the permutations from where the model will be learned}
+
+\item{distance}{Type of distance to be used in the model. By default, it is set to \code{Kendall}}
+
+\item{tmin}{Minimum value for the theta parameter. If \code{NULL} (default value) no bound is set}
+
+\item{tmax}{Maximum value for the theta parameter. If \code{NULL} (default value) no bound is set}
 
 \item{...}{Ignored}
 }
 \value{
-An object of class \code{\linkS4class{UnivariateMarginals}} that includes the marginal probability distributions
+An object of class \code{\linkS4class{MallowsModel}} that represents the learned model
 }
 \description{
-This function creates an object of class \code{\linkS4class{FlipNeighborhood}}
+This function creates an object of class \code{\linkS4class{MallowsModel}}
 }
 \seealso{
 Other EDA: \code{\link{bayesianNetwork}},
-  \code{\link{ehbsa}}, \code{\link{plackettLuce}},
+  \code{\link{ehbsa}},
+  \code{\link{generalizedMallowsModel}},
+  \code{\link{plackettLuce}},
   \code{\link{univariateMarginals}}
 }
 

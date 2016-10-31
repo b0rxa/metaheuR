@@ -8,6 +8,8 @@ alwaysAccept(delta, ...)
 }
 \arguments{
 \item{delta}{Increment in the evaluation function computed as the evaluation of the new solution minus the evaluation of the existing solution}
+
+\item{...}{This parameter is ignored}
 }
 \value{
 This function always accepts the new solution, so it returns always \code{TRUE}

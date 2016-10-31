@@ -22,4 +22,10 @@ lop <- lopProblem(matrix)
 lop$evaluate(randomPermutation(10))
 
 }
+\seealso{
+Other Problems: \code{\link{graphColoringProblem}},
+  \code{\link{knapsackProblem}}, \code{\link{mdsProblem}},
+  \code{\link{misProblem}}, \code{\link{qapProblem}},
+  \code{\link{tspProblem}}
+}
 

@@ -23,4 +23,10 @@ The evaluation function includes another parameter, \code{penalization}, which c
 library("igraph")
 
 }
+\seealso{
+Other Problems: \code{\link{graphColoringProblem}},
+  \code{\link{knapsackProblem}}, \code{\link{lopProblem}},
+  \code{\link{mdsProblem}}, \code{\link{qapProblem}},
+  \code{\link{tspProblem}}
+}
 

@@ -10,6 +10,8 @@ thresholdAccept(delta, th = 0, ...)
 \item{delta}{Increment in the evaluation function computed as the evaluation of the new solution minus the evaluation of the existing solution}
 
 \item{th}{Threshold for the acceptance. By default, the threshold is 0, meaning that the solution is accepted if it improves the evaluation function (remember the package is programmed to minimize objective functions)}
+
+\item{...}{This parameter is ignored}
 }
 \value{
 \code{TRUE} when the increment is bellow the threshold

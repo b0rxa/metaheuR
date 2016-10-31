@@ -14,7 +14,7 @@ knapsackProblem(weight, value, limit)
 \item{limit}{Maximum weight allowed}
 }
 \value{
-A list of functions to be used to solve a knapsack problem. This includes the functions \code{evaluate}, for the evaluation of a solution, \code{valid}, to check whetehr a solution is valid or not and 'correct', to correct a non-valid solution; all the functions have a single argument,  \code{solution}, representing the solution considered. Note that, given that the goal in all the algorithms in the library is minimizing the objective function, the \code{evaluate}. The solutions have to be vectors of logic values, indicating which items are included in the solution
+A list of functions to be used to solve a knapsack problem. This includes the functions \code{evaluate}, for the evaluation of a solution, \code{valid}, to check whetehr a solution is valid or not and 'correct', to correct a non-valid solution; all the functions have a single argument,  \code{solution}, representing the solution considered. Note that, given that the goal in all the algorithms in the library is minimizing the objective function, the \code{evaluate}. The solutions have to be vectors of logic values, indicating which items are included in the solution.
 }
 \description{
 This function generates an evaluation, validity and correction functions associated  with a classical knapsack problem
@@ -32,5 +32,11 @@ knp$evaluate(rnd.solution)
 knp$valid(rnd.solution)
 corrected.solution <- knp$correct (rnd.solution)
 knp$valid(corrected.solution)
+}
+\seealso{
+Other Problems: \code{\link{graphColoringProblem}},
+  \code{\link{lopProblem}}, \code{\link{mdsProblem}},
+  \code{\link{misProblem}}, \code{\link{qapProblem}},
+  \code{\link{tspProblem}}
 }
 

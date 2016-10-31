@@ -21,6 +21,7 @@ This function creates an object of class \code{\linkS4class{EHBSA}}
 }
 \seealso{
 Other EDA: \code{\link{bayesianNetwork}},
+  \code{\link{generalizedMallowsModel}},
   \code{\link{mallowsModel}}, \code{\link{plackettLuce}},
   \code{\link{univariateMarginals}}
 }

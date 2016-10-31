@@ -21,7 +21,9 @@ This function creates an object of class \code{\linkS4class{PlackettLuce}}
 }
 \seealso{
 Other EDA: \code{\link{bayesianNetwork}},
-  \code{\link{ehbsa}}, \code{\link{mallowsModel}},
+  \code{\link{ehbsa}},
+  \code{\link{generalizedMallowsModel}},
+  \code{\link{mallowsModel}},
   \code{\link{univariateMarginals}}
 }
 

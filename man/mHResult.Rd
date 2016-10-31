@@ -5,7 +5,7 @@
 \title{Function to construct objects of type \code{mHResult}}
 \usage{
 mHResult(algorithm, parameters, solution, evaluation, resources,
-  description = "", log = NULL)
+  description = "", log = NULL, solutions = NULL)
 }
 \arguments{
 \item{algorithm}{String indicating the algorithm run}

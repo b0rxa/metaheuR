@@ -6,8 +6,8 @@
 \usage{
 iteratedLocalSearch(evaluate, initial.solution, neighborhood, selector, perturb,
   accept = thresholdAccept, num.restarts = NULL, do.log = TRUE,
-  verbose = TRUE, non.valid = "ignore", valid = allValid,
-  correct = doNothing, resources = cResource(), ...)
+  save.sols = FALSE, verbose = TRUE, non.valid = "ignore",
+  valid = allValid, correct = doNothing, resources = cResource(), ...)
 }
 \arguments{
 \item{evaluate}{Function of a single parameter. Given a solution, the function returns its evaluation as a real number}
@@ -25,6 +25,8 @@ iteratedLocalSearch(evaluate, initial.solution, neighborhood, selector, perturb,
 \item{num.restarts}{Number of restarts to perform. If NULL, then restarts will be performed unitl the resources are finished}
 
 \item{do.log}{Logic value to indicate whether the progress shoul be tracked or not}
+
+\item{save.sols}{Logic value to indicate whether the evaluated solutions should be stored}
 
 \item{verbose}{Logic value to indicate whether the function should print information about the search}
 

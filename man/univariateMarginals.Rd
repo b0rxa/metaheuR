@@ -19,7 +19,8 @@ This function creates an object of class \code{\linkS4class{FlipNeighborhood}}
 }
 \seealso{
 Other EDA: \code{\link{bayesianNetwork}},
-  \code{\link{ehbsa}}, \code{\link{mallowsModel}},
-  \code{\link{plackettLuce}}
+  \code{\link{ehbsa}},
+  \code{\link{generalizedMallowsModel}},
+  \code{\link{mallowsModel}}, \code{\link{plackettLuce}}
 }
 

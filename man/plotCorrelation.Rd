@@ -5,8 +5,18 @@
 \title{Function to plot the correlation among evaluations, iterations and time}
 \usage{
 plotCorrelation(result, a = "time", b = "evaluations", ...)
+
+plotCorrelation(result, a = "time", b = "evaluations", ...)
 }
 \arguments{
+\item{result}{Object of class \code{\link{mHResult}} whose log will be visualized}
+
+\item{a}{Parameter indicating the value for the X axis. Valid options are 'time', 'evaluations' and 'iterations'}
+
+\item{b}{Parameter indicating the value for the Y axis. Valid options are 'time', 'evaluations' and 'iterations'}
+
+\item{...}{Additional parameters for the function \code{\link{geom_point}} used to draw the plots}
+
 \item{result}{Object of class \code{\link{mHResult}} whose log will be visualized}
 
 \item{a}{Parameter indicating the value for the X axis. Valid options are 'time', 'evaluations' and 'iterations'}
@@ -17,8 +27,12 @@ plotCorrelation(result, a = "time", b = "evaluations", ...)
 }
 \value{
 An object of class \code{\link{ggplot}}
+
+An object of class \code{\link{ggplot}}
 }
 \description{
+This function produces an object of class \code{\link{ggplot}} showing the correlation among evaluations, iterations and time
+
 This function produces an object of class \code{\link{ggplot}} showing the correlation among evaluations, iterations and time
 }
 

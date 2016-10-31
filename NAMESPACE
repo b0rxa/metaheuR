@@ -89,6 +89,7 @@ export(
   elitistSelection,
   binaryMutation,
   factorMutation,
+  swapMutation,
   kPointCrossover,
   orderCrossover,
   basicEda,

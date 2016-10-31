@@ -18,8 +18,9 @@ An object of class \code{\linkS4class{BayesianNetwork}} that includes the Bayesi
 This function creates an object of class \code{\linkS4class{BayesianNetwork}}
 }
 \seealso{
-Other EDA: \code{\link{ehbsa}}, \code{\link{mallowsModel}},
-  \code{\link{plackettLuce}},
+Other EDA: \code{\link{ehbsa}},
+  \code{\link{generalizedMallowsModel}},
+  \code{\link{mallowsModel}}, \code{\link{plackettLuce}},
   \code{\link{univariateMarginals}}
 }
 
