@@ -53,12 +53,23 @@ graphColoringProblem <- function(graph) {
     return(solution)
   }
   
-  plotSolution <- function (solution, node.size=5, label.cex=0.5) {
-    require(colorspace)
+  plotSolution <- function (solution, node.size=5, label.cex=0.5, palette=NULL, text.color="black") {
+    
     values <- unique(as.numeric(solution))
     num.colors <- length(values)
-    palette <- rainbow_hcl(num.colors, c=50, l=70, start=0, 
-                           end=360 * (num.colors - 1) / num.colors)
+    if (is.null(palette)) {
+      if (!requireNamespace("colorspace")) {
+        stop("This function requires the package 'colorspace'. Please install it!")
+      }
+      
+      palette <- rainbow_hcl(num.colors, c=60, l=75, start=0, 
+                             end=360 * (num.colors - 1) / num.colors)
+    } else {
+      if (length(palette)!=num.colors) {
+        stop("The color palette used must have length", num.colors)
+      }
+    }
+    
     colors <- as.numeric(solution)
     for (i in 1:num.colors) {
       colors[colors == values[i]] <- palette[i]
@@ -66,7 +77,7 @@ graphColoringProblem <- function(graph) {
     V(graph)$color <- colors
     V(graph)$label <- solution
     plot.igraph(graph, vertex.size=node.size, edge.arrow.mode="-", 
-                vertex.label.color="white", vertex.label.family="sans", 
+                vertex.label.color="black", vertex.label.family="sans", 
                 vertex.label.cex=label.cex)
   }
   
