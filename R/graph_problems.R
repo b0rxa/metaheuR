@@ -77,7 +77,7 @@ graphColoringProblem <- function(graph) {
     V(graph)$color <- colors
     V(graph)$label <- solution
     plot.igraph(graph, vertex.size=node.size, edge.arrow.mode="-", 
-                vertex.label.color="black", vertex.label.family="sans", 
+                vertex.label.color=text.color, vertex.label.family="sans", 
                 vertex.label.cex=label.cex)
   }
   
