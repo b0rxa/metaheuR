@@ -151,3 +151,69 @@ lopProblem <- function(matrix) {
   }
   return(list(evaluate=evaluate, size=nrow(matrix)))
 }
+
+
+#' PFSP problem evaluator
+#' 
+#' This function generates an evaluation function associated with a PFSP problem
+#' @param job.machine.matrix Matrix containing the time required by each job in each machine. 
+#' Each row is a machine and each column a job
+#' @return A list with three elements,  \code{evaluate}, a function to evaluate
+#' solutions, \code{num.jobs}, the number of jobs, \code{num.machines}, the number of machines
+#' and, \code{plotSolution}, a function to plot a solution for the problem. 
+#' @family Problems
+#' @examples
+#' cmatrix <- matrix(runif(100), ncol=5)
+#' tsp <- pfspProblem(cmatrix)
+#' tsp$evaluate(randomPermutation(10))
+#' 
+#' coord <- matrix(runif(14), ncol=2)
+#' rownames(coord) <- paste0("C", 1:7)
+#' cmat <- as.matrix(dist(coord))
+#' tsp <- tspProblem(cmat, coord)
+#' tsp$plotSolution(randomPermutation(7), plot.names=TRUE)
+#' 
+pfspProblem <- function(job.machine.matrix) {
+  
+  getEndTimes <- function(job.length) {
+    # This auxiliar function computes the total flow time of the jobs in the
+    # 1 to n order.
+    
+    # We create a matix with all values equal to -1
+    end.positions <- matrix(rep(-1, prod(dim(job.length))), ncol=ncol(job.length))
+    
+    # The first row and column are respectively the cumulative sums of the job lengths
+    end.positions[1, ] = cumsum(job.length[1, ])
+    end.positions[, 1] = cumsum(job.length[, 1])
+    
+    # Now we have the recursion. For each position i,j, the starting point will be 
+    # the maximum value of the cell above (i-1, j) or to the left (i, j-1).
+    for (i in 2:nrow(end.positions)) {
+      for (j in 2:ncol(end.positions)) {
+        end.positions[i, j] <- max(end.positions[i - 1, j], end.positions[i, j - 1]) + job.length[i, j]
+      }
+    }
+    return(end.positions)
+  }
+  
+  evaluate <- function(solution) {
+    if (!isClass(solution, "Permutation")) {
+      stop("This function only evaluates objects of class permutation")
+    }
+    if (length(solution) != ncol(job.machine.matrix)) { 
+      stop("The solution is not of the correct length. It should have ",
+           ncol(job.machine.matrix), " positions")
+    }
+    
+    # Get the end timeswith the permutation
+    end.times <- getEndTimes(job.machine.matrix[, as.numeric(solution)])
+    return(sum(end.times[, ncol(end.times)]))
+  }
+  
+  plotSolution <- function(solution){
+    # TODO
+    return(NULL)
+  }
+  
+  return(list(evaluate=evaluate, num.jobs=ncol(job.machine.matrix), num.machines=nrow(job.machine.matrix), plotSolution=plotSolution))
+}

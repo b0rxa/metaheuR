@@ -57,6 +57,7 @@ export(
   tspProblem,
   qapProblem,
   lopProblem,
+  pfspProblem,
   knapsackProblem,
   graphColoringProblem,
   misProblem,
