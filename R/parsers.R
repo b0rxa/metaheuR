@@ -91,3 +91,20 @@ tsplibParser <- function (file) {
   cost.matrix <- processXmlGraph (xml.children$graph)
   return(cost.matrix)
 }
+
+
+#' Function to read PFSP files
+#' 
+#' This function reads plain text files containing PFSP
+#' 
+#' @family parsers
+#' @param file File containing the information
+#' @return A matrix with the job length in each machine
+#' @seealso \code{\link{pfspProblem}}
+#' 
+pfspParser <- function (file) {
+  matrix <- as.matrix(read.csv(file, skip=3, header=FALSE, sep=""))
+  colnames(matrix) <- paste("J", 1:ncol(matrix))
+  rownames(matrix) <- paste("M", 1:nrow(matrix))
+  return(matrix)
+}

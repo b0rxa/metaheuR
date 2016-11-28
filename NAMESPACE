@@ -104,5 +104,6 @@ export(
   bayesianNetwork,
   ehbsa,
   plackettLuce,
-  generalizedMallowsModel
+  generalizedMallowsModel,
+  pfspParser
 )
