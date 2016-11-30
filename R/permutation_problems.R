@@ -211,8 +211,22 @@ pfspProblem <- function(job.machine.matrix) {
   }
   
   plotSolution <- function(solution){
-    # TODO
-    return(NULL)
+    # Get the start and end times and build a data frame with them
+    duration.matrix <- job.machine.matrix[, as.numeric(solution)]
+    end.times   <- getEndTimes(duration.matrix)
+    start.times <- end.times - duration.matrix
+    f <- function(row) {
+      return (data.frame(X1=start.times[row, ], X2=end.times[row, ], 
+                         Machine=row, Job=1:ncol(duration.matrix)))
+    }
+    aux <- lapply(1:nrow(duration.matrix), FUN=f)
+    df <- do.call(rbind, aux)
+    df$Job <- as.factor(df$Job)
+    #Finally, create the plot
+    g <- ggplot(df, aes(xmin=X1, xmax=X2, ymin=Machine-0.4, ymax=Machine+0.4, fill=Job)) +
+      geom_rect(color="black") + labs(x="Time", y="Machine") + theme_bw()
+    print(g)
+    return(g)
   }
   
   return(list(evaluate=evaluate, num.jobs=ncol(job.machine.matrix), num.machines=nrow(job.machine.matrix), plotSolution=plotSolution))
