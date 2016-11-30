@@ -207,7 +207,7 @@ pfspProblem <- function(job.machine.matrix) {
     
     # Get the end timeswith the permutation
     end.times <- getEndTimes(job.machine.matrix[, as.numeric(solution)])
-    return(sum(end.times[, ncol(end.times)]))
+    return(sum(end.times[nrow(end.times), ]))
   }
   
   plotSolution <- function(solution){
