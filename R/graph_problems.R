@@ -62,8 +62,8 @@ graphColoringProblem <- function(graph) {
         stop("This function requires the package 'colorspace'. Please install it!")
       }
       
-      palette <- rainbow_hcl(num.colors, c=60, l=75, start=0, 
-                             end=360 * (num.colors - 1) / num.colors)
+      palette <- colorspace::rainbow_hcl(num.colors, c=60, l=75, start=0,
+                                         end=360 * (num.colors - 1) / num.colors)
     } else {
       if (length(palette)!=num.colors) {
         stop("The color palette used must have length", num.colors)

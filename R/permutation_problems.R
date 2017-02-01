@@ -53,7 +53,6 @@ tspProblem <- function(cmatrix, coordinates=NULL) {
     if (is.null(coordinates)) {
       stop("The problem does not contain the coordinates of the cities and, thus, solutions cannot be plotted")
     }
-    loadPackage("ggplot2")
     # Order the cities according to the solution
     coords <- coordinates[as.numeric(solution), ]
     # Add the first city at the end to close the circuit
@@ -67,7 +66,7 @@ tspProblem <- function(cmatrix, coordinates=NULL) {
     }
     
     thm <- theme_bw() + theme(axis.text=element_blank(), axis.ticks=element_blank(), panel.grid=element_blank())
-    g <- ggplot(df, aes(x=X, y=Y)) + geom_path(size=path.width, color=path.color) + 
+    g <- ggplot2::ggplot(df, aes(x=X, y=Y)) + geom_path(size=path.width, color=path.color) + 
       geom_point(data=df[-1,], size=point.size, color=point.color) + thm + labs(x="", y="")
     if (plot.names) {
       g <- g + geom_text(aes(label=name), size=name.size, color=name.color)
@@ -149,7 +148,28 @@ lopProblem <- function(matrix) {
     cost <- sum(matrix[lower.tri(matrix, diag=FALSE)])
     return(cost)
   }
-  return(list(evaluate=evaluate, size=nrow(matrix)))
+  
+  plotSolution <- function(solution) {
+    if (!requireNamespace("reshape2")) {
+      stop("This function requires the package reshape2 to be installed. Please install it")
+    }
+    if (!isClass(solution, "Permutation")) {
+      stop("This function only evaluates objects of class permutation")
+    }
+    if (length(solution) != dim(matrix)[1]) {
+      stop("The solution is not of the correct length. It should have ",
+           dim(matrix)[1], " positions")
+    }
+    # Order the matrix by using the solution 
+    matrix <- matrix[as.numeric(solution), as.numeric(solution)]
+    # convert the matrix into an appropriate data frame
+    df <- reshape2::melt(matrix)
+    names(df) <- c("R", "C", "V")
+    g <- ggplot2::ggplot(df, aes(x=C, y=R, fill=V)) + geom_tile() + labs(x="", y="") + scale_fill_continuous(guide="none") + theme(line=element_blank(), panel.background=element_blank(), text=element_blank())
+    print(g)
+    return(g)
+  }
+  return(list(evaluate=evaluate, size=nrow(matrix), plotSolution=plotSolution))
 }
 
 
@@ -223,7 +243,7 @@ pfspProblem <- function(job.machine.matrix) {
     df <- do.call(rbind, aux)
     df$Job <- as.factor(df$Job)
     #Finally, create the plot
-    g <- ggplot(df, aes(xmin=X1, xmax=X2, ymin=Machine-0.4, ymax=Machine+0.4, fill=Job)) +
+    g <- ggplot2::ggplot(df, aes(xmin=X1, xmax=X2, ymin=Machine-0.4, ymax=Machine+0.4, fill=Job)) +
       geom_rect(color="black") + labs(x="Time", y="Machine") + theme_bw()
     print(g)
     return(g)
