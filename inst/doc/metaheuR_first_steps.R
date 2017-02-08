@@ -1,37 +1,39 @@
-## ----,message=FALSE------------------------------------------------------
+## ----message=FALSE-------------------------------------------------------
 library("metaheuR")
 library("igraph")
 set.seed(1)
 num.nodes <- 25
-rnd.graph <- random.graph.game(n = num.nodes , p.or.m = 0.15)
+rnd.graph <- random.graph.game(n=num.nodes, p.or.m=0.15)
 
-## ----,message=FALSE------------------------------------------------------
-gcp <- graph.coloring.problem (graph = rnd.graph)
+## ----message=FALSE-------------------------------------------------------
+gcp <- graphColoringProblem (graph=rnd.graph)
 names(gcp)
 
-## ----,message=FALSE------------------------------------------------------
-solution <- factor(rep("C1",num.nodes) , levels=paste("C",1:num.nodes,sep=""))
+## ----message=FALSE-------------------------------------------------------
+solution <- factor(rep("C1", num.nodes), levels=paste("C", 1:num.nodes, sep=""))
 solution
-gcp$is.valid(solution)
+gcp$valid(solution)
 gcp$evaluate(solution)
-gcp$plot(solution , node.size=10 , label.cex = 1)
+gcp$plot(solution, node.size=20, label.cex=1)
 
-## ----,message=FALSE------------------------------------------------------
+## ----message=FALSE-------------------------------------------------------
 corrected.solution <- gcp$correct(solution)
 corrected.solution
-gcp$is.valid(corrected.solution)
+gcp$valid(corrected.solution)
 gcp$evaluate(corrected.solution)
-gcp$plot(corrected.solution , node.size=10 , label.cex = 1)
+gcp$plot(corrected.solution, node.size=20, label.cex=1)
 
-## ----,message=FALSE------------------------------------------------------
-trivial.solution <- factor(paste("C",1:num.nodes,sep="") , 
-                   levels=paste("C",1:num.nodes,sep=""))
+## ----message=FALSE-------------------------------------------------------
+trivial.solution <- factor(paste("C", 1:num.nodes, sep=""),
+                           levels=paste("C", 1:num.nodes, sep=""))
 trivial.solution
-gcp$is.valid(trivial.solution)
+gcp$valid(trivial.solution)
 gcp$evaluate(trivial.solution)
 
-## ----,message=FALSE,fig.width=10, fig.height=5---------------------------
-evaluation(bls)
-optima(bls)[[1]]
-plot.progress(bls) + labs(y="Number of colors" , x="Number of solutions evaluated")
+## ----message=FALSE,fig.width=10, fig.height=5----------------------------
+getEvaluation(bls)
+getSolution(bls)
+plotProgress(bls) + labs(y="Number of colors", 
+                         x="Number of solutions evaluated")
+gcp$plot(getSolution(bls), node.size=20, label.cex=1)
 

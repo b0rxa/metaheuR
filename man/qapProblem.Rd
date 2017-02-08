@@ -29,6 +29,6 @@ qap$evaluate(randomPermutation(10))
 Other Problems: \code{\link{graphColoringProblem}},
   \code{\link{knapsackProblem}}, \code{\link{lopProblem}},
   \code{\link{mdsProblem}}, \code{\link{misProblem}},
-  \code{\link{tspProblem}}
+  \code{\link{pfspProblem}}, \code{\link{tspProblem}}
 }
 

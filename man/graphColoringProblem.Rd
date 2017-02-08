@@ -33,7 +33,7 @@ gcol.problem$plot(corrected.sol)
 \seealso{
 Other Problems: \code{\link{knapsackProblem}},
   \code{\link{lopProblem}}, \code{\link{mdsProblem}},
-  \code{\link{misProblem}}, \code{\link{qapProblem}},
-  \code{\link{tspProblem}}
+  \code{\link{misProblem}}, \code{\link{pfspProblem}},
+  \code{\link{qapProblem}}, \code{\link{tspProblem}}
 }
 

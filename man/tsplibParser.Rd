@@ -17,5 +17,7 @@ This function reads XML files (compressed or not) from TSPlib and builds the cos
 }
 \seealso{
 \code{\link{tspProblem}}
+
+Other parsers: \code{\link{pfspParser}}
 }
 

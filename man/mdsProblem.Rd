@@ -26,7 +26,7 @@ library("igraph")
 \seealso{
 Other Problems: \code{\link{graphColoringProblem}},
   \code{\link{knapsackProblem}}, \code{\link{lopProblem}},
-  \code{\link{misProblem}}, \code{\link{qapProblem}},
-  \code{\link{tspProblem}}
+  \code{\link{misProblem}}, \code{\link{pfspProblem}},
+  \code{\link{qapProblem}}, \code{\link{tspProblem}}
 }
 
