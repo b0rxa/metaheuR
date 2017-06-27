@@ -99,6 +99,7 @@ bayesianNetwork <- function(data, ...) {
 	}else{
 		stop("The data must be a list")
 	}
+  return(obj)
 }
 
 #' Converts a vector from categorical to logical.

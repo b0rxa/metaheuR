@@ -118,6 +118,7 @@ plackettLuce <- function(data, maxIter, ...) {
   }else{
     stop("The data must be a list")
   }
+  return(obj)
 }
 
 #' Acumulate the matrix values by columns

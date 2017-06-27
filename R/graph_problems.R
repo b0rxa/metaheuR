@@ -18,6 +18,7 @@
 #' gcol.problem$plot(rnd.sol)
 #' gcol.problem$plot(corrected.sol)
 #' 
+#' 
 graphColoringProblem <- function(graph) {
   size  <- length(V(graph))
   edges <- get.edgelist(graph)
