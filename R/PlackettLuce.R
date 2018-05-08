@@ -19,7 +19,6 @@ setMethod(
       # Create a random number for roulette wheel
       ac <- 0
       rnd <- 0
-      parameters <- object@parameters # create a copy to manipulate it
       l <- sample(x=0, size=length(parameters), replace = T)
       for(i in 1:length(parameters)){
         rnd <- runif(1, 0, sum(parameters))

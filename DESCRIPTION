@@ -2,9 +2,9 @@ Package: metaheuR
 Type: Package
 Title: Package including classical metaheuristics and combinatorial optimization
     problems
-Version: 0.3
+Version: 0.4
 Date: 01-02-2017
-Author: Borja Calvo [aut, cre], Usue Mori [aut], Ander Carreño [ctb], Josu Ceberio [ths]
+Author: Borja Calvo [aut, cre], Usue Mori [aut], Ander Carreño [ctb], Joan Alza [ctb], Josu Ceberio [ths]
 Maintainer: Borja Calvo <borja.calvo@ehu.eus>
 Description: This pacakge includes classical algorithms such as local search,
     iterated local search, simulated anneling or genetic algorithms. It also
